@@ -33,7 +33,7 @@ GITHUB_TOKEN=ghp_tu_token_aqui
 Puedes ejecutar el miner usando el comando configurado mediante Typer:
 
 ```bash
-export GITHUB_TOKEN="ghp_tu_token_aqui"
+export $(grep GITHUB_TOKEN .env)
 miner scan --organization nombre-organizacion --output results.json
 ```
 
