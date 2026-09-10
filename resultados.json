@@ -1,0 +1,62 @@
+{
+  "organization": "mangowm",
+  "summary": {
+    "repositories": 6,
+    "analyzed": 2,
+    "failed": 2,
+    "unsupported": 2,
+    "findings": 0
+  },
+  "repositories": [
+    {
+      "name": "awesome-mango",
+      "url": "https://github.com/mangowm/awesome-mango.git",
+      "status": "unsupported",
+      "languages": [],
+      "findings": []
+    },
+    {
+      "name": "mango",
+      "url": "https://github.com/mangowm/mango.git",
+      "status": "db_failed",
+      "languages": [
+        "cpp"
+      ],
+      "findings": []
+    },
+    {
+      "name": "mango-showcase",
+      "url": "https://github.com/mangowm/mango-showcase.git",
+      "status": "unsupported",
+      "languages": [],
+      "findings": []
+    },
+    {
+      "name": "mangobar",
+      "url": "https://github.com/mangowm/mangobar.git",
+      "status": "db_failed",
+      "languages": [
+        "cpp"
+      ],
+      "findings": []
+    },
+    {
+      "name": "mangowm-settings",
+      "url": "https://github.com/mangowm/mangowm-settings.git",
+      "status": "analyzed",
+      "languages": [
+        "javascript"
+      ],
+      "findings": []
+    },
+    {
+      "name": "mangowm.github.io",
+      "url": "https://github.com/mangowm/mangowm.github.io.git",
+      "status": "analyzed",
+      "languages": [
+        "javascript"
+      ],
+      "findings": []
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+[project]
+name = "github-codeql-miner"
+version = "0.1.0"
+description = "Miner automatizado para análisis de vulnerabilidades con CodeQL"
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.9.0",
+    "pydantic>=2.0.0",
+    "requests>=2.31.0"
+]
+
+[project.scripts]
+miner = "miner.cli:app"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0"
+]

@@ -1,0 +1,2 @@
+[console_scripts]
+miner = miner.cli:app
