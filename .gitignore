@@ -6,3 +6,6 @@ env/
 repos_clonados/
 codeql_dbs/
 *.sarif
+
+# Configuración local de OpenCode (agentes)
+.opencode/
