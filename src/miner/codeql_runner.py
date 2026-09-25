@@ -8,7 +8,7 @@ def create_database(source_dir: Path, db_dir: Path, language: str) -> bool:
             check=True, capture_output=True
         )
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
         return False
 
 def analyze_database(db_dir: Path, output_sarif: Path) -> bool:
@@ -19,5 +19,5 @@ def analyze_database(db_dir: Path, output_sarif: Path) -> bool:
             check=True, capture_output=True
         )
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
         return False

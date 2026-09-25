@@ -10,5 +10,5 @@ def clone_repository(repo_url: str, dest_dir: Path) -> bool:
             stderr=subprocess.DEVNULL
         )
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
         return False

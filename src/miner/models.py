@@ -11,7 +11,7 @@ class Finding(BaseModel):
 class RepositoryResult(BaseModel):
     name: str
     url: str
-    status: str # "analyzed", "clone_failed", "unsupported", "db_failed", "analyze_failed"
+    status: str # "analyzed", "clone_failed", "unsupported", "db_failed", "analyze_failed", "invalid_name"
     languages: List[str] = Field(default_factory=list)
     findings: List[Finding] = Field(default_factory=list)
 

@@ -1,6 +1,9 @@
 import os
 import requests
 from typing import List, Dict
+from urllib.parse import quote, urlparse
+
+API_HOST = "api.github.com"
 
 def get_github_token() -> str:
     token = os.getenv("GITHUB_TOKEN")
@@ -17,11 +20,11 @@ def get_organization_repos(org_name: str) -> List[Dict]:
     }
     
     repos = []
-    url = f"https://api.github.com/orgs/{org_name}/repos"
+    url = f"https://api.github.com/orgs/{quote(org_name, safe='')}/repos"
     params = {"per_page": 100, "type": "all"}
     
     while url:
-        response = requests.get(url, headers=headers, params=params)
+        response = requests.get(url, headers=headers, params=params, timeout=30)
         response.raise_for_status()
         repos.extend(response.json())
         
@@ -31,8 +34,11 @@ def get_organization_repos(org_name: str) -> List[Dict]:
             links = response.headers["Link"].split(", ")
             for link in links:
                 if 'rel="next"' in link:
-                    url = link[link.index("<")+1 : link.index(">")]
-                    params = None # Los parámetros ya vienen en la URL del link
+                    next_url = link[link.index("<")+1 : link.index(">")]
+                    # No reenviar el token a un host distinto de api.github.com
+                    if urlparse(next_url).netloc == API_HOST:
+                        url = next_url
+                        params = None # Los parámetros ya vienen en la URL del link
                     break
                     
     return repos
