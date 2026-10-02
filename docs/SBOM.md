@@ -129,7 +129,7 @@ Directorio con **solo `requirements.txt`** (`requests==2.31.0`): **2 componentes
 
 ## Solución de problemas de SBOM
 
-- **`syft` no encontrado** (estado `failed` y advertencia `Advertencia: no se pudo determinar la versión de Syft...`): instala Syft y verifica con `syft version`. Para omitir el SBOM usa `--no-sbom`.
+- **`syft` no encontrado** (estado `failed` y advertencia `Advertencia: no se pudo determinar la versión de Syft...`): instala Syft (consulta la sección **Instalación de Syft** del [`README.md`](../README.md)) y verifica con `syft version`. Para omitir el SBOM usa `--no-sbom`.
 - **Ningún componente (`no_components`)**: no es un error; comprueba que el repositorio incluya archivos de dependencias que el catalogador correspondiente sepa interpretar (en npm se requiere un archivo de bloqueo; `requirements.txt` basta en Python) y, para dependencias transitivas, un lockfile.
 - **No se generan SBOM**: asegúrate de no haber pasado `--no-sbom` y de que `miner scan` haya podido clonar el repositorio.
 - **`miner sbom` no encuentra repositorios**: `--repos-dir` debe existir y contener subdirectorios con `.git`. Recuerda ejecutar antes `miner scan` con `--keep-repos` (valor por defecto).
