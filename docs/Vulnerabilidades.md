@@ -42,8 +42,65 @@ Los reportes crudos de Grype se escriben en `--vuln-dir` (por defecto `./vulns`)
 ```
 vulns/
 ├── demo-app.grype.json
-└── otro-repositorio.grype.json
+├── otro-repositorio.grype.json
+└── errores.log
 ```
+
+El archivo `errores.log` es el log del seguimiento de Grype (ver **Seguimiento en tiempo real y log de errores**).
+
+## Seguimiento en tiempo real y log de errores
+
+Tanto `miner scan` (cuando el escaneo de vulnerabilidades está activo, es decir, sin `--no-vuln`) como `miner vuln` pueden mostrar el avance de Grype en tiempo real, línea a línea, prefijado con el nombre del repositorio:
+
+```bash
+Procesando: demo-app...
+  [demo-app]  ✔ Vulnerability DB                [no update available]
+  [demo-app]  ✔ Cataloged packages              [12 packages]
+  [demo-app] [0000]  WARN no explicit name provided for directory source
+  [demo-app]  ✔ Scanned image                   [2 vulnerabilities]
+```
+
+Cuando el seguimiento está activo, Grype se ejecuta con `Popen` fusionando `stdout` y `stderr` (Grype escribe el JSON en `--file` y el progreso en `stderr`), de modo que cada línea se procesa a medida que se emite. El resultado del escaneo no depende de esto: el JSON se sigue escribiendo en `--vuln-dir`.
+
+### Flag `--progress / --no-progress`
+
+| Opción | Valor por defecto | Comportamiento |
+| --- | --- | --- |
+| `--progress` | auto | Fuerza la salida del avance en tiempo real. |
+| `--no-progress` | — | No imprime el avance en pantalla. Los errores siguen registrándose en el log. |
+| (ninguno) | auto | Muestra el avance solo si la salida es una terminal (TTY). |
+
+En `miner scan`, el seguimiento solo existe si el escaneo de vulnerabilidades está activo; con `--no-vuln` no se muestra ni la sección final de errores. En `miner vuln` siempre está activo.
+
+### Clasificación de líneas
+
+Cada línea emitida por Grype se clasifica con una expresión regular que ignora mayúsculas y busca palabras completas `error`, `fatal`, `panic`, `warn`/`warning` o `failed`:
+
+- Si coincide, se considera un error o advertencia: se muestra en rojo y se añade al log.
+- Si no coincide, se muestra como avance normal.
+
+La distinción es solo de presentación: no altera el estado del escaneo ni los hallazgos.
+
+### Archivo de log de errores
+
+| Aspecto | Detalle |
+| --- | --- |
+| Ruta por defecto | `<vuln-dir>/errores.log` (por defecto `vulns/errores.log`). |
+| Opción | `--error-log RUTA`. |
+| Formato | Una línea por error, con marca temporal UTC en ISO 8601: `<timestamp> <mensaje>`. |
+| Duración | Cada ejecución **trunca** el archivo al empezar. |
+| Con `--no-progress` | El log se sigue escribiendo. |
+
+Además de las líneas detectadas en la salida de Grype, el log incluye los errores que reporta el propio ejecutor (por ejemplo, no poder preparar o leer el reporte de Grype).
+
+### Sección final de errores
+
+Al terminar el comando se imprime un resumen:
+
+- Sin errores: `Sin errores durante la evaluación de Grype.`
+- Con errores: `Errores durante la evaluación (N):`, la lista de mensajes (`  - <mensaje>`) y `Log completo: <ruta>`.
+
+> **El informe JSON no cambia:** el seguimiento y el log son solo informativos. No se agregan campos al reporte ni se modifican los estados `scanned`/`no_vulnerabilities`/`failed` ni los contadores de `summary`.
 
 ## Campos del objeto `vulnerabilities`
 
@@ -162,3 +219,4 @@ Fragmento de un informe generado por `miner scan` para `demo-app`:
 - **Ninguna vulnerabilidad (`no_vulnerabilities`)**: no es un error. Comprueba que el SBOM incluya versiones resueltas (en npm hace falta un archivo de bloqueo) o que la base de datos conozca los paquetes del inventario.
 - **No se generan reportes de Grype**: asegúrate de no haber pasado `--no-vuln` y de que `miner scan` haya podido clonar el repositorio. En `miner vuln`, `--sbom-dir` debe existir y contener archivos `*.cdx.json`.
 - **`miner vuln` no encuentra SBOM**: `--sbom-dir` debe existir y contener archivos `*.cdx.json`. Ejecuta antes `miner scan` o `miner sbom` (con `--keep-repos`, valor por defecto, si necesitas reutilizar los clones).
+- **Advertencias o errores visibles durante el escaneo**: las líneas con `error`, `fatal`, `panic`, `warning`/`warn` o `failed` se muestran en rojo, se resumen al final y quedan en `vulns/errores.log` (o en `--error-log RUTA`). Un mensaje de advertencia no implica necesariamente que el escaneo haya fallado: revisa el `vulnerabilities.status` y el log completo. El log se trunca en cada ejecución y, con `--no-progress`, no se imprime el avance pero sí se escribe el log.

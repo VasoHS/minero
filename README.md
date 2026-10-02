@@ -194,6 +194,8 @@ Analiza los repositorios de una organización, genera un SBOM por repositorio y 
 | `--sbom / --no-sbom` | No | `--sbom` | Generar un SBOM con Syft por cada repositorio. |
 | `--vuln / --no-vuln` | No | `--vuln` | Escanear vulnerabilidades con Grype (usa el SBOM o el propio repositorio). |
 | `--vuln-dir PATH` | No | `./vulns` | Directorio de salida de los reportes de Grype (JSON). |
+| `--progress / --no-progress` | No | auto (solo si la salida es una terminal) | Mostrar el avance de Grype en tiempo real. `--no-progress` lo silencia, pero los errores se siguen guardando en el log. |
+| `--error-log PATH` | No | `<vuln-dir>/errores.log` | Archivo de log de errores de Grype. Cada ejecución lo trunca al empezar. |
 | `--keep-repos / --cleanup-repos` | No | `--keep-repos` | Conservar los repositorios clonados al finalizar. |
 
 ```bash
@@ -231,6 +233,8 @@ Escanea con Grype los SBOM ya generados, **sin clonar repositorios ni ejecutar C
 | `--sbom-dir PATH` | No | `./sboms` | Directorio con los SBOM (CycloneDX JSON) a escanear. |
 | `--vuln-dir PATH` | No | `./vulns` | Directorio de salida de los reportes de Grype (JSON). |
 | `--output PATH` | No | (ninguno) | Archivo JSON del reporte (opcional). Si se omite, solo se escriben los reportes de Grype. |
+| `--progress / --no-progress` | No | auto (solo si la salida es una terminal) | Mostrar el avance de Grype en tiempo real. `--no-progress` lo silencia, pero los errores se siguen guardando en el log. |
+| `--error-log PATH` | No | `<vuln-dir>/errores.log` | Archivo de log de errores de Grype. Cada ejecución lo trunca al empezar. |
 | `--organization TEXT` | No | `local` | Nombre de organización para el reporte. |
 
 ```bash
@@ -240,6 +244,36 @@ miner vuln --sbom-dir ./sboms --vuln-dir ./vulns --output results-vuln.json
 Si `--sbom-dir` no existe o no contiene archivos `*.cdx.json`, el comando termina con código de salida `1` y un mensaje en rojo/amarillo.
 
 Cada entrada del reporte queda con `status = "scanned"` (estado exclusivo de este comando) y su objeto `vulnerabilities` con el resultado del escaneo.
+
+### Seguimiento de Grype (`--progress` y `--error-log`)
+
+Tanto `miner scan` (cuando el escaneo de vulnerabilidades está activo, es decir, sin `--no-vuln`) como `miner vuln` muestran el avance de Grype en tiempo real, línea a línea y prefijado con el nombre del repositorio:
+
+```bash
+Procesando: demo-app...
+  [demo-app]  ✔ Vulnerability DB                [no update available]
+  [demo-app]  ✔ Cataloged packages              [12 packages]
+  [demo-app] [0000]  WARN no explicit name provided for directory source
+  [demo-app]  ✔ Scanned image                   [2 vulnerabilities]
+```
+
+Las líneas que parecen un error o una advertencia (`error`, `fatal`, `panic`, `warning`/`warn`, `failed`) se muestran en rojo y se registran en el log; el resto se muestra como avance normal.
+
+El flag `--progress / --no-progress` controla la salida en pantalla. Por defecto es automático: el avance se muestra solo si la salida es una terminal (TTY). Con `--no-progress` no se imprime el avance, pero los errores **siguen guardándose** en el log.
+
+Los errores se guardan en un archivo de log con marca temporal UTC en formato ISO 8601. La ruta por defecto es `<vuln-dir>/errores.log` (es decir, `vulns/errores.log`) y se puede cambiar con `--error-log RUTA`. Cada ejecución **trunca** el log al empezar.
+
+Al terminar cada comando se imprime una sección final:
+
+- Si no hubo errores: `Sin errores durante la evaluación de Grype.`
+- Si hubo: `Errores durante la evaluación (N):`, la lista de mensajes (`  - <mensaje>`) y `Log completo: <ruta>`.
+
+El resultado del escaneo en el informe JSON **no cambia**: esta salida es solo informativa y no agrega campos al reporte.
+
+```bash
+miner vuln --sbom-dir ./sboms --vuln-dir ./vulns --output results-vuln.json \
+  --progress --error-log ./vulns/errores.log
+```
 
 ### Flujo recomendado
 
@@ -353,8 +387,11 @@ Por cada repositorio se escribe un reporte JSON crudo de Grype:
 ```
 vulns/
 ├── demo-app.grype.json
-└── otro-repositorio.grype.json
+├── otro-repositorio.grype.json
+└── errores.log
 ```
+
+El archivo `errores.log` lo genera el seguimiento de Grype (ver **Seguimiento de Grype**); su nombre y ubicación se cambian con `--error-log`.
 
 El objeto `vulnerabilities` de cada repositorio tiene estos campos:
 
@@ -502,7 +539,8 @@ sboms/
 └── demo-app.cdx.json
 
 vulns/
-└── demo-app.grype.json
+├── demo-app.grype.json
+└── errores.log
 ```
 
 ## Pruebas
@@ -525,5 +563,6 @@ pytest
 - **Base de datos de Grype no descargable:** la primera ejecución necesita descargar la base de vulnerabilidades. Si no hay red o falla la descarga, el escaneo queda como `failed`. Comprueba la conexión y vuelve a intentarlo; puedes forzar la actualización con `grype db update`.
 - **Sin vulnerabilidades (`no_vulnerabilities`):** no es un error; significa que Grype no encontró coincidencias. Puede deberse a que el SBOM no incluye versiones resueltas (por ejemplo, npm sin archivo de bloqueo) o a que la base de datos no conoce esos paquetes.
 - **Omitir el escaneo de vulnerabilidades (`--no-vuln`):** el objeto `vulnerabilities` queda en `skipped` y no afecta a ninguno de los contadores `vulns_*`.
+- **Errores o advertencias de Grype durante el escaneo:** las líneas que contienen `error`, `fatal`, `panic`, `warning`/`warn` o `failed` se muestran en rojo, se resumen al final del comando y se guardan en `vulns/errores.log` (o en la ruta indicada con `--error-log`). El log se trunca al empezar cada ejecución; con `--no-progress` no se imprime el avance, pero el log se sigue escribiendo.
 
 Para más detalle sobre el SBOM, consulta [`docs/SBOM.md`](docs/SBOM.md); para el escaneo de vulnerabilidades, [`docs/Vulnerabilidades.md`](docs/Vulnerabilidades.md).
