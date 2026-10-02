@@ -14,13 +14,20 @@ from .git_utils import (
 from .codeql_runner import create_database, analyze_database
 from .sarif_parser import parse_sarif
 from .sbom_runner import generate_sbom, get_syft_version
-from .models import OrganizationReport, RepositoryResult, SbomResult, Summary
+from .grype_runner import get_grype_version, scan_vulnerabilities
+from .models import (
+    OrganizationReport,
+    RepositoryResult,
+    SbomResult,
+    Summary,
+    VulnResult,
+)
 
 app = typer.Typer()
 
 @app.callback()
 def main() -> None:
-    """Miner automatizado para análisis de vulnerabilidades con CodeQL y SBOM."""
+    """Miner automatizado para análisis de vulnerabilidades con CodeQL, SBOM y Grype."""
 
 # Mapeo de lenguajes de GitHub a CodeQL
 LANGUAGE_MAPPING = {
@@ -38,6 +45,7 @@ LANGUAGE_MAPPING = {
 
 DEFAULT_REPOS_DIR = Path("./workdir")
 DEFAULT_SBOM_DIR = Path("./sboms")
+DEFAULT_VULN_DIR = Path("./vulns")
 
 def _is_safe_repo_name(name: str) -> bool:
     """Valida el nombre de repositorio para que no escape del workdir (path traversal)."""
@@ -75,6 +83,18 @@ def _record_sbom(summary: Summary, sbom_result: SbomResult) -> None:
     elif sbom_result.status == "failed":
         summary.sboms_failed += 1
 
+def _record_vuln(summary: Summary, vuln_result: VulnResult) -> None:
+    """Actualiza los contadores del resumen a partir del resultado de Grype."""
+    if vuln_result.status in ("scanned", "no_vulnerabilities"):
+        summary.vulns_scanned += 1
+        summary.vulnerabilities += vuln_result.total
+        summary.vulns_critical += vuln_result.by_severity.get("Critical", 0)
+        summary.vulns_high += vuln_result.by_severity.get("High", 0)
+        summary.vulns_medium += vuln_result.by_severity.get("Medium", 0)
+        summary.vulns_low += vuln_result.by_severity.get("Low", 0)
+    elif vuln_result.status == "failed":
+        summary.vulns_failed += 1
+
 def _write_report(report: OrganizationReport, output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     with open(output, "w", encoding="utf-8") as f:
@@ -88,6 +108,14 @@ def _warn_if_syft_missing(syft_version: Optional[str]) -> None:
             fg=typer.colors.YELLOW
         )
 
+def _warn_if_grype_missing(grype_version: Optional[str]) -> None:
+    if grype_version is None:
+        typer.secho(
+            "Advertencia: no se pudo determinar la versión de Grype. "
+            "Verifique que 'grype' esté instalado y disponible en el PATH.",
+            fg=typer.colors.YELLOW
+        )
+
 @app.command()
 def scan(organization: str = typer.Option(..., help="Nombre de la organización de GitHub"),
          output: Path = typer.Option(..., help="Archivo JSON de salida"),
@@ -97,9 +125,13 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
                                        help="Directorio de salida de los SBOM (CycloneDX JSON)"),
          sbom: bool = typer.Option(True, "--sbom/--no-sbom",
                                    help="Generar un SBOM con Syft por cada repositorio"),
+         vuln: bool = typer.Option(True, "--vuln/--no-vuln",
+                                   help="Escanear vulnerabilidades con Grype (usa el SBOM o el propio repositorio)"),
+         vuln_dir: Path = typer.Option(DEFAULT_VULN_DIR,
+                                       help="Directorio de salida de los reportes de Grype (JSON)"),
          keep_repos: bool = typer.Option(True, "--keep-repos/--cleanup-repos",
                                          help="Conservar los repositorios clonados al finalizar")):
-    """Analiza los repositorios de una organización y genera un SBOM por repositorio."""
+    """Analiza los repositorios de una organización y genera un SBOM y un reporte de vulnerabilidades por repositorio."""
     
     typer.echo(f"Iniciando escaneo para la organización: {organization}")
     
@@ -127,6 +159,10 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
     syft_version = get_syft_version() if sbom else None
     if sbom:
         _warn_if_syft_missing(syft_version)
+    
+    grype_version = get_grype_version() if vuln else None
+    if vuln:
+        _warn_if_grype_missing(grype_version)
     
     for repo_info in repos_data:
         repo_name = repo_info.get("name") or ""
@@ -174,7 +210,22 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
                 )
                 _record_sbom(report.summary, repo_result.sbom)
             
-            # 5. Detección y validación de lenguaje
+            # 5. Escanear vulnerabilidades con Grype (independiente del lenguaje/CodeQL).
+            # Reutiliza el SBOM recién generado; si no hay SBOM válido, escanea el
+            # propio repositorio (Grype cataloga el directorio con Syft embebido).
+            if vuln:
+                if repo_result.sbom.file and repo_result.sbom.status in (
+                    "generated", "no_components"
+                ):
+                    vuln_source = f"sbom:{repo_result.sbom.file}"
+                else:
+                    vuln_source = f"dir:{repo_dir}"
+                repo_result.vulnerabilities = scan_vulnerabilities(
+                    vuln_source, vuln_dir / f"{repo_name}.grype.json", grype_version
+                )
+                _record_vuln(report.summary, repo_result.vulnerabilities)
+            
+            # 6. Detección y validación de lenguaje
             if not gh_lang or gh_lang.lower() not in LANGUAGE_MAPPING:
                 repo_result.status = "unsupported"
                 report.summary.unsupported += 1
@@ -183,19 +234,19 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
             detected_language = LANGUAGE_MAPPING[gh_lang.lower()]
             repo_result.languages.append(detected_language)
             
-            # 6. Crear Base de Datos CodeQL
+            # 7. Crear Base de Datos CodeQL
             if not create_database(repo_dir, db_dir, detected_language):
                 repo_result.status = "db_failed"
                 report.summary.failed += 1
                 continue
             
-            # 7. Analizar Base de Datos
+            # 8. Analizar Base de Datos
             if not analyze_database(db_dir, sarif_file):
                 repo_result.status = "analyze_failed"
                 report.summary.failed += 1
                 continue
             
-            # 8. Parsear Resultados
+            # 9. Parsear Resultados
             findings = parse_sarif(sarif_file)
             
             # Ordenar hallazgos (archivo, linea, regla) para reproducibilidad
@@ -282,6 +333,69 @@ def sbom(repos_dir: Path = typer.Option(DEFAULT_REPOS_DIR,
         f"\nSBOM generados: {report.summary.sboms_generated} "
         f"(fallidos: {report.summary.sboms_failed}, "
         f"componentes: {report.summary.components})",
+        fg=typer.colors.GREEN
+    )
+
+@app.command()
+def vuln(sbom_dir: Path = typer.Option(DEFAULT_SBOM_DIR,
+                                       help="Directorio con los SBOM (CycloneDX JSON) a escanear"),
+         vuln_dir: Path = typer.Option(DEFAULT_VULN_DIR,
+                                       help="Directorio de salida de los reportes de Grype (JSON)"),
+         output: Optional[Path] = typer.Option(None,
+                                               help="Archivo JSON del reporte (opcional)"),
+         organization: str = typer.Option("local",
+                                          help="Nombre de organización para el reporte")):
+    """Escanea con Grype los SBOM ya generados (sin clonar ni ejecutar CodeQL)."""
+    
+    if not sbom_dir.is_dir():
+        typer.secho(f"El directorio de SBOM no existe: {sbom_dir}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+    
+    try:
+        sbom_files = sorted(
+            (p for p in sbom_dir.iterdir()
+             if p.is_file() and p.name.endswith(".cdx.json")),
+            key=lambda p: p.name.lower()
+        )
+    except OSError as e:
+        typer.secho(f"Error al leer {sbom_dir}: {e}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+    
+    if not sbom_files:
+        typer.secho(f"No se encontraron SBOM (*.cdx.json) en {sbom_dir}", fg=typer.colors.YELLOW)
+        raise typer.Exit(code=1)
+    
+    report = OrganizationReport(
+        organization=organization,
+        summary=Summary(repositories=len(sbom_files))
+    )
+    
+    grype_version = get_grype_version()
+    _warn_if_grype_missing(grype_version)
+    
+    for sbom_file in sbom_files:
+        repo_name = sbom_file.name[:-len(".cdx.json")]
+        
+        repo_result = RepositoryResult(name=repo_name, url="", status="scanned")
+        repo_result.vulnerabilities = scan_vulnerabilities(
+            f"sbom:{sbom_file}", vuln_dir / f"{repo_name}.grype.json", grype_version
+        )
+        _record_vuln(report.summary, repo_result.vulnerabilities)
+        report.repositories.append(repo_result)
+        
+        typer.echo(
+            f"{repo_name}: {repo_result.vulnerabilities.status} "
+            f"({repo_result.vulnerabilities.total} vulnerabilidades)"
+        )
+    
+    if output is not None:
+        _write_report(report, output)
+    
+    typer.secho(
+        f"\nVulnerabilidades encontradas: {report.summary.vulnerabilities} "
+        f"(escaneos fallidos: {report.summary.vulns_failed}, "
+        f"críticas: {report.summary.vulns_critical}, "
+        f"altas: {report.summary.vulns_high})",
         fg=typer.colors.GREEN
     )
 
