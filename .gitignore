@@ -6,6 +6,18 @@ env/
 repos_clonados/
 codeql_dbs/
 *.sarif
+workdir/
+
+# Artefactos generados por la CLI (SBOM, vulnerabilidades y reportes)
+sboms/
+vulns/
+results.json
+results-sbom.json
+results-vuln.json
+sboms*.zip
+
+# Enlaces y archivos locales varios
+link
 
 # Configuración local de OpenCode (agentes)
 .opencode/
