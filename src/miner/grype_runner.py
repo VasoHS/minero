@@ -2,9 +2,21 @@ import json
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Protocol
 
 from .models import VulnResult, Vulnerability
+
+
+class ProgressLike(Protocol):
+    """Interfaz mínima del seguidor de progreso que usa el runner.
+
+    Se define aquí para no acoplar el runner a la implementación concreta
+    (``miner.progress.VulnProgress``) ni crear importaciones circulares.
+    """
+
+    def line(self, message: str) -> None: ...
+
+    def error(self, message: str) -> None: ...
 
 # Severidades canónicas de Grype. La comparación ignora mayúsculas/espacios.
 SEVERITIES = ("Critical", "High", "Medium", "Low", "Negligible", "Unknown")
@@ -102,17 +114,76 @@ def _discard(path: Path) -> None:
     except OSError:
         pass
 
+def _report_error(progress: Optional[ProgressLike], message: str) -> None:
+    """Notifica un error al seguidor de progreso sin interrumpir el escaneo."""
+    if progress is None:
+        return
+    try:
+        progress.error(message)
+    except Exception:
+        pass
+
+def _run_grype(cmd: List[str], progress: Optional[ProgressLike]) -> None:
+    """Ejecuta Grype, transmitiendo su salida en tiempo real si hay progreso.
+
+    Sin ``progress`` se conserva la ejecución bloqueante original. Con él se
+    usa ``Popen`` para mostrar el avance línea a línea, fusionando stdout y
+    stderr (Grype escribe el JSON en ``--file`` y el progreso en stderr).
+    """
+    if progress is None:
+        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        return
+
+    process = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        bufsize=1,
+    )
+    try:
+        if process.stdout is not None:
+            for raw_line in process.stdout:
+                line = raw_line.rstrip("\r\n")
+                if not line:
+                    continue
+                try:
+                    progress.line(line)
+                except Exception:
+                    # Un fallo al mostrar el progreso no debe abortar el escaneo.
+                    pass
+    except BaseException:
+        # Ante una interrupción, no dejar el proceso hijo huérfano.
+        process.kill()
+        process.wait()
+        raise
+    finally:
+        if process.stdout is not None:
+            process.stdout.close()
+    returncode = process.wait()
+    if returncode != 0:
+        raise subprocess.CalledProcessError(returncode, cmd)
+
 def scan_vulnerabilities(source: str, output_file: Path,
-                         grype_version: Optional[str] = None) -> VulnResult:
+                         grype_version: Optional[str] = None,
+                         progress: Optional[ProgressLike] = None) -> VulnResult:
     """Escanea con Grype un SBOM o un directorio y devuelve el resultado.
 
     `source` es el objetivo tal como lo espera Grype, por ejemplo
     ``sbom:ruta/al/bom.cdx.json`` o ``dir:ruta/al/repositorio``.
+
+    Si se pasa `progress`, la salida de Grype se transmite en tiempo real y los
+    errores se notifican al seguidor; el resultado es el mismo en ambos casos.
     """
     generated_at = datetime.now(timezone.utc).isoformat()
     try:
         output_file.parent.mkdir(parents=True, exist_ok=True)
-    except OSError:
+    except OSError as exc:
+        _report_error(
+            progress, f"No se pudo preparar el reporte {output_file}: {exc}"
+        )
         return VulnResult(status="failed", grype_version=grype_version,
                           generated_at=generated_at)
 
@@ -120,11 +191,12 @@ def scan_vulnerabilities(source: str, output_file: Path,
     _discard(output_file)
 
     try:
-        subprocess.run(
+        _run_grype(
             ["grype", str(source), "-o", "json", "--file", str(output_file)],
-            check=True, capture_output=True, text=True
+            progress,
         )
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError) as exc:
+        _report_error(progress, f"Grype falló al escanear {source}: {exc}")
         _discard(output_file)
         return VulnResult(status="failed", grype_version=grype_version,
                           generated_at=generated_at)
@@ -132,7 +204,10 @@ def scan_vulnerabilities(source: str, output_file: Path,
     try:
         with open(output_file, "r", encoding="utf-8") as f:
             data = json.load(f)
-    except (OSError, ValueError):
+    except (OSError, ValueError) as exc:
+        _report_error(
+            progress, f"No se pudo leer el reporte de Grype {output_file}: {exc}"
+        )
         _discard(output_file)
         return VulnResult(status="failed", grype_version=grype_version,
                           generated_at=generated_at)
@@ -140,6 +215,9 @@ def scan_vulnerabilities(source: str, output_file: Path,
     vulnerabilities = parse_matches(data)
     if vulnerabilities is None:
         # Grype terminó "bien" pero el reporte no es legible: se considera fallo.
+        _report_error(
+            progress, f"El reporte de Grype no es válido: {output_file}"
+        )
         _discard(output_file)
         return VulnResult(status="failed", grype_version=grype_version,
                           generated_at=generated_at)
