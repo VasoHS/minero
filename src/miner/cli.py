@@ -1,4 +1,5 @@
 import shutil
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -15,6 +16,7 @@ from .codeql_runner import create_database, analyze_database
 from .sarif_parser import parse_sarif
 from .sbom_runner import generate_sbom, get_syft_version
 from .grype_runner import get_grype_version, scan_vulnerabilities
+from .progress import VulnProgress
 from .models import (
     OrganizationReport,
     RepositoryResult,
@@ -116,6 +118,34 @@ def _warn_if_grype_missing(grype_version: Optional[str]) -> None:
             fg=typer.colors.YELLOW
         )
 
+def _resolve_progress(progress: Optional[bool]) -> bool:
+    """Decide si se muestra el avance en vivo (auto = solo si hay terminal)."""
+    if progress is None:
+        isatty = getattr(sys.stdout, "isatty", None)
+        return bool(isatty and isatty())
+    return progress
+
+def _make_vuln_progress(enabled: bool, error_log: Optional[Path],
+                        vuln_dir: Path) -> VulnProgress:
+    """Crea el seguidor de Grype, con log de errores en ``vuln_dir`` por defecto."""
+    log_file = error_log if error_log is not None else vuln_dir / "errores.log"
+    return VulnProgress(log_file=log_file, enabled=enabled)
+
+def _print_error_section(progress: VulnProgress) -> None:
+    """Muestra la sección final con los errores registrados durante la evaluación."""
+    if not progress.errors:
+        typer.secho("\nSin errores durante la evaluación de Grype.",
+                    fg=typer.colors.GREEN)
+        return
+    typer.secho(
+        f"\nErrores durante la evaluación ({len(progress.errors)}):",
+        fg=typer.colors.RED, bold=True
+    )
+    for message in progress.errors:
+        typer.echo(f"  - {message}")
+    if progress.log_file is not None:
+        typer.echo(f"Log completo: {progress.log_file}")
+
 @app.command()
 def scan(organization: str = typer.Option(..., help="Nombre de la organización de GitHub"),
          output: Path = typer.Option(..., help="Archivo JSON de salida"),
@@ -129,6 +159,11 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
                                    help="Escanear vulnerabilidades con Grype (usa el SBOM o el propio repositorio)"),
          vuln_dir: Path = typer.Option(DEFAULT_VULN_DIR,
                                        help="Directorio de salida de los reportes de Grype (JSON)"),
+         progress: Optional[bool] = typer.Option(
+             None, "--progress/--no-progress",
+             help="Mostrar el avance de Grype en tiempo real (por defecto: solo si la salida es una terminal)"),
+         error_log: Optional[Path] = typer.Option(
+             None, help="Archivo de log de errores de Grype (por defecto: <vuln-dir>/errores.log)"),
          keep_repos: bool = typer.Option(True, "--keep-repos/--cleanup-repos",
                                          help="Conservar los repositorios clonados al finalizar")):
     """Analiza los repositorios de una organización y genera un SBOM y un reporte de vulnerabilidades por repositorio."""
@@ -163,6 +198,11 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
     grype_version = get_grype_version() if vuln else None
     if vuln:
         _warn_if_grype_missing(grype_version)
+    
+    vuln_progress = (
+        _make_vuln_progress(_resolve_progress(progress), error_log, vuln_dir)
+        if vuln else None
+    )
     
     for repo_info in repos_data:
         repo_name = repo_info.get("name") or ""
@@ -220,8 +260,11 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
                     vuln_source = f"sbom:{repo_result.sbom.file}"
                 else:
                     vuln_source = f"dir:{repo_dir}"
+                if vuln_progress is not None:
+                    vuln_progress.set_label(repo_name)
                 repo_result.vulnerabilities = scan_vulnerabilities(
-                    vuln_source, vuln_dir / f"{repo_name}.grype.json", grype_version
+                    vuln_source, vuln_dir / f"{repo_name}.grype.json",
+                    grype_version, progress=vuln_progress
                 )
                 _record_vuln(report.summary, repo_result.vulnerabilities)
             
@@ -263,6 +306,9 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
             if is_safe:
                 remove_repo = (not keep_repos) or (not cloned)
                 _cleanup(base_workdir, repo_dir, db_dir, sarif_file, remove_repo=remove_repo)
+    
+    if vuln_progress is not None:
+        _print_error_section(vuln_progress)
     
     _write_report(report, output)
     
@@ -343,6 +389,11 @@ def vuln(sbom_dir: Path = typer.Option(DEFAULT_SBOM_DIR,
                                        help="Directorio de salida de los reportes de Grype (JSON)"),
          output: Optional[Path] = typer.Option(None,
                                                help="Archivo JSON del reporte (opcional)"),
+         progress: Optional[bool] = typer.Option(
+             None, "--progress/--no-progress",
+             help="Mostrar el avance de Grype en tiempo real (por defecto: solo si la salida es una terminal)"),
+         error_log: Optional[Path] = typer.Option(
+             None, help="Archivo de log de errores de Grype (por defecto: <vuln-dir>/errores.log)"),
          organization: str = typer.Option("local",
                                           help="Nombre de organización para el reporte")):
     """Escanea con Grype los SBOM ya generados (sin clonar ni ejecutar CodeQL)."""
@@ -373,12 +424,18 @@ def vuln(sbom_dir: Path = typer.Option(DEFAULT_SBOM_DIR,
     grype_version = get_grype_version()
     _warn_if_grype_missing(grype_version)
     
+    vuln_progress = _make_vuln_progress(
+        _resolve_progress(progress), error_log, vuln_dir
+    )
+    
     for sbom_file in sbom_files:
         repo_name = sbom_file.name[:-len(".cdx.json")]
         
         repo_result = RepositoryResult(name=repo_name, url="", status="scanned")
+        vuln_progress.set_label(repo_name)
         repo_result.vulnerabilities = scan_vulnerabilities(
-            f"sbom:{sbom_file}", vuln_dir / f"{repo_name}.grype.json", grype_version
+            f"sbom:{sbom_file}", vuln_dir / f"{repo_name}.grype.json",
+            grype_version, progress=vuln_progress
         )
         _record_vuln(report.summary, repo_result.vulnerabilities)
         report.repositories.append(repo_result)
@@ -387,6 +444,8 @@ def vuln(sbom_dir: Path = typer.Option(DEFAULT_SBOM_DIR,
             f"{repo_name}: {repo_result.vulnerabilities.status} "
             f"({repo_result.vulnerabilities.total} vulnerabilidades)"
         )
+    
+    _print_error_section(vuln_progress)
     
     if output is not None:
         _write_report(report, output)
