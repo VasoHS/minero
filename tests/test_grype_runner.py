@@ -1,7 +1,7 @@
 import json
 import subprocess
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, call, patch
 
 import pytest
 
@@ -501,3 +501,186 @@ def test_scan_vulnerabilities_mkdir_failure(tmp_path):
     assert result.grype_version == "0.87.0"
     # Ni siquiera se llega a invocar Grype si no se puede preparar la salida.
     mock_run.assert_not_called()
+
+
+# ---------------------------------------------------------------------------
+# scan_vulnerabilities con progreso en tiempo real (Popen)
+# ---------------------------------------------------------------------------
+
+class FakeStdout:
+    """Doble de `process.stdout`: iterable, cerrable y con líneas controladas."""
+
+    def __init__(self, lines):
+        self._lines = lines
+        self.closed = False
+
+    def __iter__(self):
+        return iter(self._lines)
+
+    def close(self):
+        self.closed = True
+
+
+def make_process(lines, returncode=0):
+    """Simula un subprocess.Popen con stdout iterable y wait() controlado."""
+    process = Mock()
+    process.stdout = FakeStdout(lines)
+    process.wait.return_value = returncode
+    return process
+
+
+def test_scan_vulnerabilities_with_progress_streams_lines(tmp_path):
+    output_file = tmp_path / "nested" / "out.grype.json"
+    progress = Mock()
+    observed = {}
+
+    def fake_popen(cmd, **kwargs):
+        observed["cmd"] = cmd
+        observed["kwargs"] = kwargs
+        write_json(Path(cmd[cmd.index("--file") + 1]), {"matches": [make_match()]})
+        return make_process(["linea 1\n", "\n", "linea 2\n"], returncode=0)
+
+    with patch("miner.grype_runner.subprocess.Popen", side_effect=fake_popen) as mock_popen:
+        result = scan_vulnerabilities(
+            "dir:/repo", output_file, grype_version="0.87.0", progress=progress
+        )
+
+    assert result.status == "scanned"
+    assert result.total == 1
+    assert output_file.exists()
+    # Se transmite cada línea no vacía, sin el salto de línea final.
+    assert progress.line.call_args_list == [call("linea 1"), call("linea 2")]
+    assert mock_popen.call_count == 1
+    assert observed["kwargs"]["stdout"] == subprocess.PIPE
+    assert observed["kwargs"]["stderr"] == subprocess.STDOUT
+    assert observed["kwargs"]["text"] is True
+    assert observed["kwargs"]["bufsize"] == 1
+
+
+def test_scan_vulnerabilities_with_progress_failure_reports_error(tmp_path):
+    output_file = tmp_path / "out.grype.json"
+    progress = Mock()
+
+    def fake_popen(cmd, **kwargs):
+        return make_process(["grype: error\n"], returncode=1)
+
+    with patch("miner.grype_runner.subprocess.Popen", side_effect=fake_popen):
+        result = scan_vulnerabilities(
+            "dir:/repo", output_file, grype_version="0.87.0", progress=progress
+        )
+
+    assert result.status == "failed"
+    assert result.total == 0
+    assert result.file is None
+    assert not output_file.exists()
+    # La línea de error igualmente se transmite en vivo.
+    progress.line.assert_called_once_with("grype: error")
+    progress.error.assert_called()
+    assert any(
+        "Grype falló" in args[0] for args, _ in progress.error.call_args_list
+    )
+
+
+def test_scan_vulnerabilities_with_progress_file_not_found(tmp_path):
+    output_file = tmp_path / "out.grype.json"
+    progress = Mock()
+
+    with patch(
+        "miner.grype_runner.subprocess.Popen", side_effect=FileNotFoundError()
+    ):
+        result = scan_vulnerabilities(
+            "dir:/repo", output_file, grype_version="0.87.0", progress=progress
+        )
+
+    assert result.status == "failed"
+    assert result.file is None
+    progress.error.assert_called_once()
+    assert "Grype falló" in progress.error.call_args.args[0]
+
+
+def test_scan_vulnerabilities_progress_line_exception_does_not_abort(tmp_path):
+    output_file = tmp_path / "out.grype.json"
+    progress = Mock()
+    progress.line.side_effect = RuntimeError("callback roto")
+
+    def fake_popen(cmd, **kwargs):
+        write_json(Path(cmd[cmd.index("--file") + 1]), {"matches": [make_match()]})
+        return make_process(["linea\n"], returncode=0)
+
+    with patch("miner.grype_runner.subprocess.Popen", side_effect=fake_popen):
+        result = scan_vulnerabilities(
+            "dir:/repo", output_file, grype_version="0.87.0", progress=progress
+        )
+
+    # Un fallo al mostrar el avance no debe abortar el escaneo.
+    assert result.status == "scanned"
+    progress.line.assert_called_once_with("linea")
+
+
+def test_scan_vulnerabilities_progress_error_exception_is_ignored(tmp_path):
+    blocker = tmp_path / "bloqueado"
+    blocker.write_text("no soy un directorio", encoding="utf-8")
+    output_file = blocker / "sub" / "out.grype.json"
+    progress = Mock()
+    progress.error.side_effect = RuntimeError("no se pudo reportar")
+
+    result = scan_vulnerabilities(
+        "dir:/repo", output_file, grype_version="0.87.0", progress=progress
+    )
+
+    # El fallo al notificar el error tampoco interrumpe el escaneo.
+    assert result.status == "failed"
+    progress.error.assert_called_once()
+
+
+def test_scan_vulnerabilities_progress_closes_stdout(tmp_path):
+    output_file = tmp_path / "out.grype.json"
+    progress = Mock()
+    process = make_process(["linea\n"], returncode=0)
+
+    def fake_popen(cmd, **kwargs):
+        write_json(Path(cmd[cmd.index("--file") + 1]), {"matches": [make_match()]})
+        return process
+
+    with patch("miner.grype_runner.subprocess.Popen", side_effect=fake_popen):
+        scan_vulnerabilities(
+            "dir:/repo", output_file, grype_version="0.87.0", progress=progress
+        )
+
+    assert process.stdout.closed is True
+
+
+def test_scan_vulnerabilities_progress_interrupt_kills_process(tmp_path):
+    output_file = tmp_path / "out.grype.json"
+    progress = Mock()
+    # Un KeyboardInterrupt (BaseException) no debe dejar el hijo huérfano.
+    progress.line.side_effect = KeyboardInterrupt()
+    process = make_process(["linea\n"], returncode=0)
+
+    with patch(
+        "miner.grype_runner.subprocess.Popen", return_value=process
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            scan_vulnerabilities(
+                "dir:/repo", output_file, grype_version="0.87.0", progress=progress
+            )
+
+    process.kill.assert_called_once()
+    process.wait.assert_called_once()
+    assert process.stdout.closed is True
+
+
+def test_scan_vulnerabilities_progress_handles_carriage_return(tmp_path):
+    output_file = tmp_path / "out.grype.json"
+    progress = Mock()
+
+    def fake_popen(cmd, **kwargs):
+        write_json(Path(cmd[cmd.index("--file") + 1]), {"matches": [make_match()]})
+        return make_process(["progreso\r\n"], returncode=0)
+
+    with patch("miner.grype_runner.subprocess.Popen", side_effect=fake_popen):
+        scan_vulnerabilities(
+            "dir:/repo", output_file, grype_version="0.87.0", progress=progress
+        )
+
+    progress.line.assert_called_once_with("progreso")

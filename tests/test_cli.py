@@ -9,6 +9,7 @@ from typer.testing import CliRunner
 
 from miner.cli import app, _cleanup, _inside, _is_safe_repo_name
 from miner.models import Finding, SbomResult, Vulnerability, VulnResult
+from miner.progress import VulnProgress
 
 runner = CliRunner()
 
@@ -1072,3 +1073,174 @@ def test_scan_repos_dir_is_file(tmp_path, monkeypatch):
     )
 
     assert result.exit_code != 0
+
+
+# ---------------------------------------------------------------------------
+# Progreso de Grype (--progress / --no-progress / --error-log)
+# ---------------------------------------------------------------------------
+
+def test_scan_progress_forces_live_output(tmp_path, monkeypatch):
+    def noisy_scan(source, output, grype_version, progress=None):
+        progress.info("linea de avance")
+        return make_vuln(status="scanned", total=1)
+
+    run = run_scan(
+        tmp_path,
+        [make_repo("repo-a")],
+        monkeypatch,
+        vuln_side_effect=noisy_scan,
+        extra_args=["--progress"],
+    )
+
+    assert run.result.exit_code == 0
+    progress = run.scan_vulnerabilities.call_args.kwargs["progress"]
+    assert isinstance(progress, VulnProgress)
+    assert progress.enabled is True
+    assert "linea de avance" in run.result.output
+
+
+def test_scan_no_progress_hides_live_output_but_writes_log(tmp_path, monkeypatch):
+    def noisy_scan(source, output, grype_version, progress=None):
+        progress.info("linea de avance")
+        progress.error("fallo simulado")
+        return make_vuln(status="failed", total=0)
+
+    run = run_scan(
+        tmp_path,
+        [make_repo("repo-a")],
+        monkeypatch,
+        vuln_side_effect=noisy_scan,
+        extra_args=["--no-progress"],
+    )
+
+    assert run.result.exit_code == 0
+    progress = run.scan_vulnerabilities.call_args.kwargs["progress"]
+    assert isinstance(progress, VulnProgress)
+    assert progress.enabled is False
+    # El avance no se imprime, pero el log de errores sí se escribe.
+    assert "linea de avance" not in run.result.output
+    log = tmp_path / "vulns" / "errores.log"
+    assert log.exists()
+    content = log.read_text(encoding="utf-8")
+    assert "fallo simulado" in content
+    assert "linea de avance" not in content
+
+
+def test_scan_default_error_log_is_under_vuln_dir(tmp_path, monkeypatch):
+    def failing_scan(source, output, grype_version, progress=None):
+        progress.error("fallo simulado")
+        return make_vuln(status="failed", total=0)
+
+    run = run_scan(
+        tmp_path,
+        [make_repo("repo-a")],
+        monkeypatch,
+        vuln_side_effect=failing_scan,
+        extra_args=["--progress"],
+    )
+
+    assert run.result.exit_code == 0
+    progress = run.scan_vulnerabilities.call_args.kwargs["progress"]
+    assert progress.log_file.resolve() == (tmp_path / "vulns" / "errores.log").resolve()
+    log = tmp_path / "vulns" / "errores.log"
+    assert log.exists()
+    assert "fallo simulado" in log.read_text(encoding="utf-8")
+
+
+def test_scan_custom_error_log_path(tmp_path, monkeypatch):
+    custom_log = tmp_path / "custom" / "grype-errores.log"
+
+    def failing_scan(source, output, grype_version, progress=None):
+        progress.error("fallo personalizado")
+        return make_vuln(status="failed", total=0)
+
+    run = run_scan(
+        tmp_path,
+        [make_repo("repo-a")],
+        monkeypatch,
+        vuln_side_effect=failing_scan,
+        extra_args=["--error-log", str(custom_log)],
+    )
+
+    assert run.result.exit_code == 0
+    progress = run.scan_vulnerabilities.call_args.kwargs["progress"]
+    assert progress.log_file == custom_log
+    assert custom_log.exists()
+    assert "fallo personalizado" in custom_log.read_text(encoding="utf-8")
+    # No se crea el log por defecto si se indicó uno explícito.
+    assert not (tmp_path / "vulns" / "errores.log").exists()
+
+
+def test_scan_without_vuln_creates_no_progress_log(tmp_path, monkeypatch):
+    run = run_scan(
+        tmp_path,
+        [make_repo("repo-a")],
+        monkeypatch,
+        vuln=False,
+        extra_args=["--progress"],
+    )
+
+    assert run.result.exit_code == 0
+    run.scan_vulnerabilities.assert_not_called()
+    assert not (tmp_path / "vulns" / "errores.log").exists()
+
+
+def test_vuln_command_passes_progress(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    sbom_dir = tmp_path / "sboms"
+    make_sbom_file(sbom_dir, "repo-a")
+    vuln_dir = tmp_path / "vulns"
+
+    monkeypatch.setattr("miner.cli.get_grype_version", Mock(return_value="0.87.0"))
+    scan_mock = Mock(return_value=make_vuln(status="scanned", total=1))
+    monkeypatch.setattr("miner.cli.scan_vulnerabilities", scan_mock)
+
+    result = runner.invoke(
+        app,
+        [
+            "vuln",
+            "--sbom-dir", str(sbom_dir),
+            "--vuln-dir", str(vuln_dir),
+            "--progress",
+        ],
+    )
+
+    assert result.exit_code == 0
+    progress = scan_mock.call_args.kwargs["progress"]
+    assert isinstance(progress, VulnProgress)
+    assert progress.enabled is True
+    assert progress.log_file == vuln_dir / "errores.log"
+
+
+def test_vuln_command_no_progress_writes_error_log(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    sbom_dir = tmp_path / "sboms"
+    make_sbom_file(sbom_dir, "repo-a")
+    vuln_dir = tmp_path / "vulns"
+
+    def failing_scan(source, output, grype_version, progress=None):
+        progress.info("linea de avance")
+        progress.error("fallo en vuln")
+        return make_vuln(status="failed", total=0)
+
+    monkeypatch.setattr("miner.cli.get_grype_version", Mock(return_value="0.87.0"))
+    scan_mock = Mock(side_effect=failing_scan)
+    monkeypatch.setattr("miner.cli.scan_vulnerabilities", scan_mock)
+
+    result = runner.invoke(
+        app,
+        [
+            "vuln",
+            "--sbom-dir", str(sbom_dir),
+            "--vuln-dir", str(vuln_dir),
+            "--no-progress",
+        ],
+    )
+
+    assert result.exit_code == 0
+    progress = scan_mock.call_args.kwargs["progress"]
+    assert progress.enabled is False
+    assert "linea de avance" not in result.output
+    log = vuln_dir / "errores.log"
+    assert log.exists()
+    assert "fallo en vuln" in log.read_text(encoding="utf-8")
