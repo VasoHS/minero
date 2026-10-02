@@ -8,7 +8,7 @@ import pytest
 from typer.testing import CliRunner
 
 from miner.cli import app, _cleanup, _inside, _is_safe_repo_name
-from miner.models import Finding, SbomResult
+from miner.models import Finding, SbomResult, Vulnerability, VulnResult
 
 runner = CliRunner()
 
@@ -31,6 +31,22 @@ def make_sbom(status="generated", components=2, syft_version="9.9.9", file=None)
     )
 
 
+def make_vuln(status="scanned", total=2, by_severity=None, grype_version="0.87.0",
+              file=None, vulnerabilities=None):
+    return VulnResult(
+        status=status,
+        total=total,
+        by_severity=by_severity or {
+            "Critical": 0, "High": 1, "Medium": 1,
+            "Low": 0, "Negligible": 0, "Unknown": 0,
+        },
+        vulnerabilities=vulnerabilities or [],
+        grype_version=grype_version,
+        generated_at="2026-01-01T00:00:00+00:00",
+        file=file,
+    )
+
+
 def run_scan(
     tmp_path,
     repos,
@@ -46,6 +62,10 @@ def run_scan(
     sbom_result=None,
     sbom_side_effect=None,
     syft_version="9.9.9",
+    vuln=True,
+    vuln_result=None,
+    vuln_side_effect=None,
+    grype_version="0.87.0",
     extra_args=None,
 ):
     """Ejecuta `scan` con todas las dependencias externas monkeypatcheadas."""
@@ -73,17 +93,31 @@ def run_scan(
         )
         generate_mock = Mock(return_value=default_sbom)
 
+    grype_mock = Mock(return_value=grype_version)
+    if vuln_side_effect is not None:
+        vuln_mock = Mock(side_effect=vuln_side_effect)
+    else:
+        default_vuln = (
+            vuln_result if vuln_result is not None
+            else make_vuln(grype_version=grype_version)
+        )
+        vuln_mock = Mock(return_value=default_vuln)
+
     monkeypatch.setattr("miner.cli.clone_repository", clone_mock)
     monkeypatch.setattr("miner.cli.create_database", create_mock)
     monkeypatch.setattr("miner.cli.analyze_database", analyze_mock)
     monkeypatch.setattr("miner.cli.parse_sarif", parse_mock)
     monkeypatch.setattr("miner.cli.get_syft_version", syft_mock)
     monkeypatch.setattr("miner.cli.generate_sbom", generate_mock)
+    monkeypatch.setattr("miner.cli.get_grype_version", grype_mock)
+    monkeypatch.setattr("miner.cli.scan_vulnerabilities", vuln_mock)
 
     out_path = Path(output) if output is not None else tmp_path / "out.json"
     args = ["scan", "--organization", "test-org", "--output", str(out_path)]
     if not sbom:
         args.append("--no-sbom")
+    if not vuln:
+        args.append("--no-vuln")
     if extra_args:
         args.extend(extra_args)
 
@@ -98,6 +132,8 @@ def run_scan(
         parse=parse_mock,
         get_syft_version=syft_mock,
         generate_sbom=generate_mock,
+        get_grype_version=grype_mock,
+        scan_vulnerabilities=vuln_mock,
     )
 
 
@@ -247,6 +283,229 @@ def test_scan_sbom_records_components(tmp_path, monkeypatch):
     # La ruta de salida del SBOM sigue el patrón sbom_dir/<repo>.cdx.json.
     dest = Path(run.generate_sbom.call_args.args[1])
     assert dest.name == "repo-a.cdx.json"
+
+
+def test_scan_grype_uses_sbom_when_available(tmp_path, monkeypatch):
+    sbom_result = make_sbom(
+        status="generated", components=7, file="sboms/repo-a.cdx.json"
+    )
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, sbom_result=sbom_result
+    )
+
+    assert run.result.exit_code == 0
+    run.get_grype_version.assert_called_once()
+    run.scan_vulnerabilities.assert_called_once()
+    source = run.scan_vulnerabilities.call_args.args[0]
+    assert source == "sbom:sboms/repo-a.cdx.json"
+    # La ruta de salida sigue el patrón vuln_dir/<repo>.grype.json.
+    dest = Path(run.scan_vulnerabilities.call_args.args[1])
+    assert dest.name == "repo-a.grype.json"
+
+
+def test_scan_grype_falls_back_to_dir_without_sbom(tmp_path, monkeypatch):
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, sbom=False, vuln=True
+    )
+
+    assert run.result.exit_code == 0
+    run.scan_vulnerabilities.assert_called_once()
+    source = run.scan_vulnerabilities.call_args.args[0]
+    assert source == "dir:workdir/repo-a"
+
+
+def test_scan_grype_falls_back_to_dir_when_sbom_failed(tmp_path, monkeypatch):
+    failed_sbom = make_sbom(status="failed", components=0, file=None)
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, sbom_result=failed_sbom
+    )
+
+    assert run.result.exit_code == 0
+    run.scan_vulnerabilities.assert_called_once()
+    source = run.scan_vulnerabilities.call_args.args[0]
+    assert source == "dir:workdir/repo-a"
+
+
+def test_scan_records_vulnerability_summary(tmp_path, monkeypatch):
+    vuln_result = make_vuln(
+        status="scanned",
+        total=4,
+        by_severity={
+            "Critical": 1, "High": 2, "Medium": 1,
+            "Low": 0, "Negligible": 0, "Unknown": 0,
+        },
+    )
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, vuln_result=vuln_result
+    )
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    summary = data["summary"]
+    assert summary["vulns_scanned"] == 1
+    assert summary["vulns_failed"] == 0
+    assert summary["vulnerabilities"] == 4
+    assert summary["vulns_critical"] == 1
+    assert summary["vulns_high"] == 2
+    assert summary["vulns_medium"] == 1
+    assert summary["vulns_low"] == 0
+    repo = data["repositories"][0]
+    assert repo["vulnerabilities"]["status"] == "scanned"
+    assert repo["vulnerabilities"]["total"] == 4
+
+
+def test_scan_records_no_vulnerabilities_summary(tmp_path, monkeypatch):
+    vuln_result = make_vuln(
+        status="no_vulnerabilities",
+        total=0,
+        by_severity={
+            "Critical": 0, "High": 0, "Medium": 0,
+            "Low": 0, "Negligible": 0, "Unknown": 0,
+        },
+    )
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, vuln_result=vuln_result
+    )
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    summary = data["summary"]
+    # Un escaneo correcto sin hallazgos cuenta como escaneado, no como fallo.
+    assert summary["vulns_scanned"] == 1
+    assert summary["vulns_failed"] == 0
+    assert summary["vulnerabilities"] == 0
+    assert summary["vulns_critical"] == 0
+    assert summary["vulns_high"] == 0
+    assert summary["vulns_medium"] == 0
+    assert summary["vulns_low"] == 0
+    repo = data["repositories"][0]
+    assert repo["vulnerabilities"]["status"] == "no_vulnerabilities"
+    assert repo["vulnerabilities"]["total"] == 0
+
+
+def test_scan_ignores_unknown_and_negligible_in_severity_breakdown(tmp_path, monkeypatch):
+    vuln_result = make_vuln(
+        status="scanned",
+        total=5,
+        by_severity={
+            "Critical": 0, "High": 0, "Medium": 0,
+            "Low": 0, "Negligible": 2, "Unknown": 3,
+        },
+    )
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, vuln_result=vuln_result
+    )
+
+    assert run.result.exit_code == 0
+    summary = json.loads(run.out.read_text())["summary"]
+    assert summary["vulns_scanned"] == 1
+    # Unknown y Negligible suman al total pero no al desglose por gravedad.
+    assert summary["vulnerabilities"] == 5
+    assert summary["vulns_critical"] == 0
+    assert summary["vulns_high"] == 0
+    assert summary["vulns_medium"] == 0
+    assert summary["vulns_low"] == 0
+
+
+def test_scan_missing_grype_version_still_processes_repo(tmp_path, monkeypatch):
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, grype_version=None
+    )
+
+    assert run.result.exit_code == 0
+    run.get_grype_version.assert_called_once()
+    run.scan_vulnerabilities.assert_called_once()
+    # Se avisa de la ausencia de Grype pero el repositorio sigue procesándose.
+    assert "Grype" in run.result.output
+    data = json.loads(run.out.read_text())
+    repo = data["repositories"][0]
+    assert repo["status"] == "analyzed"
+    assert repo["vulnerabilities"]["status"] == "scanned"
+    assert repo["vulnerabilities"]["grype_version"] is None
+
+
+def test_scan_serializes_vulnerability_findings(tmp_path, monkeypatch):
+    finding = Vulnerability(
+        id="CVE-2021-1234",
+        severity="Critical",
+        package="openssl",
+        version="1.1.1",
+        type="deb",
+        fixed_version="1.1.1k",
+        namespace="debian:11",
+    )
+    vuln_result = make_vuln(
+        status="scanned",
+        total=1,
+        by_severity={
+            "Critical": 1, "High": 0, "Medium": 0,
+            "Low": 0, "Negligible": 0, "Unknown": 0,
+        },
+        vulnerabilities=[finding],
+    )
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, vuln_result=vuln_result
+    )
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    vulns = data["repositories"][0]["vulnerabilities"]["vulnerabilities"]
+    assert vulns == [{
+        "id": "CVE-2021-1234",
+        "severity": "Critical",
+        "package": "openssl",
+        "version": "1.1.1",
+        "type": "deb",
+        "fixed_version": "1.1.1k",
+        "namespace": "debian:11",
+    }]
+
+
+def test_scan_no_vuln_skips_grype(tmp_path, monkeypatch):
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, vuln=False
+    )
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    repo = data["repositories"][0]
+    assert repo["status"] == "analyzed"
+    assert repo["vulnerabilities"]["status"] == "skipped"
+    assert data["summary"]["vulns_scanned"] == 0
+    assert data["summary"]["vulns_failed"] == 0
+    run.scan_vulnerabilities.assert_not_called()
+    run.get_grype_version.assert_not_called()
+
+
+def test_scan_vuln_failed_still_analyzed(tmp_path, monkeypatch):
+    failed_vuln = make_vuln(status="failed", total=0)
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, vuln_result=failed_vuln
+    )
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    repo = data["repositories"][0]
+    assert repo["status"] == "analyzed"
+    assert repo["vulnerabilities"]["status"] == "failed"
+    assert data["summary"]["analyzed"] == 1
+    assert data["summary"]["vulns_failed"] == 1
+    assert data["summary"]["vulns_scanned"] == 0
+    assert data["summary"]["vulnerabilities"] == 0
+
+
+def test_scan_vuln_runs_for_unsupported_language(tmp_path, monkeypatch):
+    run = run_scan(
+        tmp_path, [make_repo("repo-a", language=None)], monkeypatch
+    )
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    repo = data["repositories"][0]
+    assert repo["status"] == "unsupported"
+    # El escaneo de vulnerabilidades ocurre antes de validar el lenguaje.
+    assert repo["vulnerabilities"]["status"] == "scanned"
+    run.scan_vulnerabilities.assert_called_once()
 
 
 def test_scan_invalid_name_rejected(tmp_path, monkeypatch):
@@ -574,6 +833,224 @@ def test_sbom_command_iterdir_oserror(tmp_path, monkeypatch):
     )
 
     result = runner.invoke(app, ["sbom", "--repos-dir", str(workdir)])
+
+    assert result.exit_code != 0
+
+
+# ---------------------------------------------------------------------------
+# Comando `vuln`
+# ---------------------------------------------------------------------------
+
+def make_sbom_file(sbom_dir, name):
+    sbom_dir.mkdir(parents=True, exist_ok=True)
+    sbom_file = sbom_dir / f"{name}.cdx.json"
+    sbom_file.write_text('{"components": []}', encoding="utf-8")
+    return sbom_file
+
+
+def test_vuln_command_generates(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    sbom_dir = tmp_path / "sboms"
+    make_sbom_file(sbom_dir, "repo-a")
+    make_sbom_file(sbom_dir, "repo-b")
+    vuln_dir = tmp_path / "vulns"
+    out = tmp_path / "vuln-report.json"
+
+    monkeypatch.setattr("miner.cli.get_grype_version", Mock(return_value="0.87.0"))
+    scan_mock = Mock(
+        return_value=make_vuln(status="scanned", total=3)
+    )
+    monkeypatch.setattr("miner.cli.scan_vulnerabilities", scan_mock)
+
+    result = runner.invoke(
+        app,
+        [
+            "vuln",
+            "--sbom-dir", str(sbom_dir),
+            "--vuln-dir", str(vuln_dir),
+            "--output", str(out),
+        ],
+    )
+
+    assert result.exit_code == 0
+    data = json.loads(out.read_text())
+    assert data["summary"]["repositories"] == 2
+    assert data["summary"]["vulns_scanned"] == 2
+    assert data["summary"]["vulnerabilities"] == 6
+
+    repos = {r["name"]: r for r in data["repositories"]}
+    assert set(repos) == {"repo-a", "repo-b"}
+    assert repos["repo-a"]["status"] == "scanned"
+    assert repos["repo-a"]["vulnerabilities"]["total"] == 3
+
+    called = {
+        call.args[0].split(":", 1)[1].rsplit("/", 1)[-1]: call.args[1]
+        for call in scan_mock.call_args_list
+    }
+    assert called["repo-a.cdx.json"] == vuln_dir / "repo-a.grype.json"
+    assert called["repo-b.cdx.json"] == vuln_dir / "repo-b.grype.json"
+    for call in scan_mock.call_args_list:
+        assert call.args[0].startswith("sbom:")
+
+
+def test_vuln_command_uses_exact_sbom_target_and_output(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    sbom_dir = tmp_path / "sboms"
+    make_sbom_file(sbom_dir, "repo-a")
+    vuln_dir = tmp_path / "vulns"
+
+    monkeypatch.setattr("miner.cli.get_grype_version", Mock(return_value="0.87.0"))
+    scan_mock = Mock(return_value=make_vuln(status="scanned", total=1))
+    monkeypatch.setattr("miner.cli.scan_vulnerabilities", scan_mock)
+
+    result = runner.invoke(
+        app,
+        ["vuln", "--sbom-dir", str(sbom_dir), "--vuln-dir", str(vuln_dir)],
+    )
+
+    assert result.exit_code == 0
+    assert scan_mock.call_count == 1
+    assert scan_mock.call_args.args[0] == f"sbom:{sbom_dir / 'repo-a.cdx.json'}"
+    assert scan_mock.call_args.args[1] == vuln_dir / "repo-a.grype.json"
+
+
+def test_vuln_command_sorts_sboms_alphabetically(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    sbom_dir = tmp_path / "sboms"
+    for name in ("repo-c", "repo-a", "repo-b"):
+        make_sbom_file(sbom_dir, name)
+
+    monkeypatch.setattr("miner.cli.get_grype_version", Mock(return_value="0.87.0"))
+    scan_mock = Mock(return_value=make_vuln(status="scanned", total=1))
+    monkeypatch.setattr("miner.cli.scan_vulnerabilities", scan_mock)
+
+    out = tmp_path / "vuln-report.json"
+    result = runner.invoke(
+        app,
+        [
+            "vuln",
+            "--sbom-dir", str(sbom_dir),
+            "--vuln-dir", str(tmp_path / "vulns"),
+            "--output", str(out),
+        ],
+    )
+
+    assert result.exit_code == 0
+    called = [
+        Path(call.args[0].split(":", 1)[1]).name
+        for call in scan_mock.call_args_list
+    ]
+    assert called == ["repo-a.cdx.json", "repo-b.cdx.json", "repo-c.cdx.json"]
+    data = json.loads(out.read_text())
+    assert [r["name"] for r in data["repositories"]] == [
+        "repo-a", "repo-b", "repo-c"
+    ]
+
+
+def test_vuln_command_records_failed_scan(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    sbom_dir = tmp_path / "sboms"
+    make_sbom_file(sbom_dir, "repo-a")
+    make_sbom_file(sbom_dir, "repo-b")
+
+    monkeypatch.setattr("miner.cli.get_grype_version", Mock(return_value="0.87.0"))
+    scan_mock = Mock(side_effect=[
+        make_vuln(status="failed", total=0),
+        make_vuln(status="scanned", total=2),
+    ])
+    monkeypatch.setattr("miner.cli.scan_vulnerabilities", scan_mock)
+
+    out = tmp_path / "vuln-report.json"
+    result = runner.invoke(
+        app,
+        [
+            "vuln",
+            "--sbom-dir", str(sbom_dir),
+            "--vuln-dir", str(tmp_path / "vulns"),
+            "--output", str(out),
+        ],
+    )
+
+    assert result.exit_code == 0
+    data = json.loads(out.read_text())
+    summary = data["summary"]
+    assert summary["vulns_failed"] == 1
+    assert summary["vulns_scanned"] == 1
+    assert summary["vulnerabilities"] == 2
+    repos = {r["name"]: r for r in data["repositories"]}
+    assert repos["repo-a"]["vulnerabilities"]["status"] == "failed"
+    assert repos["repo-b"]["vulnerabilities"]["status"] == "scanned"
+
+
+def test_vuln_command_missing_grype_version_still_scans(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    sbom_dir = tmp_path / "sboms"
+    make_sbom_file(sbom_dir, "repo-a")
+
+    monkeypatch.setattr("miner.cli.get_grype_version", Mock(return_value=None))
+    scan_mock = Mock(return_value=make_vuln(status="scanned", total=1))
+    monkeypatch.setattr("miner.cli.scan_vulnerabilities", scan_mock)
+
+    result = runner.invoke(
+        app,
+        ["vuln", "--sbom-dir", str(sbom_dir), "--vuln-dir", str(tmp_path / "vulns")],
+    )
+
+    assert result.exit_code == 0
+    assert "Grype" in result.output
+    # La versión ausente se propaga como None sin impedir el escaneo.
+    assert scan_mock.call_args.args[2] is None
+
+
+def test_vuln_command_without_output_writes_nothing(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    sbom_dir = tmp_path / "sboms"
+    make_sbom_file(sbom_dir, "repo-a")
+
+    monkeypatch.setattr("miner.cli.get_grype_version", Mock(return_value="0.87.0"))
+    monkeypatch.setattr(
+        "miner.cli.scan_vulnerabilities",
+        Mock(return_value=make_vuln(status="no_vulnerabilities", total=0)),
+    )
+
+    result = runner.invoke(
+        app, ["vuln", "--sbom-dir", str(sbom_dir), "--vuln-dir", str(tmp_path / "vulns")]
+    )
+
+    assert result.exit_code == 0
+    assert not (tmp_path / "vuln-report.json").exists()
+
+
+def test_vuln_command_missing_sbom_dir(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    result = runner.invoke(
+        app, ["vuln", "--sbom-dir", str(tmp_path / "does-not-exist")]
+    )
+
+    assert result.exit_code != 0
+
+
+def test_vuln_command_no_sboms(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    sbom_dir = tmp_path / "sboms"
+    sbom_dir.mkdir()
+    (sbom_dir / "no-es-sbom.txt").write_text("x", encoding="utf-8")
+
+    result = runner.invoke(app, ["vuln", "--sbom-dir", str(sbom_dir)])
+
+    assert result.exit_code != 0
+
+
+def test_vuln_command_iterdir_oserror(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    sbom_dir = tmp_path / "sboms"
+    sbom_dir.mkdir()
+
+    monkeypatch.setattr(
+        "miner.cli.Path.iterdir", Mock(side_effect=OSError("boom"))
+    )
+
+    result = runner.invoke(app, ["vuln", "--sbom-dir", str(sbom_dir)])
 
     assert result.exit_code != 0
 

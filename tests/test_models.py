@@ -6,6 +6,8 @@ from miner.models import (
     RepositoryResult,
     SbomResult,
     Summary,
+    Vulnerability,
+    VulnResult,
 )
 
 
@@ -19,6 +21,24 @@ def test_summary_defaults():
     assert summary.sboms_generated == 0
     assert summary.sboms_failed == 0
     assert summary.components == 0
+    assert summary.vulns_scanned == 0
+    assert summary.vulns_failed == 0
+    assert summary.vulnerabilities == 0
+    assert summary.vulns_critical == 0
+    assert summary.vulns_high == 0
+    assert summary.vulns_medium == 0
+    assert summary.vulns_low == 0
+
+
+def test_vuln_result_defaults():
+    result = VulnResult()
+    assert result.status == "skipped"
+    assert result.total == 0
+    assert result.by_severity == {}
+    assert result.vulnerabilities == []
+    assert result.grype_version is None
+    assert result.generated_at is None
+    assert result.file is None
 
 
 def test_sbom_result_defaults():
@@ -40,8 +60,55 @@ def test_repository_result_defaults():
     assert repo.commit is None
     assert isinstance(repo.sbom, SbomResult)
     assert repo.sbom.status == "skipped"
+    assert isinstance(repo.vulnerabilities, VulnResult)
+    assert repo.vulnerabilities.status == "skipped"
     assert repo.languages == []
     assert repo.findings == []
+
+
+def test_repository_result_serializes_vulnerabilities():
+    vulnerability = Vulnerability(
+        id="CVE-2021-1234",
+        severity="High",
+        package="lodash",
+        version="4.17.20",
+        type="npm",
+        fixed_version="4.17.21",
+        namespace="nvd:cpe",
+    )
+    vuln_result = VulnResult(
+        status="scanned",
+        total=1,
+        by_severity={
+            "Critical": 0, "High": 1, "Medium": 0,
+            "Low": 0, "Negligible": 0, "Unknown": 0,
+        },
+        vulnerabilities=[vulnerability],
+        grype_version="0.87.0",
+        generated_at="2026-01-01T00:00:00+00:00",
+        file="vulns/test-repo.grype.json",
+    )
+    repo = RepositoryResult(
+        name="test-repo",
+        url="https://github.com/org/test-repo",
+        status="analyzed",
+        vulnerabilities=vuln_result,
+    )
+
+    data = json.loads(repo.model_dump_json())
+    assert data["vulnerabilities"]["status"] == "scanned"
+    assert data["vulnerabilities"]["total"] == 1
+    assert data["vulnerabilities"]["grype_version"] == "0.87.0"
+    assert data["vulnerabilities"]["file"] == "vulns/test-repo.grype.json"
+    assert data["vulnerabilities"]["vulnerabilities"] == [{
+        "id": "CVE-2021-1234",
+        "severity": "High",
+        "package": "lodash",
+        "version": "4.17.20",
+        "type": "npm",
+        "fixed_version": "4.17.21",
+        "namespace": "nvd:cpe",
+    }]
 
 
 def test_repository_result_serializes_new_fields():
