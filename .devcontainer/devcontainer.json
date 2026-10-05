@@ -1,0 +1,41 @@
+{
+  "name": "GitHub CodeQL Miner",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": {
+      "CODEQL_VERSION": "2.27.1",
+      "SYFT_VERSION": "1.51.0",
+      "GRYPE_VERSION": "0.120.0"
+    }
+  },
+  "remoteUser": "vscode",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "forwardPorts": [8888],
+  "containerEnv": {
+    "MPLBACKEND": "Agg"
+  },
+  "remoteEnv": {
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["tests"],
+        "python.analysis.extraPaths": ["src"],
+        "jupyter.notebookFileRoot": "${workspaceFolder}",
+        "jupyter.askForKernelRestart": false,
+        "files.eol": "\n",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}
