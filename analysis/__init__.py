@@ -5,6 +5,7 @@ Módulos principales:
 - ``loader``: carga y normalización tolerante de los reportes del Miner.
 - ``metrics``: métricas y observaciones sobre las vulnerabilidades y hallazgos.
 - ``contract``: contrato de salida (documento estructurado) para el Visualizer.
+- ``orchestrator``: orquestación end-to-end (Miner opcional → Analyzer → Visualizer).
 """
 
-__all__ = ["loader", "metrics", "contract"]
+__all__ = ["loader", "metrics", "contract", "orchestrator"]
