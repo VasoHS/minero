@@ -149,6 +149,9 @@ def _print_error_section(progress: VulnProgress) -> None:
 @app.command()
 def scan(organization: str = typer.Option(..., help="Nombre de la organización de GitHub"),
          output: Path = typer.Option(..., help="Archivo JSON de salida"),
+         limit: Optional[int] = typer.Option(
+             None, "--limit",
+             help="Máximo de repositorios a analizar: toma los primeros N tras ordenar alfabéticamente"),
          repos_dir: Path = typer.Option(DEFAULT_REPOS_DIR,
                                         help="Directorio donde se clonan los repositorios"),
          sbom_dir: Path = typer.Option(DEFAULT_SBOM_DIR,
@@ -168,6 +171,13 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
                                          help="Conservar los repositorios clonados al finalizar")):
     """Analiza los repositorios de una organización y genera un SBOM y un reporte de vulnerabilidades por repositorio."""
     
+    if limit is not None and limit < 0:
+        typer.secho(
+            "El límite de repositorios (--limit) no puede ser negativo.",
+            fg=typer.colors.RED
+        )
+        raise typer.Exit(code=1)
+    
     typer.echo(f"Iniciando escaneo para la organización: {organization}")
     
     try:
@@ -178,6 +188,14 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
     
     # Ordenar alfabéticamente para resultados reproducibles
     repos_data.sort(key=lambda r: (r.get("name") or "").lower())
+    
+    # Aplicar el límite opcional sobre la lista ya ordenada (primeros N).
+    if limit is not None and limit < len(repos_data):
+        total_repos = len(repos_data)
+        repos_data = repos_data[:limit]
+        typer.echo(
+            f"Límite aplicado: se procesarán {len(repos_data)} de {total_repos} repositorios."
+        )
     
     report = OrganizationReport(
         organization=organization,
