@@ -1,0 +1,9 @@
+type,severity,count
+github-action,Low,6
+java-archive,High,1
+java-archive,Low,1
+pod,Critical,1
+python,Critical,13
+python,High,130
+python,Medium,108
+python,Low,20

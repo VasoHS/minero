@@ -1,0 +1,4875 @@
+{
+  "schema_version": "1.1",
+  "meta": {
+    "organization": "tensorflow",
+    "source": "results-sbom.json + results-vuln.json",
+    "source_kind": "merged",
+    "generated_at": "2026-10-05T12:00:00+00:00",
+    "repositories": 23,
+    "warnings": []
+  },
+  "summary": {
+    "repositories": 23,
+    "analyzed": 0,
+    "failed": 0,
+    "unsupported": 0,
+    "findings": 0,
+    "sboms_generated": 23,
+    "sboms_failed": 0,
+    "components": 1614,
+    "vulns_scanned": 23,
+    "vulns_failed": 0,
+    "vulnerabilities": 280,
+    "vulns_critical": 14,
+    "vulns_high": 131,
+    "vulns_medium": 108,
+    "vulns_low": 27
+  },
+  "coverage": {
+    "repositories_total": 23,
+    "by_repo_status": {
+      "scanned": 23
+    },
+    "by_vuln_status": {
+      "no_vulnerabilities": 10,
+      "scanned": 13
+    },
+    "by_sbom_status": {
+      "generated": 21,
+      "no_components": 2
+    },
+    "unsupported": 0,
+    "repo_failed": 0,
+    "vuln_failed": 0,
+    "sbom_failed": 0,
+    "coverage_ratio": 1.0,
+    "code_coverage_ratio": 0.0,
+    "sbom_coverage_ratio": 1.0,
+    "vuln_coverage_ratio": 1.0,
+    "warnings": []
+  },
+  "datasets": {
+    "repositories": [
+      {
+        "repo": "addons",
+        "full_name": "tensorflow/addons",
+        "url": "https://github.com/tensorflow/addons.git",
+        "commit": "d208d752e98c310280938efa939117bf635a60a8",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 20,
+        "vuln_status": "scanned",
+        "vuln_total": 1,
+        "findings_total": 0
+      },
+      {
+        "repo": "community",
+        "full_name": "tensorflow/community",
+        "url": "https://github.com/tensorflow/community.git",
+        "commit": "185530183d8f3734795beb520d02b8265c230a12",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "no_components",
+        "sbom_components": 0,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      },
+      {
+        "repo": "docs",
+        "full_name": "tensorflow/docs",
+        "url": "https://github.com/tensorflow/docs.git",
+        "commit": "53f7db427b7766dfad0ef1fc1f46852dc7ab79af",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 7,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      },
+      {
+        "repo": "examples",
+        "full_name": "tensorflow/examples",
+        "url": "https://github.com/tensorflow/examples.git",
+        "commit": "bda6a8741864b7bc934345c47c25f8e17fd67bdc",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 159,
+        "vuln_status": "scanned",
+        "vuln_total": 128,
+        "findings_total": 0
+      },
+      {
+        "repo": "fairness-indicators",
+        "full_name": "tensorflow/fairness-indicators",
+        "url": "https://github.com/tensorflow/fairness-indicators.git",
+        "commit": "b747546137ccd3c26b29f25f280da45a13b644a6",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 19,
+        "vuln_status": "scanned",
+        "vuln_total": 1,
+        "findings_total": 0
+      },
+      {
+        "repo": "gnn",
+        "full_name": "tensorflow/gnn",
+        "url": "https://github.com/tensorflow/gnn.git",
+        "commit": "7fd24610dd904d8041cbc1cfb14eab21b5757f08",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 5,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      },
+      {
+        "repo": "java",
+        "full_name": "tensorflow/java",
+        "url": "https://github.com/tensorflow/java.git",
+        "commit": "58a19434ad41d6e62c944e2f7f2a974bf170bff4",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 33,
+        "vuln_status": "scanned",
+        "vuln_total": 2,
+        "findings_total": 0
+      },
+      {
+        "repo": "mlir-hlo",
+        "full_name": "tensorflow/mlir-hlo",
+        "url": "https://github.com/tensorflow/mlir-hlo.git",
+        "commit": "74b9d25f5cb824269cabfd2d4640a050c3fe6728",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "no_components",
+        "sbom_components": 0,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      },
+      {
+        "repo": "model-analysis",
+        "full_name": "tensorflow/model-analysis",
+        "url": "https://github.com/tensorflow/model-analysis.git",
+        "commit": "5df83b6cbb6712e6b48a41af2a72559745d7f6c9",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 17,
+        "vuln_status": "scanned",
+        "vuln_total": 1,
+        "findings_total": 0
+      },
+      {
+        "repo": "models",
+        "full_name": "tensorflow/models",
+        "url": "https://github.com/tensorflow/models.git",
+        "commit": "930a6f98f7debcc32ca7afbca4a176dbf9211e03",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 42,
+        "vuln_status": "scanned",
+        "vuln_total": 28,
+        "findings_total": 0
+      },
+      {
+        "repo": "neural-structured-learning",
+        "full_name": "tensorflow/neural-structured-learning",
+        "url": "https://github.com/tensorflow/neural-structured-learning.git",
+        "commit": "82eb5d4f16c138bc7eb04ea648997ebd97f0d2b4",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 4,
+        "vuln_status": "scanned",
+        "vuln_total": 1,
+        "findings_total": 0
+      },
+      {
+        "repo": "playground",
+        "full_name": "tensorflow/playground",
+        "url": "https://github.com/tensorflow/playground.git",
+        "commit": "02469bd3751764b20486015d4202b792af5362a6",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 5,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      },
+      {
+        "repo": "privacy",
+        "full_name": "tensorflow/privacy",
+        "url": "https://github.com/tensorflow/privacy.git",
+        "commit": "c5a3633e84f1a296c7e362e7c1926aead4063359",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 4,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      },
+      {
+        "repo": "probability",
+        "full_name": "tensorflow/probability",
+        "url": "https://github.com/tensorflow/probability.git",
+        "commit": "d135a50f176224d654c62149be8cccc0886c0ed7",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 12,
+        "vuln_status": "scanned",
+        "vuln_total": 1,
+        "findings_total": 0
+      },
+      {
+        "repo": "recommenders",
+        "full_name": "tensorflow/recommenders",
+        "url": "https://github.com/tensorflow/recommenders.git",
+        "commit": "7f3e76f277494ae2dfe5d0c6f7a26aea35d6cfc1",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 9,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      },
+      {
+        "repo": "recommenders-addons",
+        "full_name": "tensorflow/recommenders-addons",
+        "url": "https://github.com/tensorflow/recommenders-addons.git",
+        "commit": "b3bc3d4691a9421dbe837ee9708c504217fdc8f9",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 18,
+        "vuln_status": "scanned",
+        "vuln_total": 1,
+        "findings_total": 0
+      },
+      {
+        "repo": "rust",
+        "full_name": "tensorflow/rust",
+        "url": "https://github.com/tensorflow/rust.git",
+        "commit": "1ddf5a348037402f87d67c076bf3019857eae05f",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 7,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      },
+      {
+        "repo": "serving",
+        "full_name": "tensorflow/serving",
+        "url": "https://github.com/tensorflow/serving.git",
+        "commit": "40f3fb1b022fa54c4d0ae29544532af65cc392de",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 2,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      },
+      {
+        "repo": "tensor2tensor",
+        "full_name": "tensorflow/tensor2tensor",
+        "url": "https://github.com/tensorflow/tensor2tensor.git",
+        "commit": "bafdc1b67730430d38d6ab802cbd51f9d053ba2e",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 3,
+        "vuln_status": "scanned",
+        "vuln_total": 52,
+        "findings_total": 0
+      },
+      {
+        "repo": "tensorflow",
+        "full_name": "tensorflow/tensorflow",
+        "url": "https://github.com/tensorflow/tensorflow.git",
+        "commit": "f27cff93ab3ed3d24e428050acd9b7d88f980fb7",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 803,
+        "vuln_status": "scanned",
+        "vuln_total": 6,
+        "findings_total": 0
+      },
+      {
+        "repo": "tflite-micro",
+        "full_name": "tensorflow/tflite-micro",
+        "url": "https://github.com/tensorflow/tflite-micro.git",
+        "commit": "3f787dcff5c4693f3436a65aff1b268538a07bdb",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 148,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      },
+      {
+        "repo": "tfx",
+        "full_name": "tensorflow/tfx",
+        "url": "https://github.com/tensorflow/tfx.git",
+        "commit": "19225645c7907ef052ca8d5d893bba27fefe7a56",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 281,
+        "vuln_status": "scanned",
+        "vuln_total": 57,
+        "findings_total": 0
+      },
+      {
+        "repo": "transform",
+        "full_name": "tensorflow/transform",
+        "url": "https://github.com/tensorflow/transform.git",
+        "commit": "deefef17a96947c9703ff82e3b58abc0052c61b3",
+        "status": "scanned",
+        "languages": [],
+        "sbom_status": "generated",
+        "sbom_components": 16,
+        "vuln_status": "scanned",
+        "vuln_total": 1,
+        "findings_total": 0
+      }
+    ],
+    "findings": [],
+    "vulnerabilities": [
+      {
+        "repo": "addons",
+        "id": "GHSA-vxmw-7h4f-hqxh",
+        "severity": "Low",
+        "package": "pypa/gh-action-pypi-publish",
+        "version": "v1.1.0",
+        "type": "github-action",
+        "fixed_version": "1.13.0",
+        "namespace": "github:language:github-action"
+      },
+      {
+        "repo": "examples",
+        "id": "CVE-2021-40531",
+        "severity": "Critical",
+        "package": "Sketch",
+        "version": "2.0",
+        "type": "pod",
+        "fixed_version": "75",
+        "namespace": "nvd:cpe"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-x4wf-678h-2pmq",
+        "severity": "Critical",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "2.13.1rc0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-3f63-hfp8-52jq",
+        "severity": "Critical",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "10.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-gw97-ff7c-9v96",
+        "severity": "Critical",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-gw97-ff7c-9v96",
+        "severity": "Critical",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-36fq-jgmw-4r9c",
+        "severity": "High",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.11.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-4f3f-g24h-fr8m",
+        "severity": "High",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.13.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-5gwj-m78q-7pq3",
+        "severity": "High",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.12.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-hjqc-jx6g-rwp9",
+        "severity": "High",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.12.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-hqp4-2352-xf5r",
+        "severity": "High",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.14.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-v2w2-w228-c444",
+        "severity": "High",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.12.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-44wm-f244-xhp3",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "10.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-45hq-cxwh-f6vc",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-5x94-69rx-g8h2",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-62p4-gmf7-7g93",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-6r8x-57c9-28j4",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-8v84-f9pq-wr9x",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-9hw9-ch79-4vh6",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-jjj6-mw9f-p565",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-phj9-mv4w-65pm",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-vjc4-5qp5-m44j",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-xj96-63gp-2gmr",
+        "severity": "High",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-49rq-hwc3-x77w",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-49rq-hwc3-x77w",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-558h-mq8x-7q9g",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-558h-mq8x-7q9g",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-5w96-866f-6rm8",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-5w96-866f-6rm8",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-647v-r7qq-24fh",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-647v-r7qq-24fh",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-64jg-wjww-7c5w",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-64jg-wjww-7c5w",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-68v3-g9cm-rmm6",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-68v3-g9cm-rmm6",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-6hg6-5c2q-7rcr",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-6hg6-5c2q-7rcr",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-6wfh-89q8-44jq",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-6wfh-89q8-44jq",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-7jvm-xxmr-v5cw",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-7jvm-xxmr-v5cw",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-7x4v-9gxg-9hwj",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-7x4v-9gxg-9hwj",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-93vr-9q9m-pj8p",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-93vr-9q9m-pj8p",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-94mm-g2mv-8p7r",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-94mm-g2mv-8p7r",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-cg88-rpvp-cjv5",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-cg88-rpvp-cjv5",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-f49c-87jh-g47q",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-f49c-87jh-g47q",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-f637-vh3r-vfh2",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-f637-vh3r-vfh2",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-gf97-q72m-7579",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-gf97-q72m-7579",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-gjh7-xx4r-x345",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.12.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-gjh7-xx4r-x345",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.12.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-h6q3-vv32-2cq5",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-h6q3-vv32-2cq5",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-j5w9-hmfh-4cr6",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-j5w9-hmfh-4cr6",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-qjqc-vqcf-5qvj",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-qjqc-vqcf-5qvj",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-rcf8-g8jv-vg6p",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-rcf8-g8jv-vg6p",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-xvwp-h6jv-7472",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-xvwp-h6jv-7472",
+        "severity": "High",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-w69q-w4h4-2fx8",
+        "severity": "Medium",
+        "package": "dm-reverb",
+        "version": "0.5.0",
+        "type": "python",
+        "fixed_version": null,
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-26c4-7vv6-867j",
+        "severity": "Medium",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.12.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-74m6-m3xx-3vmj",
+        "severity": "Medium",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.15.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-cjgq-5qmw-rcj6",
+        "severity": "Medium",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": null,
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-gh82-f9x8-5frx",
+        "severity": "Medium",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.12.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-m8wh-29wm-52mv",
+        "severity": "Medium",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.12.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-mq84-hjqx-cwf2",
+        "severity": "Medium",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.12.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-4x4j-2g7c-83w6",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-fj7v-r99m-22gq",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-r73j-pqj5-w3x7",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-wjx4-4jcj-g98j",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "10.0.1",
+        "type": "python",
+        "fixed_version": "12.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-27rc-728f-x5w2",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-27rc-728f-x5w2",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-368v-7v32-52fx",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-368v-7v32-52fx",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-54pp-c6pp-7fpx",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-54pp-c6pp-7fpx",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-66vq-54fq-6jvv",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-66vq-54fq-6jvv",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-67pf-62xr-q35m",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-67pf-62xr-q35m",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-6x99-gv2v-q76v",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-6x99-gv2v-q76v",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-762h-vpvw-3rcx",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.7.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-8fvv-46hw-vpg3",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-8fvv-46hw-vpg3",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-8w5g-3wcv-9g2j",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-8w5g-3wcv-9g2j",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-f2w8-jw48-fr7j",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-f2w8-jw48-fr7j",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-fqm2-gh8w-gr68",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-fqm2-gh8w-gr68",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-frqp-wp83-qggv",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-frqp-wp83-qggv",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-fxgc-95xx-grvq",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-fxgc-95xx-grvq",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.11.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-g9fm-r5mm-rf9f",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-g9fm-r5mm-rf9f",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-gq2j-cr96-gvqx",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-gq2j-cr96-gvqx",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-h246-cgh4-7475",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-h246-cgh4-7475",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-hq7g-wwwp-q46h",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-hq7g-wwwp-q46h",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-jq6x-99hj-q636",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-jq6x-99hj-q636",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-mv77-9g28-cwg3",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-mv77-9g28-cwg3",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-pf36-r9c6-h97j",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-pf36-r9c6-h97j",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-rjx6-v474-2ch9",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-rjx6-v474-2ch9",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-rmg2-f698-wq35",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-rmg2-f698-wq35",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-xxcj-rhqg-m46g",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-xxcj-rhqg-m46g",
+        "severity": "Medium",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-58hv-7753-xmfq",
+        "severity": "Low",
+        "package": "keras",
+        "version": "2.2.0",
+        "type": "python",
+        "fixed_version": "3.12.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-cqvq-fvhr-v6hc",
+        "severity": "Low",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-cqvq-fvhr-v6hc",
+        "severity": "Low",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-xf83-q765-xm6m",
+        "severity": "Low",
+        "package": "tensorflow",
+        "version": "2.7.2",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-xf83-q765-xm6m",
+        "severity": "Low",
+        "package": "tensorflow",
+        "version": "2.9.1",
+        "type": "python",
+        "fixed_version": "2.9.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "examples",
+        "id": "GHSA-g7vv-2v7x-gj9p",
+        "severity": "Low",
+        "package": "tqdm",
+        "version": "4.64.0",
+        "type": "python",
+        "fixed_version": "4.66.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "fairness-indicators",
+        "id": "GHSA-vxmw-7h4f-hqxh",
+        "severity": "Low",
+        "package": "pypa/gh-action-pypi-publish",
+        "version": "release/v1.12",
+        "type": "github-action",
+        "fixed_version": "1.13.0",
+        "namespace": "github:language:github-action"
+      },
+      {
+        "repo": "java",
+        "id": "GHSA-jmp9-x22r-554x",
+        "severity": "High",
+        "package": "spring-core",
+        "version": "5.3.32",
+        "type": "java-archive",
+        "fixed_version": null,
+        "namespace": "github:language:java"
+      },
+      {
+        "repo": "java",
+        "id": "GHSA-659m-px2c-25wj",
+        "severity": "Low",
+        "package": "spring-core",
+        "version": "5.3.32",
+        "type": "java-archive",
+        "fixed_version": null,
+        "namespace": "github:language:java"
+      },
+      {
+        "repo": "model-analysis",
+        "id": "GHSA-vxmw-7h4f-hqxh",
+        "severity": "Low",
+        "package": "pypa/gh-action-pypi-publish",
+        "version": "v1",
+        "type": "github-action",
+        "fixed_version": "1.13.0",
+        "namespace": "github:language:github-action"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-qr4w-53vh-m672",
+        "severity": "High",
+        "package": "opencv-python",
+        "version": "4.2.0.32",
+        "type": "python",
+        "fixed_version": "4.8.1.78",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-45hq-cxwh-f6vc",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-5x94-69rx-g8h2",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-62p4-gmf7-7g93",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-6r8x-57c9-28j4",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-8v84-f9pq-wr9x",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-9hw9-ch79-4vh6",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-cfh3-3jmp-rvhc",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.1.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-jjj6-mw9f-p565",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-phj9-mv4w-65pm",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-pwv6-vv43-88gr",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-vjc4-5qp5-m44j",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-whj4-6x5x-4v2j",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-xj96-63gp-2gmr",
+        "severity": "High",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-4x4j-2g7c-83w6",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-5xmw-vc9v-4wf2",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-fj7v-r99m-22gq",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-pg7v-jwj7-p798",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-r73j-pqj5-w3x7",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-wjx4-4jcj-g98j",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "12.0.0",
+        "type": "python",
+        "fixed_version": "12.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-887c-mr87-cxwp",
+        "severity": "Medium",
+        "package": "torch",
+        "version": "2.6.0+cu124",
+        "type": "python",
+        "fixed_version": "2.8.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-f4hp-rmr7-r7v8",
+        "severity": "Medium",
+        "package": "torch",
+        "version": "2.6.0+cu124",
+        "type": "python",
+        "fixed_version": null,
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-vgrw-7cvw-pwgx",
+        "severity": "Medium",
+        "package": "torch",
+        "version": "2.6.0+cu124",
+        "type": "python",
+        "fixed_version": "2.9.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-3749-ghw9-m3mg",
+        "severity": "Low",
+        "package": "torch",
+        "version": "2.6.0+cu124",
+        "type": "python",
+        "fixed_version": "2.7.1-rc1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-c678-jfcj-6jmf",
+        "severity": "Low",
+        "package": "torch",
+        "version": "2.6.0+cu124",
+        "type": "python",
+        "fixed_version": null,
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-qfhq-4f3w-5fph",
+        "severity": "Low",
+        "package": "torch",
+        "version": "2.6.0+cu124",
+        "type": "python",
+        "fixed_version": "2.10.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-rrmf-rvhw-rf47",
+        "severity": "Low",
+        "package": "torch",
+        "version": "2.6.0+cu124",
+        "type": "python",
+        "fixed_version": "2.13.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "models",
+        "id": "GHSA-x3gm-94wq-g975",
+        "severity": "Low",
+        "package": "torch",
+        "version": "2.6.0+cu124",
+        "type": "python",
+        "fixed_version": null,
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "neural-structured-learning",
+        "id": "GHSA-gjh7-xx4r-x345",
+        "severity": "High",
+        "package": "tensorflow-gpu",
+        "version": "2.12.0",
+        "type": "python",
+        "fixed_version": "2.12.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "probability",
+        "id": "GHSA-g7vv-2v7x-gj9p",
+        "severity": "Low",
+        "package": "tqdm",
+        "version": "4.66",
+        "type": "python",
+        "fixed_version": "4.66.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "recommenders-addons",
+        "id": "GHSA-vxmw-7h4f-hqxh",
+        "severity": "Low",
+        "package": "pypa/gh-action-pypi-publish",
+        "version": "v1.1.0",
+        "type": "github-action",
+        "fixed_version": "1.13.0",
+        "namespace": "github:language:github-action"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-3f63-hfp8-52jq",
+        "severity": "Critical",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "10.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-43fq-w8qq-v88h",
+        "severity": "Critical",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "7.1.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-57h3-9rgr-c24m",
+        "severity": "Critical",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-7534-mm45-c74v",
+        "severity": "Critical",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-8vj2-vxx3-667w",
+        "severity": "Critical",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "9.0.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-p49h-hjvm-jg3h",
+        "severity": "Critical",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "6.2.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-r7rm-8j6h-r933",
+        "severity": "Critical",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "6.2.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-vcqg-3p29-xw73",
+        "severity": "Critical",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "6.2.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-3wvg-mj6g-m9cv",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-3xv8-3j54-hgrp",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "7.1.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-44wm-f244-xhp3",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "10.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-45hq-cxwh-f6vc",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-5gm3-px64-rw72",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "6.2.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-5x94-69rx-g8h2",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-62p4-gmf7-7g93",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-6r8x-57c9-28j4",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-77gc-v2xv-rvvh",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-7r7m-5h27-29hp",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-8843-m7mw-mxqm",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "7.1.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-8ghj-p4vj-mr35",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "10.0.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-8v84-f9pq-wr9x",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-8xjq-8fcg-g5hw",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-95q3-8gr9-gm8w",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-9hw9-ch79-4vh6",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-9j59-75qj-795w",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "9.0.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-cqhg-xjhh-p8hf",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "7.1.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-f4w8-cv6p-x6r5",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-f5g8-5qq7-938w",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-g6rj-rv7j-xwp4",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-hj69-c76v-86wr",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "6.2.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-j7hp-h8jx-5ppr",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "10.0.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-j7mj-748x-7p78",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "6.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-jjj6-mw9f-p565",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-m2vv-5vj5-2hm7",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "9.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-mvg9-xffr-p774",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-p43w-g3c5-g5mq",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-phj9-mv4w-65pm",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-q5hq-fp76-qmrc",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-rwv7-3v45-hg29",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-vj42-xq3r-hr3r",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "7.1.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-vqcj-wrf2-7v73",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-xj96-63gp-2gmr",
+        "severity": "High",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-4x4j-2g7c-83w6",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-9hx2-hgq2-2g4f",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-hf64-x4gq-p99h",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-hjfx-8p6c-g7gx",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-jgpv-4h4c-xhw3",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "8.1.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-pw3c-h7wp-cvhx",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "9.0.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-r73j-pqj5-w3x7",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-wjx4-4jcj-g98j",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "12.2.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-xrcv-f9gm-v42c",
+        "severity": "Medium",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "9.0.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensor2tensor",
+        "id": "GHSA-4fx9-vc88-q2xc",
+        "severity": "Low",
+        "package": "pillow",
+        "version": "5.1.0",
+        "type": "python",
+        "fixed_version": "9.0.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensorflow",
+        "id": "GHSA-8988-9cw3-xx77",
+        "severity": "High",
+        "package": "urllib3",
+        "version": "2.7.0",
+        "type": "python",
+        "fixed_version": "2.8.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensorflow",
+        "id": "GHSA-vxq7-64xx-v4gw",
+        "severity": "High",
+        "package": "urllib3",
+        "version": "2.7.0",
+        "type": "python",
+        "fixed_version": "2.8.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensorflow",
+        "id": "GHSA-8rrh-rw8j-w5fx",
+        "severity": "High",
+        "package": "wheel",
+        "version": "0.41.3",
+        "type": "python",
+        "fixed_version": "0.46.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensorflow",
+        "id": "GHSA-5wmx-573v-2qwq",
+        "severity": "Medium",
+        "package": "markdown",
+        "version": "3.8",
+        "type": "python",
+        "fixed_version": "3.8.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensorflow",
+        "id": "GHSA-gc5v-m9x4-r6x2",
+        "severity": "Medium",
+        "package": "requests",
+        "version": "2.32.4",
+        "type": "python",
+        "fixed_version": "2.33.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tensorflow",
+        "id": "GHSA-gh4c-6fx4-qh6g",
+        "severity": "Medium",
+        "package": "urllib3",
+        "version": "2.7.0",
+        "type": "python",
+        "fixed_version": "2.8.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-82r6-8w77-94w6",
+        "severity": "Critical",
+        "package": "anyio",
+        "version": "4.13.0",
+        "type": "python",
+        "fixed_version": "4.14.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-cq5v-8q36-5273",
+        "severity": "High",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-h95x-26f3-88hr",
+        "severity": "High",
+        "package": "js2py",
+        "version": "0.74",
+        "type": "python",
+        "fixed_version": null,
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-vfmq-68hx-4jfw",
+        "severity": "High",
+        "package": "lxml",
+        "version": "5.3.0",
+        "type": "python",
+        "fixed_version": "6.1.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-2h4p-vjrc-8xpq",
+        "severity": "High",
+        "package": "mako",
+        "version": "1.3.5",
+        "type": "python",
+        "fixed_version": "1.3.12",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-v92g-xgxw-vvmm",
+        "severity": "High",
+        "package": "mako",
+        "version": "1.3.5",
+        "type": "python",
+        "fixed_version": "1.3.11",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-4j32-57v6-6g45",
+        "severity": "High",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-8mp2-v27r-99xp",
+        "severity": "High",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.2.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-c8j7-8cv4-2xmq",
+        "severity": "High",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-ffq3-xpv3-j92q",
+        "severity": "High",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-qcq2-496w-v96p",
+        "severity": "High",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-6v7p-g79w-8964",
+        "severity": "High",
+        "package": "msgpack",
+        "version": "1.1.0",
+        "type": "python",
+        "fixed_version": "1.2.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-rgxp-2hwp-jwgg",
+        "severity": "High",
+        "package": "pyarrow",
+        "version": "18.1.0",
+        "type": "python",
+        "fixed_version": "23.0.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-2wc2-fm75-p42x",
+        "severity": "High",
+        "package": "soupsieve",
+        "version": "2.6",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-836r-79rf-4m37",
+        "severity": "High",
+        "package": "soupsieve",
+        "version": "2.6",
+        "type": "python",
+        "fixed_version": "2.8.4",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-94p9-xgh2-xp45",
+        "severity": "High",
+        "package": "virtualenv",
+        "version": "20.26.6",
+        "type": "python",
+        "fixed_version": "21.7.12",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-p58f-9548-mpm2",
+        "severity": "High",
+        "package": "virtualenv",
+        "version": "20.26.6",
+        "type": "python",
+        "fixed_version": "21.7.13",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-x78j-v8h9-3j2q",
+        "severity": "High",
+        "package": "virtualenv",
+        "version": "20.26.6",
+        "type": "python",
+        "fixed_version": "21.7.12",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-4fvr-rgm6-gqmc",
+        "severity": "Medium",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-63hw-fmq6-xxg2",
+        "severity": "Medium",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-g3cq-j2xw-wf74",
+        "severity": "Medium",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-hg6j-4rv6-33pg",
+        "severity": "Medium",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-hpj7-wq8m-9hgp",
+        "severity": "Medium",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-jg22-mg44-37j8",
+        "severity": "Medium",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-mfx4-hv73-q22v",
+        "severity": "Medium",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-mq44-7p77-q5h7",
+        "severity": "Medium",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-xcgm-r5h9-7989",
+        "severity": "Medium",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-5p39-cfhj-2xmp",
+        "severity": "Medium",
+        "package": "anyio",
+        "version": "4.13.0",
+        "type": "python",
+        "fixed_version": "4.14.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-gj48-438w-jh9v",
+        "severity": "Medium",
+        "package": "bleach",
+        "version": "6.1.0",
+        "type": "python",
+        "fixed_version": "6.4.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-qmgc-5h2g-mvrw",
+        "severity": "Medium",
+        "package": "filelock",
+        "version": "3.16.1",
+        "type": "python",
+        "fixed_version": "3.20.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-w853-jp5j-5j7f",
+        "severity": "Medium",
+        "package": "filelock",
+        "version": "3.16.1",
+        "type": "python",
+        "fixed_version": "3.20.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-65pc-fj4g-8rjx",
+        "severity": "Medium",
+        "package": "idna",
+        "version": "3.7",
+        "type": "python",
+        "fixed_version": "3.15",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-428g-f7cq-pgp5",
+        "severity": "Medium",
+        "package": "marshmallow",
+        "version": "3.22.0",
+        "type": "python",
+        "fixed_version": "3.26.2",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-2hm2-hc3v-44h9",
+        "severity": "Medium",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-58cw-g322-p94v",
+        "severity": "Medium",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.2.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-8c25-4j27-2rv3",
+        "severity": "Medium",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-8g87-j6q8-g93x",
+        "severity": "Medium",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": null,
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-8mpj-m6qm-5qr8",
+        "severity": "Medium",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-g97x-gvcm-x72h",
+        "severity": "Medium",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-qfrw-5rxm-mhh2",
+        "severity": "Medium",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-r4rv-85jg-w4mf",
+        "severity": "Medium",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.3.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-v87v-83h2-53w7",
+        "severity": "Medium",
+        "package": "mistune",
+        "version": "3.0.2",
+        "type": "python",
+        "fixed_version": "3.2.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-hj66-6f7g-4r5v",
+        "severity": "Medium",
+        "package": "oauthlib",
+        "version": "3.2.2",
+        "type": "python",
+        "fixed_version": "4.0.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-xpv3-w29h-x7cv",
+        "severity": "Medium",
+        "package": "oauthlib",
+        "version": "3.2.2",
+        "type": "python",
+        "fixed_version": "4.0.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-6w46-j5rx-g56g",
+        "severity": "Medium",
+        "package": "pytest",
+        "version": "8.0.0",
+        "type": "python",
+        "fixed_version": "9.0.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-gjv8-xp57-g29c",
+        "severity": "Medium",
+        "package": "soupsieve",
+        "version": "2.6",
+        "type": "python",
+        "fixed_version": "2.9.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-j934-xhv5-fg8f",
+        "severity": "Medium",
+        "package": "soupsieve",
+        "version": "2.6",
+        "type": "python",
+        "fixed_version": "2.9.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-597g-3phw-6986",
+        "severity": "Medium",
+        "package": "virtualenv",
+        "version": "20.26.6",
+        "type": "python",
+        "fixed_version": "20.36.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-9h9j-4vrj-gf7g",
+        "severity": "Medium",
+        "package": "virtualenv",
+        "version": "20.26.6",
+        "type": "python",
+        "fixed_version": "21.7.11",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-2fqr-mr3j-6wp8",
+        "severity": "Low",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-4m7w-qmgq-4wj5",
+        "severity": "Low",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-9x8q-7h8h-wcw9",
+        "severity": "Low",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.1",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-m6qw-4cw2-hm4m",
+        "severity": "Low",
+        "package": "aiohttp",
+        "version": "3.13.5",
+        "type": "python",
+        "fixed_version": "3.14.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-8rfp-98v4-mmr6",
+        "severity": "Low",
+        "package": "bleach",
+        "version": "6.1.0",
+        "type": "python",
+        "fixed_version": "6.4.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-68rp-wp8r-4726",
+        "severity": "Low",
+        "package": "flask",
+        "version": "2.2.5",
+        "type": "python",
+        "fixed_version": "3.1.3",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-5239-wwwm-4pmq",
+        "severity": "Low",
+        "package": "pygments",
+        "version": "2.19.1",
+        "type": "python",
+        "fixed_version": "2.20.0",
+        "namespace": "github:language:python"
+      },
+      {
+        "repo": "tfx",
+        "id": "GHSA-vxmw-7h4f-hqxh",
+        "severity": "Low",
+        "package": "pypa/gh-action-pypi-publish",
+        "version": "v1",
+        "type": "github-action",
+        "fixed_version": "1.13.0",
+        "namespace": "github:language:github-action"
+      },
+      {
+        "repo": "transform",
+        "id": "GHSA-vxmw-7h4f-hqxh",
+        "severity": "Low",
+        "package": "pypa/gh-action-pypi-publish",
+        "version": "v1",
+        "type": "github-action",
+        "fixed_version": "1.13.0",
+        "namespace": "github:language:github-action"
+      }
+    ],
+    "severity_distribution": [
+      {
+        "severity": "Critical",
+        "count": 14
+      },
+      {
+        "severity": "High",
+        "count": 131
+      },
+      {
+        "severity": "Medium",
+        "count": 108
+      },
+      {
+        "severity": "Low",
+        "count": 27
+      },
+      {
+        "severity": "Negligible",
+        "count": 0
+      },
+      {
+        "severity": "Unknown",
+        "count": 0
+      }
+    ],
+    "severity_by_repo": [
+      {
+        "repo": "addons",
+        "severity": "Low",
+        "count": 1
+      },
+      {
+        "repo": "examples",
+        "severity": "Critical",
+        "count": 5
+      },
+      {
+        "repo": "examples",
+        "severity": "High",
+        "count": 61
+      },
+      {
+        "repo": "examples",
+        "severity": "Medium",
+        "count": 56
+      },
+      {
+        "repo": "examples",
+        "severity": "Low",
+        "count": 6
+      },
+      {
+        "repo": "fairness-indicators",
+        "severity": "Low",
+        "count": 1
+      },
+      {
+        "repo": "java",
+        "severity": "High",
+        "count": 1
+      },
+      {
+        "repo": "java",
+        "severity": "Low",
+        "count": 1
+      },
+      {
+        "repo": "model-analysis",
+        "severity": "Low",
+        "count": 1
+      },
+      {
+        "repo": "models",
+        "severity": "High",
+        "count": 14
+      },
+      {
+        "repo": "models",
+        "severity": "Medium",
+        "count": 9
+      },
+      {
+        "repo": "models",
+        "severity": "Low",
+        "count": 5
+      },
+      {
+        "repo": "neural-structured-learning",
+        "severity": "High",
+        "count": 1
+      },
+      {
+        "repo": "probability",
+        "severity": "Low",
+        "count": 1
+      },
+      {
+        "repo": "recommenders-addons",
+        "severity": "Low",
+        "count": 1
+      },
+      {
+        "repo": "tensor2tensor",
+        "severity": "Critical",
+        "count": 8
+      },
+      {
+        "repo": "tensor2tensor",
+        "severity": "High",
+        "count": 34
+      },
+      {
+        "repo": "tensor2tensor",
+        "severity": "Medium",
+        "count": 9
+      },
+      {
+        "repo": "tensor2tensor",
+        "severity": "Low",
+        "count": 1
+      },
+      {
+        "repo": "tensorflow",
+        "severity": "High",
+        "count": 3
+      },
+      {
+        "repo": "tensorflow",
+        "severity": "Medium",
+        "count": 3
+      },
+      {
+        "repo": "tfx",
+        "severity": "Critical",
+        "count": 1
+      },
+      {
+        "repo": "tfx",
+        "severity": "High",
+        "count": 17
+      },
+      {
+        "repo": "tfx",
+        "severity": "Medium",
+        "count": 31
+      },
+      {
+        "repo": "tfx",
+        "severity": "Low",
+        "count": 8
+      },
+      {
+        "repo": "transform",
+        "severity": "Low",
+        "count": 1
+      }
+    ],
+    "top_rules": [],
+    "top_cves": [
+      {
+        "id": "GHSA-vxmw-7h4f-hqxh",
+        "severity": "Low",
+        "count": 6,
+        "repos_affected": 6
+      },
+      {
+        "id": "GHSA-45hq-cxwh-f6vc",
+        "severity": "High",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-4x4j-2g7c-83w6",
+        "severity": "Medium",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-5x94-69rx-g8h2",
+        "severity": "High",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-62p4-gmf7-7g93",
+        "severity": "High",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-6r8x-57c9-28j4",
+        "severity": "High",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-8v84-f9pq-wr9x",
+        "severity": "High",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-9hw9-ch79-4vh6",
+        "severity": "High",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-gjh7-xx4r-x345",
+        "severity": "High",
+        "count": 3,
+        "repos_affected": 2
+      },
+      {
+        "id": "GHSA-jjj6-mw9f-p565",
+        "severity": "High",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-phj9-mv4w-65pm",
+        "severity": "High",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-r73j-pqj5-w3x7",
+        "severity": "Medium",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-wjx4-4jcj-g98j",
+        "severity": "Medium",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-xj96-63gp-2gmr",
+        "severity": "High",
+        "count": 3,
+        "repos_affected": 3
+      },
+      {
+        "id": "GHSA-27rc-728f-x5w2",
+        "severity": "Medium",
+        "count": 2,
+        "repos_affected": 1
+      },
+      {
+        "id": "GHSA-368v-7v32-52fx",
+        "severity": "Medium",
+        "count": 2,
+        "repos_affected": 1
+      },
+      {
+        "id": "GHSA-3f63-hfp8-52jq",
+        "severity": "Critical",
+        "count": 2,
+        "repos_affected": 2
+      },
+      {
+        "id": "GHSA-44wm-f244-xhp3",
+        "severity": "High",
+        "count": 2,
+        "repos_affected": 2
+      },
+      {
+        "id": "GHSA-49rq-hwc3-x77w",
+        "severity": "High",
+        "count": 2,
+        "repos_affected": 1
+      },
+      {
+        "id": "GHSA-54pp-c6pp-7fpx",
+        "severity": "Medium",
+        "count": 2,
+        "repos_affected": 1
+      }
+    ],
+    "top_packages": [
+      {
+        "package": "tensorflow",
+        "count": 95,
+        "repos_affected": 1,
+        "worst_severity": "Critical"
+      },
+      {
+        "package": "pillow",
+        "count": 87,
+        "repos_affected": 3,
+        "worst_severity": "Critical"
+      },
+      {
+        "package": "aiohttp",
+        "count": 14,
+        "repos_affected": 1,
+        "worst_severity": "High"
+      },
+      {
+        "package": "keras",
+        "count": 14,
+        "repos_affected": 1,
+        "worst_severity": "Critical"
+      },
+      {
+        "package": "mistune",
+        "count": 14,
+        "repos_affected": 1,
+        "worst_severity": "High"
+      },
+      {
+        "package": "torch",
+        "count": 8,
+        "repos_affected": 1,
+        "worst_severity": "Medium"
+      },
+      {
+        "package": "pypa/gh-action-pypi-publish",
+        "count": 6,
+        "repos_affected": 6,
+        "worst_severity": "Low"
+      },
+      {
+        "package": "virtualenv",
+        "count": 5,
+        "repos_affected": 1,
+        "worst_severity": "High"
+      },
+      {
+        "package": "soupsieve",
+        "count": 4,
+        "repos_affected": 1,
+        "worst_severity": "High"
+      },
+      {
+        "package": "urllib3",
+        "count": 3,
+        "repos_affected": 1,
+        "worst_severity": "High"
+      },
+      {
+        "package": "anyio",
+        "count": 2,
+        "repos_affected": 1,
+        "worst_severity": "Critical"
+      },
+      {
+        "package": "bleach",
+        "count": 2,
+        "repos_affected": 1,
+        "worst_severity": "Medium"
+      },
+      {
+        "package": "filelock",
+        "count": 2,
+        "repos_affected": 1,
+        "worst_severity": "Medium"
+      },
+      {
+        "package": "mako",
+        "count": 2,
+        "repos_affected": 1,
+        "worst_severity": "High"
+      },
+      {
+        "package": "oauthlib",
+        "count": 2,
+        "repos_affected": 1,
+        "worst_severity": "Medium"
+      },
+      {
+        "package": "spring-core",
+        "count": 2,
+        "repos_affected": 1,
+        "worst_severity": "High"
+      },
+      {
+        "package": "tqdm",
+        "count": 2,
+        "repos_affected": 2,
+        "worst_severity": "Low"
+      },
+      {
+        "package": "Sketch",
+        "count": 1,
+        "repos_affected": 1,
+        "worst_severity": "Critical"
+      },
+      {
+        "package": "dm-reverb",
+        "count": 1,
+        "repos_affected": 1,
+        "worst_severity": "Medium"
+      },
+      {
+        "package": "flask",
+        "count": 1,
+        "repos_affected": 1,
+        "worst_severity": "Low"
+      }
+    ],
+    "repository_distribution": [
+      {
+        "repo": "addons",
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 20,
+        "status": "scanned"
+      },
+      {
+        "repo": "community",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 0,
+        "status": "scanned"
+      },
+      {
+        "repo": "docs",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 7,
+        "status": "scanned"
+      },
+      {
+        "repo": "examples",
+        "vulnerabilities": 128,
+        "findings": 0,
+        "components": 159,
+        "status": "scanned"
+      },
+      {
+        "repo": "fairness-indicators",
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 19,
+        "status": "scanned"
+      },
+      {
+        "repo": "gnn",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 5,
+        "status": "scanned"
+      },
+      {
+        "repo": "java",
+        "vulnerabilities": 2,
+        "findings": 0,
+        "components": 33,
+        "status": "scanned"
+      },
+      {
+        "repo": "mlir-hlo",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 0,
+        "status": "scanned"
+      },
+      {
+        "repo": "model-analysis",
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 17,
+        "status": "scanned"
+      },
+      {
+        "repo": "models",
+        "vulnerabilities": 28,
+        "findings": 0,
+        "components": 42,
+        "status": "scanned"
+      },
+      {
+        "repo": "neural-structured-learning",
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 4,
+        "status": "scanned"
+      },
+      {
+        "repo": "playground",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 5,
+        "status": "scanned"
+      },
+      {
+        "repo": "privacy",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 4,
+        "status": "scanned"
+      },
+      {
+        "repo": "probability",
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 12,
+        "status": "scanned"
+      },
+      {
+        "repo": "recommenders",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 9,
+        "status": "scanned"
+      },
+      {
+        "repo": "recommenders-addons",
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 18,
+        "status": "scanned"
+      },
+      {
+        "repo": "rust",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 7,
+        "status": "scanned"
+      },
+      {
+        "repo": "serving",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 2,
+        "status": "scanned"
+      },
+      {
+        "repo": "tensor2tensor",
+        "vulnerabilities": 52,
+        "findings": 0,
+        "components": 3,
+        "status": "scanned"
+      },
+      {
+        "repo": "tensorflow",
+        "vulnerabilities": 6,
+        "findings": 0,
+        "components": 803,
+        "status": "scanned"
+      },
+      {
+        "repo": "tflite-micro",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 148,
+        "status": "scanned"
+      },
+      {
+        "repo": "tfx",
+        "vulnerabilities": 57,
+        "findings": 0,
+        "components": 281,
+        "status": "scanned"
+      },
+      {
+        "repo": "transform",
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 16,
+        "status": "scanned"
+      }
+    ],
+    "repository_risk": [
+      {
+        "repo": "neural-structured-learning",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 4,
+        "critical": 0,
+        "high": 1,
+        "worst_severity": "High",
+        "severity_weighted_average": 7.0,
+        "severity_median": 7.0,
+        "score": 7.3,
+        "vulns_per_component": 0.25,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 1.0
+      },
+      {
+        "repo": "tensor2tensor",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 52,
+        "findings": 0,
+        "components": 3,
+        "critical": 8,
+        "high": 34,
+        "worst_severity": "Critical",
+        "severity_weighted_average": 6.8462,
+        "severity_median": 7.0,
+        "score": 7.2,
+        "vulns_per_component": 17.3333,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 1.0
+      },
+      {
+        "repo": "examples",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 128,
+        "findings": 0,
+        "components": 159,
+        "critical": 5,
+        "high": 61,
+        "worst_severity": "Critical",
+        "severity_weighted_average": 5.5703,
+        "severity_median": 7.0,
+        "score": 6.0,
+        "vulns_per_component": 0.805,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 0.9844
+      },
+      {
+        "repo": "tensorflow",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 6,
+        "findings": 0,
+        "components": 803,
+        "critical": 0,
+        "high": 3,
+        "worst_severity": "High",
+        "severity_weighted_average": 5.5,
+        "severity_median": 5.5,
+        "score": 6.0,
+        "vulns_per_component": 0.0075,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 1.0
+      },
+      {
+        "repo": "models",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 28,
+        "findings": 0,
+        "components": 42,
+        "critical": 0,
+        "high": 14,
+        "worst_severity": "High",
+        "severity_weighted_average": 5.1429,
+        "severity_median": 5.5,
+        "score": 5.6,
+        "vulns_per_component": 0.6667,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 0.8929
+      },
+      {
+        "repo": "tfx",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 57,
+        "findings": 0,
+        "components": 281,
+        "critical": 1,
+        "high": 17,
+        "worst_severity": "Critical",
+        "severity_weighted_average": 4.7193,
+        "severity_median": 4.0,
+        "score": 5.2,
+        "vulns_per_component": 0.2028,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 0.9649
+      },
+      {
+        "repo": "java",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 2,
+        "findings": 0,
+        "components": 33,
+        "critical": 0,
+        "high": 1,
+        "worst_severity": "High",
+        "severity_weighted_average": 4.5,
+        "severity_median": 4.5,
+        "score": 5.0,
+        "vulns_per_component": 0.0606,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 0.0
+      },
+      {
+        "repo": "addons",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 20,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Low",
+        "severity_weighted_average": 2.0,
+        "severity_median": 2.0,
+        "score": 2.8,
+        "vulns_per_component": 0.05,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 1.0
+      },
+      {
+        "repo": "fairness-indicators",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 19,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Low",
+        "severity_weighted_average": 2.0,
+        "severity_median": 2.0,
+        "score": 2.8,
+        "vulns_per_component": 0.0526,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 1.0
+      },
+      {
+        "repo": "model-analysis",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 17,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Low",
+        "severity_weighted_average": 2.0,
+        "severity_median": 2.0,
+        "score": 2.8,
+        "vulns_per_component": 0.0588,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 1.0
+      },
+      {
+        "repo": "probability",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 12,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Low",
+        "severity_weighted_average": 2.0,
+        "severity_median": 2.0,
+        "score": 2.8,
+        "vulns_per_component": 0.0833,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 1.0
+      },
+      {
+        "repo": "recommenders-addons",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 18,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Low",
+        "severity_weighted_average": 2.0,
+        "severity_median": 2.0,
+        "score": 2.8,
+        "vulns_per_component": 0.0556,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 1.0
+      },
+      {
+        "repo": "transform",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 1,
+        "findings": 0,
+        "components": 16,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Low",
+        "severity_weighted_average": 2.0,
+        "severity_median": 2.0,
+        "score": 2.8,
+        "vulns_per_component": 0.0625,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 1.0
+      },
+      {
+        "repo": "community",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 0,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": null,
+        "findings_per_component": null,
+        "fixed_version_share": null
+      },
+      {
+        "repo": "docs",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 7,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": 0.0,
+        "findings_per_component": 0.0,
+        "fixed_version_share": null
+      },
+      {
+        "repo": "gnn",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 5,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": 0.0,
+        "findings_per_component": 0.0,
+        "fixed_version_share": null
+      },
+      {
+        "repo": "mlir-hlo",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 0,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": null,
+        "findings_per_component": null,
+        "fixed_version_share": null
+      },
+      {
+        "repo": "playground",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 5,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": 0.0,
+        "findings_per_component": 0.0,
+        "fixed_version_share": null
+      },
+      {
+        "repo": "privacy",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 4,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": 0.0,
+        "findings_per_component": 0.0,
+        "fixed_version_share": null
+      },
+      {
+        "repo": "recommenders",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 9,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": 0.0,
+        "findings_per_component": 0.0,
+        "fixed_version_share": null
+      },
+      {
+        "repo": "rust",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 7,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": 0.0,
+        "findings_per_component": 0.0,
+        "fixed_version_share": null
+      },
+      {
+        "repo": "serving",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 2,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": 0.0,
+        "findings_per_component": 0.0,
+        "fixed_version_share": null
+      },
+      {
+        "repo": "tflite-micro",
+        "status": "scanned",
+        "languages": [],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 148,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": 0.0,
+        "findings_per_component": 0.0,
+        "fixed_version_share": null
+      }
+    ],
+    "concentration": {
+      "repositories_with_vulns": 13,
+      "top_n": 3,
+      "top_n_share": 0.8464,
+      "top_10pct_share": 0.6607,
+      "hhi": 0.2955
+    },
+    "risk_summary": {
+      "score": 6.0,
+      "severity_weighted_average": 5.5107,
+      "severity_median": 7.0,
+      "total_vulnerabilities": 280,
+      "repositories_scored": 13,
+      "repositories_with_critical": 3,
+      "repositories_with_high_or_critical": 7,
+      "mean_repository_score": 4.5,
+      "max_repository_score": 7.3,
+      "critical_hotspots": [
+        "examples",
+        "tensor2tensor",
+        "tfx"
+      ],
+      "worst_severity": "Critical"
+    },
+    "relations": {
+      "components_vs_vulnerabilities": {
+        "pearson": 0.2014,
+        "n": 23
+      },
+      "fixed_version_available_share": 0.9679,
+      "severity_by_package_type": [
+        {
+          "type": "github-action",
+          "severity": "Low",
+          "count": 6
+        },
+        {
+          "type": "java-archive",
+          "severity": "High",
+          "count": 1
+        },
+        {
+          "type": "java-archive",
+          "severity": "Low",
+          "count": 1
+        },
+        {
+          "type": "pod",
+          "severity": "Critical",
+          "count": 1
+        },
+        {
+          "type": "python",
+          "severity": "Critical",
+          "count": 13
+        },
+        {
+          "type": "python",
+          "severity": "High",
+          "count": 130
+        },
+        {
+          "type": "python",
+          "severity": "Medium",
+          "count": 108
+        },
+        {
+          "type": "python",
+          "severity": "Low",
+          "count": 20
+        }
+      ],
+      "findings_by_language": [],
+      "severity_by_language": []
+    }
+  },
+  "observations": [
+    {
+      "id": "OBS-01",
+      "title": "Cobertura del análisis",
+      "statement": "23 repositorios en el reporte; al menos un análisis exitoso en 100.0% de ellos (código 0.0%, SBOM 100.0%, Grype 100.0%).",
+      "metric": "coverage.coverage_ratio",
+      "evidence": {
+        "repositories_total": 23,
+        "coverage_ratio": 1.0,
+        "code_coverage_ratio": 0.0,
+        "sbom_coverage_ratio": 1.0,
+        "vuln_coverage_ratio": 1.0,
+        "by_vuln_status": {
+          "no_vulnerabilities": 10,
+          "scanned": 13
+        },
+        "by_sbom_status": {
+          "generated": 21,
+          "no_components": 2
+        }
+      }
+    },
+    {
+      "id": "OBS-02",
+      "title": "Severidad de las vulnerabilidades",
+      "statement": "El 51.8% de las vulnerabilidades son High o Critical (145 de 280); Critical=14, High=131.",
+      "metric": "datasets.severity_distribution",
+      "evidence": {
+        "total": 280,
+        "high_or_critical": 145,
+        "high_or_critical_share": 0.5179,
+        "by_severity": {
+          "Critical": 14,
+          "High": 131,
+          "Medium": 108,
+          "Low": 27,
+          "Negligible": 0,
+          "Unknown": 0
+        }
+      }
+    },
+    {
+      "id": "OBS-03",
+      "title": "Distribución de vulnerabilidades por repositorio",
+      "statement": "13 de 23 repositorios concentran las 280 vulnerabilidades; 10 no presentan ninguna.",
+      "metric": "datasets.repository_distribution",
+      "evidence": {
+        "repositories_total": 23,
+        "repositories_with_vulns": 13,
+        "repositories_without_vulns": 10,
+        "total_vulnerabilities": 280
+      }
+    },
+    {
+      "id": "OBS-04",
+      "title": "Concentración entre repositorios",
+      "statement": "El top 3 de repositorios acumula el 84.6% de las vulnerabilidades y el decil superior el 66.1% (HHI=0.2955).",
+      "metric": "datasets.concentration",
+      "evidence": {
+        "repositories_with_vulns": 13,
+        "top_n": 3,
+        "top_n_share": 0.8464,
+        "top_10pct_share": 0.6607,
+        "hhi": 0.2955
+      }
+    },
+    {
+      "id": "OBS-05",
+      "title": "Paquetes más afectados",
+      "statement": "El paquete más afectado es 'tensorflow' con 95 vulnerabilidades (peor severidad Critical) en 1 repositorio(s); el top 20 de 33 paquetes distintos.",
+      "metric": "datasets.top_packages",
+      "evidence": {
+        "top_packages": [
+          {
+            "package": "tensorflow",
+            "count": 95,
+            "repos_affected": 1,
+            "worst_severity": "Critical"
+          },
+          {
+            "package": "pillow",
+            "count": 87,
+            "repos_affected": 3,
+            "worst_severity": "Critical"
+          },
+          {
+            "package": "aiohttp",
+            "count": 14,
+            "repos_affected": 1,
+            "worst_severity": "High"
+          },
+          {
+            "package": "keras",
+            "count": 14,
+            "repos_affected": 1,
+            "worst_severity": "Critical"
+          },
+          {
+            "package": "mistune",
+            "count": 14,
+            "repos_affected": 1,
+            "worst_severity": "High"
+          },
+          {
+            "package": "torch",
+            "count": 8,
+            "repos_affected": 1,
+            "worst_severity": "Medium"
+          },
+          {
+            "package": "pypa/gh-action-pypi-publish",
+            "count": 6,
+            "repos_affected": 6,
+            "worst_severity": "Low"
+          },
+          {
+            "package": "virtualenv",
+            "count": 5,
+            "repos_affected": 1,
+            "worst_severity": "High"
+          },
+          {
+            "package": "soupsieve",
+            "count": 4,
+            "repos_affected": 1,
+            "worst_severity": "High"
+          },
+          {
+            "package": "urllib3",
+            "count": 3,
+            "repos_affected": 1,
+            "worst_severity": "High"
+          },
+          {
+            "package": "anyio",
+            "count": 2,
+            "repos_affected": 1,
+            "worst_severity": "Critical"
+          },
+          {
+            "package": "bleach",
+            "count": 2,
+            "repos_affected": 1,
+            "worst_severity": "Medium"
+          },
+          {
+            "package": "filelock",
+            "count": 2,
+            "repos_affected": 1,
+            "worst_severity": "Medium"
+          },
+          {
+            "package": "mako",
+            "count": 2,
+            "repos_affected": 1,
+            "worst_severity": "High"
+          },
+          {
+            "package": "oauthlib",
+            "count": 2,
+            "repos_affected": 1,
+            "worst_severity": "Medium"
+          },
+          {
+            "package": "spring-core",
+            "count": 2,
+            "repos_affected": 1,
+            "worst_severity": "High"
+          },
+          {
+            "package": "tqdm",
+            "count": 2,
+            "repos_affected": 2,
+            "worst_severity": "Low"
+          },
+          {
+            "package": "Sketch",
+            "count": 1,
+            "repos_affected": 1,
+            "worst_severity": "Critical"
+          },
+          {
+            "package": "dm-reverb",
+            "count": 1,
+            "repos_affected": 1,
+            "worst_severity": "Medium"
+          },
+          {
+            "package": "flask",
+            "count": 1,
+            "repos_affected": 1,
+            "worst_severity": "Low"
+          }
+        ],
+        "packages_distinct": 33
+      }
+    },
+    {
+      "id": "OBS-06",
+      "title": "Identificadores de vulnerabilidad más frecuentes",
+      "statement": "El identificador más repetido es GHSA-vxmw-7h4f-hqxh (severidad Low) con 6 aparición(es) en 6 repositorio(s); el top 20 de 198 identificadores distintos.",
+      "metric": "datasets.top_cves",
+      "evidence": {
+        "top_cves": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "count": 6,
+            "repos_affected": 6
+          },
+          {
+            "id": "GHSA-45hq-cxwh-f6vc",
+            "severity": "High",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-4x4j-2g7c-83w6",
+            "severity": "Medium",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-5x94-69rx-g8h2",
+            "severity": "High",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-62p4-gmf7-7g93",
+            "severity": "High",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-6r8x-57c9-28j4",
+            "severity": "High",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-8v84-f9pq-wr9x",
+            "severity": "High",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-9hw9-ch79-4vh6",
+            "severity": "High",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-gjh7-xx4r-x345",
+            "severity": "High",
+            "count": 3,
+            "repos_affected": 2
+          },
+          {
+            "id": "GHSA-jjj6-mw9f-p565",
+            "severity": "High",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-phj9-mv4w-65pm",
+            "severity": "High",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-r73j-pqj5-w3x7",
+            "severity": "Medium",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-wjx4-4jcj-g98j",
+            "severity": "Medium",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-xj96-63gp-2gmr",
+            "severity": "High",
+            "count": 3,
+            "repos_affected": 3
+          },
+          {
+            "id": "GHSA-27rc-728f-x5w2",
+            "severity": "Medium",
+            "count": 2,
+            "repos_affected": 1
+          },
+          {
+            "id": "GHSA-368v-7v32-52fx",
+            "severity": "Medium",
+            "count": 2,
+            "repos_affected": 1
+          },
+          {
+            "id": "GHSA-3f63-hfp8-52jq",
+            "severity": "Critical",
+            "count": 2,
+            "repos_affected": 2
+          },
+          {
+            "id": "GHSA-44wm-f244-xhp3",
+            "severity": "High",
+            "count": 2,
+            "repos_affected": 2
+          },
+          {
+            "id": "GHSA-49rq-hwc3-x77w",
+            "severity": "High",
+            "count": 2,
+            "repos_affected": 1
+          },
+          {
+            "id": "GHSA-54pp-c6pp-7fpx",
+            "severity": "Medium",
+            "count": 2,
+            "repos_affected": 1
+          }
+        ],
+        "cves_distinct": 198
+      }
+    },
+    {
+      "id": "OBS-07",
+      "title": "Disponibilidad de versión corregida",
+      "statement": "El 96.8% de las vulnerabilidades (271 de 280) tiene versión corregida publicada; el resto carece de corrección conocida.",
+      "metric": "relations.fixed_version_available_share",
+      "evidence": {
+        "total": 280,
+        "with_fixed_version": 271,
+        "fixed_version_available_share": 0.9679
+      }
+    },
+    {
+      "id": "OBS-08",
+      "title": "Componentes y vulnerabilidades",
+      "statement": "Correlación de Pearson entre componentes del SBOM y vulnerabilidades por repositorio: 0.2014 (n=23); no implica causalidad.",
+      "metric": "relations.components_vs_vulnerabilities.pearson",
+      "evidence": {
+        "pearson": 0.2014,
+        "n": 23
+      }
+    },
+    {
+      "id": "OBS-09",
+      "title": "Severidad por tipo de paquete",
+      "statement": "Se observan 8 combinación(es) (tipo, severidad) sobre 4 tipo(s) de paquete: github-action, java-archive, pod, python.",
+      "metric": "relations.severity_by_package_type",
+      "evidence": {
+        "severity_by_package_type": [
+          {
+            "type": "github-action",
+            "severity": "Low",
+            "count": 6
+          },
+          {
+            "type": "java-archive",
+            "severity": "High",
+            "count": 1
+          },
+          {
+            "type": "java-archive",
+            "severity": "Low",
+            "count": 1
+          },
+          {
+            "type": "pod",
+            "severity": "Critical",
+            "count": 1
+          },
+          {
+            "type": "python",
+            "severity": "Critical",
+            "count": 13
+          },
+          {
+            "type": "python",
+            "severity": "High",
+            "count": 130
+          },
+          {
+            "type": "python",
+            "severity": "Medium",
+            "count": 108
+          },
+          {
+            "type": "python",
+            "severity": "Low",
+            "count": 20
+          }
+        ]
+      }
+    },
+    {
+      "id": "OBS-10",
+      "title": "Nota global de vulnerabilidad (gravedad media)",
+      "statement": "La organización obtiene una nota de 6.0/10 (media ponderada de severidad 5.5107/10, peor severidad Critical); la media de las notas por repositorio es 4.5/10 sobre 13 repositorio(s) con vulnerabilidades.",
+      "metric": "datasets.risk_summary",
+      "evidence": {
+        "score": 6.0,
+        "severity_weighted_average": 5.5107,
+        "severity_median": 7.0,
+        "mean_repository_score": 4.5,
+        "max_repository_score": 7.3,
+        "repositories_scored": 13,
+        "worst_severity": "Critical",
+        "total_vulnerabilities": 280
+      }
+    },
+    {
+      "id": "OBS-11",
+      "title": "Repositorios con mayor gravedad media",
+      "statement": "'neural-structured-learning' encabeza el ranking por gravedad media (no por volumen) con nota 7.3/10 (media ponderada 7.0/10, peor severidad High, 1 vulnerabilidad(es)); 13 de 23 repositorio(s) tienen vulnerabilidades.",
+      "metric": "datasets.repository_risk",
+      "evidence": {
+        "repository_risk": [
+          {
+            "repo": "neural-structured-learning",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 1,
+            "findings": 0,
+            "components": 4,
+            "critical": 0,
+            "high": 1,
+            "worst_severity": "High",
+            "severity_weighted_average": 7.0,
+            "severity_median": 7.0,
+            "score": 7.3,
+            "vulns_per_component": 0.25,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 1.0
+          },
+          {
+            "repo": "tensor2tensor",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 52,
+            "findings": 0,
+            "components": 3,
+            "critical": 8,
+            "high": 34,
+            "worst_severity": "Critical",
+            "severity_weighted_average": 6.8462,
+            "severity_median": 7.0,
+            "score": 7.2,
+            "vulns_per_component": 17.3333,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 1.0
+          },
+          {
+            "repo": "examples",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 128,
+            "findings": 0,
+            "components": 159,
+            "critical": 5,
+            "high": 61,
+            "worst_severity": "Critical",
+            "severity_weighted_average": 5.5703,
+            "severity_median": 7.0,
+            "score": 6.0,
+            "vulns_per_component": 0.805,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 0.9844
+          },
+          {
+            "repo": "tensorflow",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 6,
+            "findings": 0,
+            "components": 803,
+            "critical": 0,
+            "high": 3,
+            "worst_severity": "High",
+            "severity_weighted_average": 5.5,
+            "severity_median": 5.5,
+            "score": 6.0,
+            "vulns_per_component": 0.0075,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 1.0
+          },
+          {
+            "repo": "models",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 28,
+            "findings": 0,
+            "components": 42,
+            "critical": 0,
+            "high": 14,
+            "worst_severity": "High",
+            "severity_weighted_average": 5.1429,
+            "severity_median": 5.5,
+            "score": 5.6,
+            "vulns_per_component": 0.6667,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 0.8929
+          },
+          {
+            "repo": "tfx",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 57,
+            "findings": 0,
+            "components": 281,
+            "critical": 1,
+            "high": 17,
+            "worst_severity": "Critical",
+            "severity_weighted_average": 4.7193,
+            "severity_median": 4.0,
+            "score": 5.2,
+            "vulns_per_component": 0.2028,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 0.9649
+          },
+          {
+            "repo": "java",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 2,
+            "findings": 0,
+            "components": 33,
+            "critical": 0,
+            "high": 1,
+            "worst_severity": "High",
+            "severity_weighted_average": 4.5,
+            "severity_median": 4.5,
+            "score": 5.0,
+            "vulns_per_component": 0.0606,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 0.0
+          },
+          {
+            "repo": "addons",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 1,
+            "findings": 0,
+            "components": 20,
+            "critical": 0,
+            "high": 0,
+            "worst_severity": "Low",
+            "severity_weighted_average": 2.0,
+            "severity_median": 2.0,
+            "score": 2.8,
+            "vulns_per_component": 0.05,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 1.0
+          },
+          {
+            "repo": "fairness-indicators",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 1,
+            "findings": 0,
+            "components": 19,
+            "critical": 0,
+            "high": 0,
+            "worst_severity": "Low",
+            "severity_weighted_average": 2.0,
+            "severity_median": 2.0,
+            "score": 2.8,
+            "vulns_per_component": 0.0526,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 1.0
+          },
+          {
+            "repo": "model-analysis",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 1,
+            "findings": 0,
+            "components": 17,
+            "critical": 0,
+            "high": 0,
+            "worst_severity": "Low",
+            "severity_weighted_average": 2.0,
+            "severity_median": 2.0,
+            "score": 2.8,
+            "vulns_per_component": 0.0588,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 1.0
+          },
+          {
+            "repo": "probability",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 1,
+            "findings": 0,
+            "components": 12,
+            "critical": 0,
+            "high": 0,
+            "worst_severity": "Low",
+            "severity_weighted_average": 2.0,
+            "severity_median": 2.0,
+            "score": 2.8,
+            "vulns_per_component": 0.0833,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 1.0
+          },
+          {
+            "repo": "recommenders-addons",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 1,
+            "findings": 0,
+            "components": 18,
+            "critical": 0,
+            "high": 0,
+            "worst_severity": "Low",
+            "severity_weighted_average": 2.0,
+            "severity_median": 2.0,
+            "score": 2.8,
+            "vulns_per_component": 0.0556,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 1.0
+          },
+          {
+            "repo": "transform",
+            "status": "scanned",
+            "languages": [],
+            "vulnerabilities": 1,
+            "findings": 0,
+            "components": 16,
+            "critical": 0,
+            "high": 0,
+            "worst_severity": "Low",
+            "severity_weighted_average": 2.0,
+            "severity_median": 2.0,
+            "score": 2.8,
+            "vulns_per_component": 0.0625,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 1.0
+          }
+        ],
+        "leader": "neural-structured-learning",
+        "leader_score": 7.3,
+        "repositories_scored": 13,
+        "repositories_total": 23
+      }
+    },
+    {
+      "id": "OBS-12",
+      "title": "Densidad de vulnerabilidades",
+      "statement": "'tensor2tensor' tiene la mayor densidad: 17.3333 vulnerabilidades por componente (52 de 3 componentes).",
+      "metric": "datasets.repository_risk.vulns_per_component",
+      "evidence": {
+        "leader": "tensor2tensor",
+        "vulns_per_component": 17.3333,
+        "repositories_with_density": 13
+      }
+    },
+    {
+      "id": "OBS-13",
+      "title": "Repositorios con vulnerabilidades Critical",
+      "statement": "3 repositorio(s) tienen al menos una vulnerabilidad Critical: examples, tensor2tensor, tfx; 7 repositorio(s) tienen High o Critical.",
+      "metric": "datasets.risk_summary.critical_hotspots",
+      "evidence": {
+        "repositories_with_critical": 3,
+        "repositories_with_high_or_critical": 7,
+        "critical_hotspots": [
+          "examples",
+          "tensor2tensor",
+          "tfx"
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "El reporte no incluye hallazgos de CodeQL (findings vacío o ausente): no pueden calcularse métricas por regla ni por lenguaje.",
+    "La nota 1-10, la media ponderada y la mediana de severidad usan pesos fijos (Critical=10, High=7, Medium=4, Low=2, Negligible=1, Unknown=0): resumen la gravedad media, no el volumen ni la explotabilidad real, y no sustituyen una priorización basada en CVSS, EPSS o KEV.",
+    "Ningún repositorio declara lenguajes: no puede calcularse la severidad de vulnerabilidades por lenguaje.",
+    "La correlación entre variables (p. ej. componentes y vulnerabilidades) no implica causalidad; puede estar confundida por el tamaño o el ecosistema del repositorio.",
+    "La muestra es pequeña (23 repositorios): las proporciones y correlaciones tienen alta incertidumbre y no deben generalizarse."
+  ]
+}

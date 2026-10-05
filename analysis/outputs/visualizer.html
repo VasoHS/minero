@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visualizer · tensorflow</title>
+<meta name="generator" content="github-codeql-miner visualizer">
+<meta name="color-scheme" content="light dark">
+<style>
+/* Visualizer · GitHub CodeQL Miner — hoja de estilos autocontenida.
+ * Sin CDN, sin fuentes remotas ni imágenes externas. Todo SVG/CSS propio.
+ * Usa variables CSS y color-scheme para modo claro/oscuro. */
+
+:root {
+  color-scheme: light dark;
+
+  /* Superficies y texto */
+  --bg: #eef1f6;
+  --surface: #ffffff;
+  --surface-2: #f6f8fb;
+  --surface-3: #eef2f8;
+  --text: #1b2430;
+  --muted: #5b6b7b;
+  --border: #d5dde7;
+  --accent: #2563eb;
+  --accent-weak: #dbe6ff;
+  --accent-contrast: #ffffff;
+  --track: #e6ebf2;
+  --grid: #dde4ee;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+
+  /* Severidades canónicas (colores estables para gráficos) */
+  --sev-critical: #b2182b;
+  --sev-high: #d6604d;
+  --sev-medium: #d98a00;
+  --sev-low: #3b7fb8;
+  --sev-negligible: #4f9d5a;
+  --sev-unknown: #8b95a1;
+
+  /* Fondos/texto de badges de severidad: oscuros con texto blanco.
+     Se mantienen iguales en claro y oscuro para garantizar contraste AA
+     (≥ 4.5:1) del texto normal del badge sobre su propio fondo. */
+  --sev-critical-bg: #b2182b;
+  --sev-critical-fg: #ffffff;
+  --sev-high-bg: #b23a25;
+  --sev-high-fg: #ffffff;
+  --sev-medium-bg: #9a6400;
+  --sev-medium-fg: #ffffff;
+  --sev-low-bg: #2b5f8f;
+  --sev-low-fg: #ffffff;
+  --sev-negligible-bg: #2f6b3a;
+  --sev-negligible-fg: #ffffff;
+  --sev-unknown-bg: #5b6673;
+  --sev-unknown-fg: #ffffff;
+
+  --ok: #2f7d4f;
+  --warn: #b45309;
+  --warn-bg: #fff4e5;
+  --danger: #b2182b;
+  --radius: 12px;
+  --focus: #1d4ed8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f141b;
+    --surface: #161d26;
+    --surface-2: #1c2530;
+    --surface-3: #212c38;
+    --text: #e7edf5;
+    --muted: #9fb0c2;
+    --border: #2a3644;
+    --accent: #6ea8fe;
+    --accent-weak: #1e2f4d;
+    --accent-contrast: #0b1220;
+    --track: #26313d;
+    --grid: #2a3644;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+
+    --sev-critical: #ff6b81;
+    --sev-high: #ff8a65;
+    --sev-medium: #ffc247;
+    --sev-low: #6fb3e0;
+    --sev-negligible: #7bd389;
+    --sev-unknown: #a9b4c0;
+
+    --ok: #6bd39a;
+    --warn: #fbbf24;
+    --warn-bg: #3a2a10;
+    --danger: #ff6b81;
+    --focus: #93c5fd;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Utilidad para lectores de pantalla */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0);
+  white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: 0.5rem 0.75rem;
+  z-index: 50;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus { left: 0; }
+
+#app { max-width: 1240px; margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
+
+h1, h2, h3 { line-height: 1.2; }
+h1 { font-size: 1.55rem; margin: 0 0 0.35rem; }
+h2 { font-size: 1.08rem; margin: 0; }
+h3 { font-size: 0.95rem; margin: 0 0 0.5rem; }
+
+a { color: var(--accent); }
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.muted { color: var(--muted); }
+.small { font-size: 0.82rem; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+/* ---------------- Cabecera ---------------- */
+.app-header { margin-bottom: 1rem; }
+.app-header .meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.kind-badge {
+  display: inline-block;
+  background: var(--accent-weak);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.05rem 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.warnbox {
+  margin-top: 0.75rem;
+  background: var(--warn-bg);
+  border: 1px solid var(--warn);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+.warnbox ul { margin: 0.25rem 0 0 1.1rem; padding: 0; }
+.warnbox li { margin: 0.1rem 0; }
+
+/* ---------------- Tarjetas ---------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.card-head .sub { color: var(--muted); font-size: 0.82rem; font-weight: 400; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.grid-2 > .card { margin-bottom: 0; }
+
+/* ---------------- Barra de filtros ---------------- */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+.toolbar .toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: flex-end;
+}
+.field { display: flex; flex-direction: column; gap: 0.25rem; }
+.field > label, .field > .field-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+input[type="search"], select {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem 0.55rem;
+  font: inherit;
+  font-size: 0.9rem;
+  min-width: 11rem;
+}
+input[type="search"] { min-width: 14rem; }
+
+.sev-checks { display: flex; flex-wrap: wrap; gap: 0.35rem 0.75rem; }
+.sev-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.sev-check input { margin: 0; }
+.swatch {
+  display: inline-block;
+  width: 0.7rem; height: 0.7rem;
+  border-radius: 2px;
+  flex: none;
+}
+.swatch.sev-critical { background: var(--sev-critical); }
+.swatch.sev-high { background: var(--sev-high); }
+.swatch.sev-medium { background: var(--sev-medium); }
+.swatch.sev-low { background: var(--sev-low); }
+.swatch.sev-negligible { background: var(--sev-negligible); }
+.swatch.sev-unknown { background: var(--sev-unknown); }
+
+button.btn {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem 0.7rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+button.btn:hover { background: var(--surface-3); }
+button.btn.primary { background: var(--accent); color: var(--accent-contrast); border-color: var(--accent); }
+button.btn.link {
+  background: none; border: none; padding: 0; color: var(--accent);
+  text-decoration: underline; cursor: pointer; font: inherit;
+}
+
+/* ---------------- KPIs ---------------- */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+.kpi {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.7rem 0.8rem;
+}
+.kpi .value { font-size: 1.7rem; font-weight: 700; line-height: 1.1; }
+.kpi .value .unit { font-size: 0.9rem; font-weight: 500; color: var(--muted); }
+.kpi .label { color: var(--muted); font-size: 0.82rem; }
+.kpi .hint { color: var(--muted); font-size: 0.75rem; margin-top: 0.15rem; }
+.kpi.sev-critical { border-left: 4px solid var(--sev-critical); }
+.kpi.sev-high { border-left: 4px solid var(--sev-high); }
+.kpi.ok { border-left: 4px solid var(--ok); }
+.kpi.warn { border-left: 4px solid var(--warn); }
+
+/* ---------------- Badges de severidad ---------------- */
+.badge {
+  display: inline-block;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge.sev-critical { background: var(--sev-critical-bg); color: var(--sev-critical-fg); }
+.badge.sev-high { background: var(--sev-high-bg); color: var(--sev-high-fg); }
+.badge.sev-medium { background: var(--sev-medium-bg); color: var(--sev-medium-fg); }
+.badge.sev-low { background: var(--sev-low-bg); color: var(--sev-low-fg); }
+.badge.sev-negligible { background: var(--sev-negligible-bg); color: var(--sev-negligible-fg); }
+.badge.sev-unknown { background: var(--sev-unknown-bg); color: var(--sev-unknown-fg); }
+.badge.status { background: var(--surface-3); color: var(--muted); border: 1px solid var(--border); }
+
+/* ---------------- Dona ---------------- */
+.donut-wrap { display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center; }
+.donut { width: 200px; height: 200px; flex: none; }
+.donut circle { cursor: default; }
+.donut .donut-total { fill: var(--text); font-size: 22px; font-weight: 700; }
+.donut .donut-sub { fill: var(--muted); font-size: 10px; }
+.legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; min-width: 200px; }
+.legend li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; }
+.legend .legend-name { flex: 1; }
+.legend .legend-val { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---------------- Barras ---------------- */
+.bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 30%) 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.86rem;
+}
+.bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-track {
+  display: block;
+  position: relative;
+  height: 0.85rem;
+  background: var(--track);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar-fill { display: block; height: 100%; min-width: 2px; background: var(--accent); border-radius: 999px; }
+.bar-value { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 2.5rem; text-align: right; }
+
+/* Barras apiladas */
+.stack-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 26%) 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.86rem;
+  margin-bottom: 0.3rem;
+}
+.stack-track { display: flex; height: 0.9rem; background: var(--track); border-radius: 999px; overflow: hidden; }
+.stack-seg { height: 100%; }
+.stack-seg + .stack-seg { box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.12); }
+
+/* ---------------- Tabla ---------------- */
+.table-wrap { overflow-x: auto; }
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+table.data caption { text-align: left; color: var(--muted); font-size: 0.82rem; margin-bottom: 0.4rem; }
+table.data th, table.data td {
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+table.data thead th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
+table.data th.sortable { cursor: pointer; user-select: none; }
+table.data th.sortable button {
+  all: unset;
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+table.data th.sortable button:hover { color: var(--accent); }
+table.data th[aria-sort="ascending"] .sort-arrow::after { content: "▲"; font-size: 0.7rem; }
+table.data th[aria-sort="descending"] .sort-arrow::after { content: "▼"; font-size: 0.7rem; }
+table.data tbody tr:hover { background: var(--surface-2); }
+table.data tbody tr.selected { background: var(--accent-weak); }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.score-cell { display: flex; align-items: center; gap: 0.45rem; min-width: 7rem; }
+.score-bar { flex: 1; height: 0.5rem; background: var(--track); border-radius: 999px; overflow: hidden; min-width: 3rem; }
+.score-bar > span { display: block; height: 100%; border-radius: 999px; }
+.score-num { font-variant-numeric: tabular-nums; font-weight: 600; min-width: 2.2rem; text-align: right; }
+
+/* ---------------- Dispersión ---------------- */
+.scatter-wrap { position: relative; }
+.scatter { width: 100%; height: auto; display: block; }
+.scatter .axis { stroke: var(--border); stroke-width: 1; }
+.scatter .gridline { stroke: var(--grid); stroke-width: 1; }
+.scatter .tick { fill: var(--muted); font-size: 10px; }
+.scatter .axis-title { fill: var(--muted); font-size: 11px; }
+.scatter .pt { stroke: var(--surface); stroke-width: 1.5; cursor: pointer; }
+.scatter .cell { stroke: none; }
+.scatter-note { color: var(--muted); font-size: 0.82rem; margin-top: 0.5rem; }
+
+/* ---------------- Observaciones / limitaciones ---------------- */
+.obs { display: grid; gap: 0.7rem; }
+.obs-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  background: var(--surface-2);
+}
+.obs-item .obs-head { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: baseline; }
+.obs-item .obs-id {
+  font-size: 0.75rem; font-weight: 700; color: var(--accent);
+  background: var(--accent-weak); border-radius: 6px; padding: 0.05rem 0.4rem;
+}
+.obs-item .obs-title { font-weight: 600; }
+.obs-item .obs-metric { color: var(--muted); font-size: 0.78rem; }
+.obs-item p { margin: 0.35rem 0 0; }
+.obs-item details { margin-top: 0.35rem; }
+.obs-item summary { cursor: pointer; color: var(--muted); font-size: 0.8rem; }
+.obs-item pre {
+  margin: 0.4rem 0 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem;
+  overflow: auto;
+  font-size: 0.78rem;
+  max-height: 18rem;
+}
+.limits { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.35rem; font-size: 0.9rem; }
+
+/* ---------------- Drill-down ---------------- */
+.drill { border-left: 4px solid var(--accent); }
+.drill-head { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+.drill-summary { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; color: var(--muted); font-size: 0.85rem; margin-bottom: 0.6rem; }
+.drill h3 { margin-top: 0.8rem; }
+.empty { color: var(--muted); font-style: italic; }
+.note { color: var(--muted); font-size: 0.82rem; margin-top: 0.5rem; }
+.filter-note {
+  color: var(--text);
+  font-size: 0.85rem;
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+}
+
+/* ---------------- Tooltip ---------------- */
+.tooltip {
+  position: fixed;
+  z-index: 100;
+  max-width: 280px;
+  background: var(--text);
+  color: var(--surface);
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+.tooltip.visible { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .tooltip { transition: opacity 0.1s ease-out; }
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 640px) {
+  #app { padding: 0.75rem 0.6rem 2rem; }
+  .bar-row, .stack-row { grid-template-columns: minmax(70px, 40%) 1fr auto; }
+  .toolbar { position: static; }
+  .kpi .value { font-size: 1.4rem; }
+}
+
+/* ---------------- Impresión ---------------- */
+@media print {
+  :root {
+    --bg: #ffffff; --surface: #ffffff; --surface-2: #ffffff; --surface-3: #ffffff;
+    --text: #000000; --muted: #333333; --border: #999999; --shadow: none;
+  }
+  body { background: #ffffff; color: #000000; }
+  .toolbar, .tooltip, .skip-link, button.btn { display: none !important; }
+  #app { max-width: none; padding: 0; }
+  .card { break-inside: avoid; page-break-inside: avoid; box-shadow: none; }
+  .grid-2 { display: block; }
+  a { color: #000000; text-decoration: none; }
+}
+
+/* ---------------- Movimiento reducido ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; animation: none !important; }
+}
+
+</style>
+</head>
+<body>
+<a class="skip-link" href="#app">Saltar al contenido</a>
+<div id="app" role="main"></div>
+<script id="analyzer-data" type="application/json">{"schema_version":"1.1","meta":{"organization":"tensorflow","source":"results-sbom.json + results-vuln.json","source_kind":"merged","generated_at":"2026-10-05T12:00:00+00:00","repositories":23,"warnings":[]},"summary":{"repositories":23,"analyzed":0,"failed":0,"unsupported":0,"findings":0,"sboms_generated":23,"sboms_failed":0,"components":1614,"vulns_scanned":23,"vulns_failed":0,"vulnerabilities":280,"vulns_critical":14,"vulns_high":131,"vulns_medium":108,"vulns_low":27},"coverage":{"repositories_total":23,"by_repo_status":{"scanned":23},"by_vuln_status":{"no_vulnerabilities":10,"scanned":13},"by_sbom_status":{"generated":21,"no_components":2},"unsupported":0,"repo_failed":0,"vuln_failed":0,"sbom_failed":0,"coverage_ratio":1.0,"code_coverage_ratio":0.0,"sbom_coverage_ratio":1.0,"vuln_coverage_ratio":1.0,"warnings":[]},"datasets":{"repositories":[{"repo":"addons","full_name":"tensorflow/addons","url":"https://github.com/tensorflow/addons.git","commit":"d208d752e98c310280938efa939117bf635a60a8","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":20,"vuln_status":"scanned","vuln_total":1,"findings_total":0},{"repo":"community","full_name":"tensorflow/community","url":"https://github.com/tensorflow/community.git","commit":"185530183d8f3734795beb520d02b8265c230a12","status":"scanned","languages":[],"sbom_status":"no_components","sbom_components":0,"vuln_status":"no_vulnerabilities","vuln_total":0,"findings_total":0},{"repo":"docs","full_name":"tensorflow/docs","url":"https://github.com/tensorflow/docs.git","commit":"53f7db427b7766dfad0ef1fc1f46852dc7ab79af","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":7,"vuln_status":"no_vulnerabilities","vuln_total":0,"findings_total":0},{"repo":"examples","full_name":"tensorflow/examples","url":"https://github.com/tensorflow/examples.git","commit":"bda6a8741864b7bc934345c47c25f8e17fd67bdc","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":159,"vuln_status":"scanned","vuln_total":128,"findings_total":0},{"repo":"fairness-indicators","full_name":"tensorflow/fairness-indicators","url":"https://github.com/tensorflow/fairness-indicators.git","commit":"b747546137ccd3c26b29f25f280da45a13b644a6","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":19,"vuln_status":"scanned","vuln_total":1,"findings_total":0},{"repo":"gnn","full_name":"tensorflow/gnn","url":"https://github.com/tensorflow/gnn.git","commit":"7fd24610dd904d8041cbc1cfb14eab21b5757f08","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":5,"vuln_status":"no_vulnerabilities","vuln_total":0,"findings_total":0},{"repo":"java","full_name":"tensorflow/java","url":"https://github.com/tensorflow/java.git","commit":"58a19434ad41d6e62c944e2f7f2a974bf170bff4","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":33,"vuln_status":"scanned","vuln_total":2,"findings_total":0},{"repo":"mlir-hlo","full_name":"tensorflow/mlir-hlo","url":"https://github.com/tensorflow/mlir-hlo.git","commit":"74b9d25f5cb824269cabfd2d4640a050c3fe6728","status":"scanned","languages":[],"sbom_status":"no_components","sbom_components":0,"vuln_status":"no_vulnerabilities","vuln_total":0,"findings_total":0},{"repo":"model-analysis","full_name":"tensorflow/model-analysis","url":"https://github.com/tensorflow/model-analysis.git","commit":"5df83b6cbb6712e6b48a41af2a72559745d7f6c9","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":17,"vuln_status":"scanned","vuln_total":1,"findings_total":0},{"repo":"models","full_name":"tensorflow/models","url":"https://github.com/tensorflow/models.git","commit":"930a6f98f7debcc32ca7afbca4a176dbf9211e03","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":42,"vuln_status":"scanned","vuln_total":28,"findings_total":0},{"repo":"neural-structured-learning","full_name":"tensorflow/neural-structured-learning","url":"https://github.com/tensorflow/neural-structured-learning.git","commit":"82eb5d4f16c138bc7eb04ea648997ebd97f0d2b4","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":4,"vuln_status":"scanned","vuln_total":1,"findings_total":0},{"repo":"playground","full_name":"tensorflow/playground","url":"https://github.com/tensorflow/playground.git","commit":"02469bd3751764b20486015d4202b792af5362a6","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":5,"vuln_status":"no_vulnerabilities","vuln_total":0,"findings_total":0},{"repo":"privacy","full_name":"tensorflow/privacy","url":"https://github.com/tensorflow/privacy.git","commit":"c5a3633e84f1a296c7e362e7c1926aead4063359","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":4,"vuln_status":"no_vulnerabilities","vuln_total":0,"findings_total":0},{"repo":"probability","full_name":"tensorflow/probability","url":"https://github.com/tensorflow/probability.git","commit":"d135a50f176224d654c62149be8cccc0886c0ed7","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":12,"vuln_status":"scanned","vuln_total":1,"findings_total":0},{"repo":"recommenders","full_name":"tensorflow/recommenders","url":"https://github.com/tensorflow/recommenders.git","commit":"7f3e76f277494ae2dfe5d0c6f7a26aea35d6cfc1","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":9,"vuln_status":"no_vulnerabilities","vuln_total":0,"findings_total":0},{"repo":"recommenders-addons","full_name":"tensorflow/recommenders-addons","url":"https://github.com/tensorflow/recommenders-addons.git","commit":"b3bc3d4691a9421dbe837ee9708c504217fdc8f9","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":18,"vuln_status":"scanned","vuln_total":1,"findings_total":0},{"repo":"rust","full_name":"tensorflow/rust","url":"https://github.com/tensorflow/rust.git","commit":"1ddf5a348037402f87d67c076bf3019857eae05f","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":7,"vuln_status":"no_vulnerabilities","vuln_total":0,"findings_total":0},{"repo":"serving","full_name":"tensorflow/serving","url":"https://github.com/tensorflow/serving.git","commit":"40f3fb1b022fa54c4d0ae29544532af65cc392de","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":2,"vuln_status":"no_vulnerabilities","vuln_total":0,"findings_total":0},{"repo":"tensor2tensor","full_name":"tensorflow/tensor2tensor","url":"https://github.com/tensorflow/tensor2tensor.git","commit":"bafdc1b67730430d38d6ab802cbd51f9d053ba2e","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":3,"vuln_status":"scanned","vuln_total":52,"findings_total":0},{"repo":"tensorflow","full_name":"tensorflow/tensorflow","url":"https://github.com/tensorflow/tensorflow.git","commit":"f27cff93ab3ed3d24e428050acd9b7d88f980fb7","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":803,"vuln_status":"scanned","vuln_total":6,"findings_total":0},{"repo":"tflite-micro","full_name":"tensorflow/tflite-micro","url":"https://github.com/tensorflow/tflite-micro.git","commit":"3f787dcff5c4693f3436a65aff1b268538a07bdb","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":148,"vuln_status":"no_vulnerabilities","vuln_total":0,"findings_total":0},{"repo":"tfx","full_name":"tensorflow/tfx","url":"https://github.com/tensorflow/tfx.git","commit":"19225645c7907ef052ca8d5d893bba27fefe7a56","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":281,"vuln_status":"scanned","vuln_total":57,"findings_total":0},{"repo":"transform","full_name":"tensorflow/transform","url":"https://github.com/tensorflow/transform.git","commit":"deefef17a96947c9703ff82e3b58abc0052c61b3","status":"scanned","languages":[],"sbom_status":"generated","sbom_components":16,"vuln_status":"scanned","vuln_total":1,"findings_total":0}],"findings":[],"vulnerabilities":[{"repo":"addons","id":"GHSA-vxmw-7h4f-hqxh","severity":"Low","package":"pypa/gh-action-pypi-publish","version":"v1.1.0","type":"github-action","fixed_version":"1.13.0","namespace":"github:language:github-action"},{"repo":"examples","id":"CVE-2021-40531","severity":"Critical","package":"Sketch","version":"2.0","type":"pod","fixed_version":"75","namespace":"nvd:cpe"},{"repo":"examples","id":"GHSA-x4wf-678h-2pmq","severity":"Critical","package":"keras","version":"2.2.0","type":"python","fixed_version":"2.13.1rc0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-3f63-hfp8-52jq","severity":"Critical","package":"pillow","version":"10.0.1","type":"python","fixed_version":"10.2.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-gw97-ff7c-9v96","severity":"Critical","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-gw97-ff7c-9v96","severity":"Critical","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-36fq-jgmw-4r9c","severity":"High","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.11.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-4f3f-g24h-fr8m","severity":"High","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.13.2","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-5gwj-m78q-7pq3","severity":"High","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.12.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-hjqc-jx6g-rwp9","severity":"High","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.12.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-hqp4-2352-xf5r","severity":"High","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.14.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-v2w2-w228-c444","severity":"High","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.12.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-44wm-f244-xhp3","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"10.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-45hq-cxwh-f6vc","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-5x94-69rx-g8h2","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-62p4-gmf7-7g93","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-6r8x-57c9-28j4","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-8v84-f9pq-wr9x","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-9hw9-ch79-4vh6","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-jjj6-mw9f-p565","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-phj9-mv4w-65pm","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-vjc4-5qp5-m44j","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-xj96-63gp-2gmr","severity":"High","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-49rq-hwc3-x77w","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-49rq-hwc3-x77w","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-558h-mq8x-7q9g","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-558h-mq8x-7q9g","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-5w96-866f-6rm8","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-5w96-866f-6rm8","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-647v-r7qq-24fh","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-647v-r7qq-24fh","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-64jg-wjww-7c5w","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-64jg-wjww-7c5w","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-68v3-g9cm-rmm6","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-68v3-g9cm-rmm6","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-6hg6-5c2q-7rcr","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-6hg6-5c2q-7rcr","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-6wfh-89q8-44jq","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-6wfh-89q8-44jq","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-7jvm-xxmr-v5cw","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-7jvm-xxmr-v5cw","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-7x4v-9gxg-9hwj","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-7x4v-9gxg-9hwj","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-93vr-9q9m-pj8p","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-93vr-9q9m-pj8p","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-94mm-g2mv-8p7r","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-94mm-g2mv-8p7r","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-cg88-rpvp-cjv5","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-cg88-rpvp-cjv5","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-f49c-87jh-g47q","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-f49c-87jh-g47q","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-f637-vh3r-vfh2","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-f637-vh3r-vfh2","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-gf97-q72m-7579","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-gf97-q72m-7579","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-gjh7-xx4r-x345","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.12.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-gjh7-xx4r-x345","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.12.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-h6q3-vv32-2cq5","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-h6q3-vv32-2cq5","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-j5w9-hmfh-4cr6","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-j5w9-hmfh-4cr6","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-qjqc-vqcf-5qvj","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-qjqc-vqcf-5qvj","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-rcf8-g8jv-vg6p","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-rcf8-g8jv-vg6p","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-xvwp-h6jv-7472","severity":"High","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-xvwp-h6jv-7472","severity":"High","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-w69q-w4h4-2fx8","severity":"Medium","package":"dm-reverb","version":"0.5.0","type":"python","fixed_version":null,"namespace":"github:language:python"},{"repo":"examples","id":"GHSA-26c4-7vv6-867j","severity":"Medium","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.12.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-74m6-m3xx-3vmj","severity":"Medium","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.15.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-cjgq-5qmw-rcj6","severity":"Medium","package":"keras","version":"2.2.0","type":"python","fixed_version":null,"namespace":"github:language:python"},{"repo":"examples","id":"GHSA-gh82-f9x8-5frx","severity":"Medium","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.12.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-m8wh-29wm-52mv","severity":"Medium","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.12.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-mq84-hjqx-cwf2","severity":"Medium","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.12.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-4x4j-2g7c-83w6","severity":"Medium","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-fj7v-r99m-22gq","severity":"Medium","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-r73j-pqj5-w3x7","severity":"Medium","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.2.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-wjx4-4jcj-g98j","severity":"Medium","package":"pillow","version":"10.0.1","type":"python","fixed_version":"12.2.0","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-27rc-728f-x5w2","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-27rc-728f-x5w2","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-368v-7v32-52fx","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-368v-7v32-52fx","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-54pp-c6pp-7fpx","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-54pp-c6pp-7fpx","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-66vq-54fq-6jvv","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-66vq-54fq-6jvv","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-67pf-62xr-q35m","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-67pf-62xr-q35m","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-6x99-gv2v-q76v","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-6x99-gv2v-q76v","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-762h-vpvw-3rcx","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.7.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-8fvv-46hw-vpg3","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-8fvv-46hw-vpg3","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-8w5g-3wcv-9g2j","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-8w5g-3wcv-9g2j","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-f2w8-jw48-fr7j","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-f2w8-jw48-fr7j","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-fqm2-gh8w-gr68","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-fqm2-gh8w-gr68","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-frqp-wp83-qggv","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-frqp-wp83-qggv","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-fxgc-95xx-grvq","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-fxgc-95xx-grvq","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.11.1","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-g9fm-r5mm-rf9f","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-g9fm-r5mm-rf9f","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-gq2j-cr96-gvqx","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-gq2j-cr96-gvqx","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-h246-cgh4-7475","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-h246-cgh4-7475","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-hq7g-wwwp-q46h","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-hq7g-wwwp-q46h","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-jq6x-99hj-q636","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-jq6x-99hj-q636","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-mv77-9g28-cwg3","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-mv77-9g28-cwg3","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-pf36-r9c6-h97j","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-pf36-r9c6-h97j","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-rjx6-v474-2ch9","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-rjx6-v474-2ch9","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-rmg2-f698-wq35","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-rmg2-f698-wq35","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-xxcj-rhqg-m46g","severity":"Medium","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-xxcj-rhqg-m46g","severity":"Medium","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-58hv-7753-xmfq","severity":"Low","package":"keras","version":"2.2.0","type":"python","fixed_version":"3.12.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-cqvq-fvhr-v6hc","severity":"Low","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-cqvq-fvhr-v6hc","severity":"Low","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-xf83-q765-xm6m","severity":"Low","package":"tensorflow","version":"2.7.2","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-xf83-q765-xm6m","severity":"Low","package":"tensorflow","version":"2.9.1","type":"python","fixed_version":"2.9.3","namespace":"github:language:python"},{"repo":"examples","id":"GHSA-g7vv-2v7x-gj9p","severity":"Low","package":"tqdm","version":"4.64.0","type":"python","fixed_version":"4.66.3","namespace":"github:language:python"},{"repo":"fairness-indicators","id":"GHSA-vxmw-7h4f-hqxh","severity":"Low","package":"pypa/gh-action-pypi-publish","version":"release/v1.12","type":"github-action","fixed_version":"1.13.0","namespace":"github:language:github-action"},{"repo":"java","id":"GHSA-jmp9-x22r-554x","severity":"High","package":"spring-core","version":"5.3.32","type":"java-archive","fixed_version":null,"namespace":"github:language:java"},{"repo":"java","id":"GHSA-659m-px2c-25wj","severity":"Low","package":"spring-core","version":"5.3.32","type":"java-archive","fixed_version":null,"namespace":"github:language:java"},{"repo":"model-analysis","id":"GHSA-vxmw-7h4f-hqxh","severity":"Low","package":"pypa/gh-action-pypi-publish","version":"v1","type":"github-action","fixed_version":"1.13.0","namespace":"github:language:github-action"},{"repo":"models","id":"GHSA-qr4w-53vh-m672","severity":"High","package":"opencv-python","version":"4.2.0.32","type":"python","fixed_version":"4.8.1.78","namespace":"github:language:python"},{"repo":"models","id":"GHSA-45hq-cxwh-f6vc","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-5x94-69rx-g8h2","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-62p4-gmf7-7g93","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-6r8x-57c9-28j4","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-8v84-f9pq-wr9x","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-9hw9-ch79-4vh6","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-cfh3-3jmp-rvhc","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.1.1","namespace":"github:language:python"},{"repo":"models","id":"GHSA-jjj6-mw9f-p565","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-phj9-mv4w-65pm","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-pwv6-vv43-88gr","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.2.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-vjc4-5qp5-m44j","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-whj4-6x5x-4v2j","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.2.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-xj96-63gp-2gmr","severity":"High","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-4x4j-2g7c-83w6","severity":"Medium","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-5xmw-vc9v-4wf2","severity":"Medium","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.2.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-fj7v-r99m-22gq","severity":"Medium","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-pg7v-jwj7-p798","severity":"Medium","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-r73j-pqj5-w3x7","severity":"Medium","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.2.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-wjx4-4jcj-g98j","severity":"Medium","package":"pillow","version":"12.0.0","type":"python","fixed_version":"12.2.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-887c-mr87-cxwp","severity":"Medium","package":"torch","version":"2.6.0+cu124","type":"python","fixed_version":"2.8.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-f4hp-rmr7-r7v8","severity":"Medium","package":"torch","version":"2.6.0+cu124","type":"python","fixed_version":null,"namespace":"github:language:python"},{"repo":"models","id":"GHSA-vgrw-7cvw-pwgx","severity":"Medium","package":"torch","version":"2.6.0+cu124","type":"python","fixed_version":"2.9.1","namespace":"github:language:python"},{"repo":"models","id":"GHSA-3749-ghw9-m3mg","severity":"Low","package":"torch","version":"2.6.0+cu124","type":"python","fixed_version":"2.7.1-rc1","namespace":"github:language:python"},{"repo":"models","id":"GHSA-c678-jfcj-6jmf","severity":"Low","package":"torch","version":"2.6.0+cu124","type":"python","fixed_version":null,"namespace":"github:language:python"},{"repo":"models","id":"GHSA-qfhq-4f3w-5fph","severity":"Low","package":"torch","version":"2.6.0+cu124","type":"python","fixed_version":"2.10.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-rrmf-rvhw-rf47","severity":"Low","package":"torch","version":"2.6.0+cu124","type":"python","fixed_version":"2.13.0","namespace":"github:language:python"},{"repo":"models","id":"GHSA-x3gm-94wq-g975","severity":"Low","package":"torch","version":"2.6.0+cu124","type":"python","fixed_version":null,"namespace":"github:language:python"},{"repo":"neural-structured-learning","id":"GHSA-gjh7-xx4r-x345","severity":"High","package":"tensorflow-gpu","version":"2.12.0","type":"python","fixed_version":"2.12.1","namespace":"github:language:python"},{"repo":"probability","id":"GHSA-g7vv-2v7x-gj9p","severity":"Low","package":"tqdm","version":"4.66","type":"python","fixed_version":"4.66.3","namespace":"github:language:python"},{"repo":"recommenders-addons","id":"GHSA-vxmw-7h4f-hqxh","severity":"Low","package":"pypa/gh-action-pypi-publish","version":"v1.1.0","type":"github-action","fixed_version":"1.13.0","namespace":"github:language:github-action"},{"repo":"tensor2tensor","id":"GHSA-3f63-hfp8-52jq","severity":"Critical","package":"pillow","version":"5.1.0","type":"python","fixed_version":"10.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-43fq-w8qq-v88h","severity":"Critical","package":"pillow","version":"5.1.0","type":"python","fixed_version":"7.1.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-57h3-9rgr-c24m","severity":"Critical","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.1","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-7534-mm45-c74v","severity":"Critical","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-8vj2-vxx3-667w","severity":"Critical","package":"pillow","version":"5.1.0","type":"python","fixed_version":"9.0.1","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-p49h-hjvm-jg3h","severity":"Critical","package":"pillow","version":"5.1.0","type":"python","fixed_version":"6.2.2","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-r7rm-8j6h-r933","severity":"Critical","package":"pillow","version":"5.1.0","type":"python","fixed_version":"6.2.2","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-vcqg-3p29-xw73","severity":"Critical","package":"pillow","version":"5.1.0","type":"python","fixed_version":"6.2.2","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-3wvg-mj6g-m9cv","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.2","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-3xv8-3j54-hgrp","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"7.1.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-44wm-f244-xhp3","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"10.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-45hq-cxwh-f6vc","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-5gm3-px64-rw72","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"6.2.2","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-5x94-69rx-g8h2","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-62p4-gmf7-7g93","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-6r8x-57c9-28j4","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-77gc-v2xv-rvvh","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-7r7m-5h27-29hp","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-8843-m7mw-mxqm","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"7.1.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-8ghj-p4vj-mr35","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"10.0.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-8v84-f9pq-wr9x","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-8xjq-8fcg-g5hw","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.1","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-95q3-8gr9-gm8w","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.2","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-9hw9-ch79-4vh6","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-9j59-75qj-795w","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"9.0.1","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-cqhg-xjhh-p8hf","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"7.1.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-f4w8-cv6p-x6r5","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.2","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-f5g8-5qq7-938w","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-g6rj-rv7j-xwp4","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-hj69-c76v-86wr","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"6.2.2","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-j7hp-h8jx-5ppr","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"10.0.1","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-j7mj-748x-7p78","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"6.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-jjj6-mw9f-p565","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-m2vv-5vj5-2hm7","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"9.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-mvg9-xffr-p774","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-p43w-g3c5-g5mq","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.1","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-phj9-mv4w-65pm","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-q5hq-fp76-qmrc","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-rwv7-3v45-hg29","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-vj42-xq3r-hr3r","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"7.1.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-vqcj-wrf2-7v73","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-xj96-63gp-2gmr","severity":"High","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-4x4j-2g7c-83w6","severity":"Medium","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.3.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-9hx2-hgq2-2g4f","severity":"Medium","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.1","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-hf64-x4gq-p99h","severity":"Medium","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-hjfx-8p6c-g7gx","severity":"Medium","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-jgpv-4h4c-xhw3","severity":"Medium","package":"pillow","version":"5.1.0","type":"python","fixed_version":"8.1.2","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-pw3c-h7wp-cvhx","severity":"Medium","package":"pillow","version":"5.1.0","type":"python","fixed_version":"9.0.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-r73j-pqj5-w3x7","severity":"Medium","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-wjx4-4jcj-g98j","severity":"Medium","package":"pillow","version":"5.1.0","type":"python","fixed_version":"12.2.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-xrcv-f9gm-v42c","severity":"Medium","package":"pillow","version":"5.1.0","type":"python","fixed_version":"9.0.0","namespace":"github:language:python"},{"repo":"tensor2tensor","id":"GHSA-4fx9-vc88-q2xc","severity":"Low","package":"pillow","version":"5.1.0","type":"python","fixed_version":"9.0.0","namespace":"github:language:python"},{"repo":"tensorflow","id":"GHSA-8988-9cw3-xx77","severity":"High","package":"urllib3","version":"2.7.0","type":"python","fixed_version":"2.8.0","namespace":"github:language:python"},{"repo":"tensorflow","id":"GHSA-vxq7-64xx-v4gw","severity":"High","package":"urllib3","version":"2.7.0","type":"python","fixed_version":"2.8.0","namespace":"github:language:python"},{"repo":"tensorflow","id":"GHSA-8rrh-rw8j-w5fx","severity":"High","package":"wheel","version":"0.41.3","type":"python","fixed_version":"0.46.2","namespace":"github:language:python"},{"repo":"tensorflow","id":"GHSA-5wmx-573v-2qwq","severity":"Medium","package":"markdown","version":"3.8","type":"python","fixed_version":"3.8.1","namespace":"github:language:python"},{"repo":"tensorflow","id":"GHSA-gc5v-m9x4-r6x2","severity":"Medium","package":"requests","version":"2.32.4","type":"python","fixed_version":"2.33.0","namespace":"github:language:python"},{"repo":"tensorflow","id":"GHSA-gh4c-6fx4-qh6g","severity":"Medium","package":"urllib3","version":"2.7.0","type":"python","fixed_version":"2.8.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-82r6-8w77-94w6","severity":"Critical","package":"anyio","version":"4.13.0","type":"python","fixed_version":"4.14.2","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-cq5v-8q36-5273","severity":"High","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.3","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-h95x-26f3-88hr","severity":"High","package":"js2py","version":"0.74","type":"python","fixed_version":null,"namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-vfmq-68hx-4jfw","severity":"High","package":"lxml","version":"5.3.0","type":"python","fixed_version":"6.1.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-2h4p-vjrc-8xpq","severity":"High","package":"mako","version":"1.3.5","type":"python","fixed_version":"1.3.12","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-v92g-xgxw-vvmm","severity":"High","package":"mako","version":"1.3.5","type":"python","fixed_version":"1.3.11","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-4j32-57v6-6g45","severity":"High","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.3.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-8mp2-v27r-99xp","severity":"High","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.2.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-c8j7-8cv4-2xmq","severity":"High","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.3.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-ffq3-xpv3-j92q","severity":"High","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.3.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-qcq2-496w-v96p","severity":"High","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.3.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-6v7p-g79w-8964","severity":"High","package":"msgpack","version":"1.1.0","type":"python","fixed_version":"1.2.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-rgxp-2hwp-jwgg","severity":"High","package":"pyarrow","version":"18.1.0","type":"python","fixed_version":"23.0.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-2wc2-fm75-p42x","severity":"High","package":"soupsieve","version":"2.6","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-836r-79rf-4m37","severity":"High","package":"soupsieve","version":"2.6","type":"python","fixed_version":"2.8.4","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-94p9-xgh2-xp45","severity":"High","package":"virtualenv","version":"20.26.6","type":"python","fixed_version":"21.7.12","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-p58f-9548-mpm2","severity":"High","package":"virtualenv","version":"20.26.6","type":"python","fixed_version":"21.7.13","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-x78j-v8h9-3j2q","severity":"High","package":"virtualenv","version":"20.26.6","type":"python","fixed_version":"21.7.12","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-4fvr-rgm6-gqmc","severity":"Medium","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-63hw-fmq6-xxg2","severity":"Medium","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-g3cq-j2xw-wf74","severity":"Medium","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-hg6j-4rv6-33pg","severity":"Medium","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-hpj7-wq8m-9hgp","severity":"Medium","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-jg22-mg44-37j8","severity":"Medium","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-mfx4-hv73-q22v","severity":"Medium","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.2","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-mq44-7p77-q5h7","severity":"Medium","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.2","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-xcgm-r5h9-7989","severity":"Medium","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-5p39-cfhj-2xmp","severity":"Medium","package":"anyio","version":"4.13.0","type":"python","fixed_version":"4.14.2","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-gj48-438w-jh9v","severity":"Medium","package":"bleach","version":"6.1.0","type":"python","fixed_version":"6.4.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-qmgc-5h2g-mvrw","severity":"Medium","package":"filelock","version":"3.16.1","type":"python","fixed_version":"3.20.3","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-w853-jp5j-5j7f","severity":"Medium","package":"filelock","version":"3.16.1","type":"python","fixed_version":"3.20.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-65pc-fj4g-8rjx","severity":"Medium","package":"idna","version":"3.7","type":"python","fixed_version":"3.15","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-428g-f7cq-pgp5","severity":"Medium","package":"marshmallow","version":"3.22.0","type":"python","fixed_version":"3.26.2","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-2hm2-hc3v-44h9","severity":"Medium","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.3.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-58cw-g322-p94v","severity":"Medium","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.2.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-8c25-4j27-2rv3","severity":"Medium","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.3.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-8g87-j6q8-g93x","severity":"Medium","package":"mistune","version":"3.0.2","type":"python","fixed_version":null,"namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-8mpj-m6qm-5qr8","severity":"Medium","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.3.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-g97x-gvcm-x72h","severity":"Medium","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.3.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-qfrw-5rxm-mhh2","severity":"Medium","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.3.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-r4rv-85jg-w4mf","severity":"Medium","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.3.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-v87v-83h2-53w7","severity":"Medium","package":"mistune","version":"3.0.2","type":"python","fixed_version":"3.2.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-hj66-6f7g-4r5v","severity":"Medium","package":"oauthlib","version":"3.2.2","type":"python","fixed_version":"4.0.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-xpv3-w29h-x7cv","severity":"Medium","package":"oauthlib","version":"3.2.2","type":"python","fixed_version":"4.0.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-6w46-j5rx-g56g","severity":"Medium","package":"pytest","version":"8.0.0","type":"python","fixed_version":"9.0.3","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-gjv8-xp57-g29c","severity":"Medium","package":"soupsieve","version":"2.6","type":"python","fixed_version":"2.9.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-j934-xhv5-fg8f","severity":"Medium","package":"soupsieve","version":"2.6","type":"python","fixed_version":"2.9.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-597g-3phw-6986","severity":"Medium","package":"virtualenv","version":"20.26.6","type":"python","fixed_version":"20.36.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-9h9j-4vrj-gf7g","severity":"Medium","package":"virtualenv","version":"20.26.6","type":"python","fixed_version":"21.7.11","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-2fqr-mr3j-6wp8","severity":"Low","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-4m7w-qmgq-4wj5","severity":"Low","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-9x8q-7h8h-wcw9","severity":"Low","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.1","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-m6qw-4cw2-hm4m","severity":"Low","package":"aiohttp","version":"3.13.5","type":"python","fixed_version":"3.14.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-8rfp-98v4-mmr6","severity":"Low","package":"bleach","version":"6.1.0","type":"python","fixed_version":"6.4.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-68rp-wp8r-4726","severity":"Low","package":"flask","version":"2.2.5","type":"python","fixed_version":"3.1.3","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-5239-wwwm-4pmq","severity":"Low","package":"pygments","version":"2.19.1","type":"python","fixed_version":"2.20.0","namespace":"github:language:python"},{"repo":"tfx","id":"GHSA-vxmw-7h4f-hqxh","severity":"Low","package":"pypa/gh-action-pypi-publish","version":"v1","type":"github-action","fixed_version":"1.13.0","namespace":"github:language:github-action"},{"repo":"transform","id":"GHSA-vxmw-7h4f-hqxh","severity":"Low","package":"pypa/gh-action-pypi-publish","version":"v1","type":"github-action","fixed_version":"1.13.0","namespace":"github:language:github-action"}],"severity_distribution":[{"severity":"Critical","count":14},{"severity":"High","count":131},{"severity":"Medium","count":108},{"severity":"Low","count":27},{"severity":"Negligible","count":0},{"severity":"Unknown","count":0}],"severity_by_repo":[{"repo":"addons","severity":"Low","count":1},{"repo":"examples","severity":"Critical","count":5},{"repo":"examples","severity":"High","count":61},{"repo":"examples","severity":"Medium","count":56},{"repo":"examples","severity":"Low","count":6},{"repo":"fairness-indicators","severity":"Low","count":1},{"repo":"java","severity":"High","count":1},{"repo":"java","severity":"Low","count":1},{"repo":"model-analysis","severity":"Low","count":1},{"repo":"models","severity":"High","count":14},{"repo":"models","severity":"Medium","count":9},{"repo":"models","severity":"Low","count":5},{"repo":"neural-structured-learning","severity":"High","count":1},{"repo":"probability","severity":"Low","count":1},{"repo":"recommenders-addons","severity":"Low","count":1},{"repo":"tensor2tensor","severity":"Critical","count":8},{"repo":"tensor2tensor","severity":"High","count":34},{"repo":"tensor2tensor","severity":"Medium","count":9},{"repo":"tensor2tensor","severity":"Low","count":1},{"repo":"tensorflow","severity":"High","count":3},{"repo":"tensorflow","severity":"Medium","count":3},{"repo":"tfx","severity":"Critical","count":1},{"repo":"tfx","severity":"High","count":17},{"repo":"tfx","severity":"Medium","count":31},{"repo":"tfx","severity":"Low","count":8},{"repo":"transform","severity":"Low","count":1}],"top_rules":[],"top_cves":[{"id":"GHSA-vxmw-7h4f-hqxh","severity":"Low","count":6,"repos_affected":6},{"id":"GHSA-45hq-cxwh-f6vc","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-4x4j-2g7c-83w6","severity":"Medium","count":3,"repos_affected":3},{"id":"GHSA-5x94-69rx-g8h2","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-62p4-gmf7-7g93","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-6r8x-57c9-28j4","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-8v84-f9pq-wr9x","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-9hw9-ch79-4vh6","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-gjh7-xx4r-x345","severity":"High","count":3,"repos_affected":2},{"id":"GHSA-jjj6-mw9f-p565","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-phj9-mv4w-65pm","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-r73j-pqj5-w3x7","severity":"Medium","count":3,"repos_affected":3},{"id":"GHSA-wjx4-4jcj-g98j","severity":"Medium","count":3,"repos_affected":3},{"id":"GHSA-xj96-63gp-2gmr","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-27rc-728f-x5w2","severity":"Medium","count":2,"repos_affected":1},{"id":"GHSA-368v-7v32-52fx","severity":"Medium","count":2,"repos_affected":1},{"id":"GHSA-3f63-hfp8-52jq","severity":"Critical","count":2,"repos_affected":2},{"id":"GHSA-44wm-f244-xhp3","severity":"High","count":2,"repos_affected":2},{"id":"GHSA-49rq-hwc3-x77w","severity":"High","count":2,"repos_affected":1},{"id":"GHSA-54pp-c6pp-7fpx","severity":"Medium","count":2,"repos_affected":1}],"top_packages":[{"package":"tensorflow","count":95,"repos_affected":1,"worst_severity":"Critical"},{"package":"pillow","count":87,"repos_affected":3,"worst_severity":"Critical"},{"package":"aiohttp","count":14,"repos_affected":1,"worst_severity":"High"},{"package":"keras","count":14,"repos_affected":1,"worst_severity":"Critical"},{"package":"mistune","count":14,"repos_affected":1,"worst_severity":"High"},{"package":"torch","count":8,"repos_affected":1,"worst_severity":"Medium"},{"package":"pypa/gh-action-pypi-publish","count":6,"repos_affected":6,"worst_severity":"Low"},{"package":"virtualenv","count":5,"repos_affected":1,"worst_severity":"High"},{"package":"soupsieve","count":4,"repos_affected":1,"worst_severity":"High"},{"package":"urllib3","count":3,"repos_affected":1,"worst_severity":"High"},{"package":"anyio","count":2,"repos_affected":1,"worst_severity":"Critical"},{"package":"bleach","count":2,"repos_affected":1,"worst_severity":"Medium"},{"package":"filelock","count":2,"repos_affected":1,"worst_severity":"Medium"},{"package":"mako","count":2,"repos_affected":1,"worst_severity":"High"},{"package":"oauthlib","count":2,"repos_affected":1,"worst_severity":"Medium"},{"package":"spring-core","count":2,"repos_affected":1,"worst_severity":"High"},{"package":"tqdm","count":2,"repos_affected":2,"worst_severity":"Low"},{"package":"Sketch","count":1,"repos_affected":1,"worst_severity":"Critical"},{"package":"dm-reverb","count":1,"repos_affected":1,"worst_severity":"Medium"},{"package":"flask","count":1,"repos_affected":1,"worst_severity":"Low"}],"repository_distribution":[{"repo":"addons","vulnerabilities":1,"findings":0,"components":20,"status":"scanned"},{"repo":"community","vulnerabilities":0,"findings":0,"components":0,"status":"scanned"},{"repo":"docs","vulnerabilities":0,"findings":0,"components":7,"status":"scanned"},{"repo":"examples","vulnerabilities":128,"findings":0,"components":159,"status":"scanned"},{"repo":"fairness-indicators","vulnerabilities":1,"findings":0,"components":19,"status":"scanned"},{"repo":"gnn","vulnerabilities":0,"findings":0,"components":5,"status":"scanned"},{"repo":"java","vulnerabilities":2,"findings":0,"components":33,"status":"scanned"},{"repo":"mlir-hlo","vulnerabilities":0,"findings":0,"components":0,"status":"scanned"},{"repo":"model-analysis","vulnerabilities":1,"findings":0,"components":17,"status":"scanned"},{"repo":"models","vulnerabilities":28,"findings":0,"components":42,"status":"scanned"},{"repo":"neural-structured-learning","vulnerabilities":1,"findings":0,"components":4,"status":"scanned"},{"repo":"playground","vulnerabilities":0,"findings":0,"components":5,"status":"scanned"},{"repo":"privacy","vulnerabilities":0,"findings":0,"components":4,"status":"scanned"},{"repo":"probability","vulnerabilities":1,"findings":0,"components":12,"status":"scanned"},{"repo":"recommenders","vulnerabilities":0,"findings":0,"components":9,"status":"scanned"},{"repo":"recommenders-addons","vulnerabilities":1,"findings":0,"components":18,"status":"scanned"},{"repo":"rust","vulnerabilities":0,"findings":0,"components":7,"status":"scanned"},{"repo":"serving","vulnerabilities":0,"findings":0,"components":2,"status":"scanned"},{"repo":"tensor2tensor","vulnerabilities":52,"findings":0,"components":3,"status":"scanned"},{"repo":"tensorflow","vulnerabilities":6,"findings":0,"components":803,"status":"scanned"},{"repo":"tflite-micro","vulnerabilities":0,"findings":0,"components":148,"status":"scanned"},{"repo":"tfx","vulnerabilities":57,"findings":0,"components":281,"status":"scanned"},{"repo":"transform","vulnerabilities":1,"findings":0,"components":16,"status":"scanned"}],"repository_risk":[{"repo":"neural-structured-learning","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":4,"critical":0,"high":1,"worst_severity":"High","severity_weighted_average":7.0,"severity_median":7.0,"score":7.3,"vulns_per_component":0.25,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"tensor2tensor","status":"scanned","languages":[],"vulnerabilities":52,"findings":0,"components":3,"critical":8,"high":34,"worst_severity":"Critical","severity_weighted_average":6.8462,"severity_median":7.0,"score":7.2,"vulns_per_component":17.3333,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"examples","status":"scanned","languages":[],"vulnerabilities":128,"findings":0,"components":159,"critical":5,"high":61,"worst_severity":"Critical","severity_weighted_average":5.5703,"severity_median":7.0,"score":6.0,"vulns_per_component":0.805,"findings_per_component":0.0,"fixed_version_share":0.9844},{"repo":"tensorflow","status":"scanned","languages":[],"vulnerabilities":6,"findings":0,"components":803,"critical":0,"high":3,"worst_severity":"High","severity_weighted_average":5.5,"severity_median":5.5,"score":6.0,"vulns_per_component":0.0075,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"models","status":"scanned","languages":[],"vulnerabilities":28,"findings":0,"components":42,"critical":0,"high":14,"worst_severity":"High","severity_weighted_average":5.1429,"severity_median":5.5,"score":5.6,"vulns_per_component":0.6667,"findings_per_component":0.0,"fixed_version_share":0.8929},{"repo":"tfx","status":"scanned","languages":[],"vulnerabilities":57,"findings":0,"components":281,"critical":1,"high":17,"worst_severity":"Critical","severity_weighted_average":4.7193,"severity_median":4.0,"score":5.2,"vulns_per_component":0.2028,"findings_per_component":0.0,"fixed_version_share":0.9649},{"repo":"java","status":"scanned","languages":[],"vulnerabilities":2,"findings":0,"components":33,"critical":0,"high":1,"worst_severity":"High","severity_weighted_average":4.5,"severity_median":4.5,"score":5.0,"vulns_per_component":0.0606,"findings_per_component":0.0,"fixed_version_share":0.0},{"repo":"addons","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":20,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.05,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"fairness-indicators","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":19,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.0526,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"model-analysis","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":17,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.0588,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"probability","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":12,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.0833,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"recommenders-addons","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":18,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.0556,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"transform","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":16,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.0625,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"community","status":"scanned","languages":[],"vulnerabilities":0,"findings":0,"components":0,"critical":0,"high":0,"worst_severity":"Unknown","severity_weighted_average":0.0,"severity_median":0.0,"score":1.0,"vulns_per_component":null,"findings_per_component":null,"fixed_version_share":null},{"repo":"docs","status":"scanned","languages":[],"vulnerabilities":0,"findings":0,"components":7,"critical":0,"high":0,"worst_severity":"Unknown","severity_weighted_average":0.0,"severity_median":0.0,"score":1.0,"vulns_per_component":0.0,"findings_per_component":0.0,"fixed_version_share":null},{"repo":"gnn","status":"scanned","languages":[],"vulnerabilities":0,"findings":0,"components":5,"critical":0,"high":0,"worst_severity":"Unknown","severity_weighted_average":0.0,"severity_median":0.0,"score":1.0,"vulns_per_component":0.0,"findings_per_component":0.0,"fixed_version_share":null},{"repo":"mlir-hlo","status":"scanned","languages":[],"vulnerabilities":0,"findings":0,"components":0,"critical":0,"high":0,"worst_severity":"Unknown","severity_weighted_average":0.0,"severity_median":0.0,"score":1.0,"vulns_per_component":null,"findings_per_component":null,"fixed_version_share":null},{"repo":"playground","status":"scanned","languages":[],"vulnerabilities":0,"findings":0,"components":5,"critical":0,"high":0,"worst_severity":"Unknown","severity_weighted_average":0.0,"severity_median":0.0,"score":1.0,"vulns_per_component":0.0,"findings_per_component":0.0,"fixed_version_share":null},{"repo":"privacy","status":"scanned","languages":[],"vulnerabilities":0,"findings":0,"components":4,"critical":0,"high":0,"worst_severity":"Unknown","severity_weighted_average":0.0,"severity_median":0.0,"score":1.0,"vulns_per_component":0.0,"findings_per_component":0.0,"fixed_version_share":null},{"repo":"recommenders","status":"scanned","languages":[],"vulnerabilities":0,"findings":0,"components":9,"critical":0,"high":0,"worst_severity":"Unknown","severity_weighted_average":0.0,"severity_median":0.0,"score":1.0,"vulns_per_component":0.0,"findings_per_component":0.0,"fixed_version_share":null},{"repo":"rust","status":"scanned","languages":[],"vulnerabilities":0,"findings":0,"components":7,"critical":0,"high":0,"worst_severity":"Unknown","severity_weighted_average":0.0,"severity_median":0.0,"score":1.0,"vulns_per_component":0.0,"findings_per_component":0.0,"fixed_version_share":null},{"repo":"serving","status":"scanned","languages":[],"vulnerabilities":0,"findings":0,"components":2,"critical":0,"high":0,"worst_severity":"Unknown","severity_weighted_average":0.0,"severity_median":0.0,"score":1.0,"vulns_per_component":0.0,"findings_per_component":0.0,"fixed_version_share":null},{"repo":"tflite-micro","status":"scanned","languages":[],"vulnerabilities":0,"findings":0,"components":148,"critical":0,"high":0,"worst_severity":"Unknown","severity_weighted_average":0.0,"severity_median":0.0,"score":1.0,"vulns_per_component":0.0,"findings_per_component":0.0,"fixed_version_share":null}],"concentration":{"repositories_with_vulns":13,"top_n":3,"top_n_share":0.8464,"top_10pct_share":0.6607,"hhi":0.2955},"risk_summary":{"score":6.0,"severity_weighted_average":5.5107,"severity_median":7.0,"total_vulnerabilities":280,"repositories_scored":13,"repositories_with_critical":3,"repositories_with_high_or_critical":7,"mean_repository_score":4.5,"max_repository_score":7.3,"critical_hotspots":["examples","tensor2tensor","tfx"],"worst_severity":"Critical"},"relations":{"components_vs_vulnerabilities":{"pearson":0.2014,"n":23},"fixed_version_available_share":0.9679,"severity_by_package_type":[{"type":"github-action","severity":"Low","count":6},{"type":"java-archive","severity":"High","count":1},{"type":"java-archive","severity":"Low","count":1},{"type":"pod","severity":"Critical","count":1},{"type":"python","severity":"Critical","count":13},{"type":"python","severity":"High","count":130},{"type":"python","severity":"Medium","count":108},{"type":"python","severity":"Low","count":20}],"findings_by_language":[],"severity_by_language":[]}},"observations":[{"id":"OBS-01","title":"Cobertura del análisis","statement":"23 repositorios en el reporte; al menos un análisis exitoso en 100.0% de ellos (código 0.0%, SBOM 100.0%, Grype 100.0%).","metric":"coverage.coverage_ratio","evidence":{"repositories_total":23,"coverage_ratio":1.0,"code_coverage_ratio":0.0,"sbom_coverage_ratio":1.0,"vuln_coverage_ratio":1.0,"by_vuln_status":{"no_vulnerabilities":10,"scanned":13},"by_sbom_status":{"generated":21,"no_components":2}}},{"id":"OBS-02","title":"Severidad de las vulnerabilidades","statement":"El 51.8% de las vulnerabilidades son High o Critical (145 de 280); Critical=14, High=131.","metric":"datasets.severity_distribution","evidence":{"total":280,"high_or_critical":145,"high_or_critical_share":0.5179,"by_severity":{"Critical":14,"High":131,"Medium":108,"Low":27,"Negligible":0,"Unknown":0}}},{"id":"OBS-03","title":"Distribución de vulnerabilidades por repositorio","statement":"13 de 23 repositorios concentran las 280 vulnerabilidades; 10 no presentan ninguna.","metric":"datasets.repository_distribution","evidence":{"repositories_total":23,"repositories_with_vulns":13,"repositories_without_vulns":10,"total_vulnerabilities":280}},{"id":"OBS-04","title":"Concentración entre repositorios","statement":"El top 3 de repositorios acumula el 84.6% de las vulnerabilidades y el decil superior el 66.1% (HHI=0.2955).","metric":"datasets.concentration","evidence":{"repositories_with_vulns":13,"top_n":3,"top_n_share":0.8464,"top_10pct_share":0.6607,"hhi":0.2955}},{"id":"OBS-05","title":"Paquetes más afectados","statement":"El paquete más afectado es 'tensorflow' con 95 vulnerabilidades (peor severidad Critical) en 1 repositorio(s); el top 20 de 33 paquetes distintos.","metric":"datasets.top_packages","evidence":{"top_packages":[{"package":"tensorflow","count":95,"repos_affected":1,"worst_severity":"Critical"},{"package":"pillow","count":87,"repos_affected":3,"worst_severity":"Critical"},{"package":"aiohttp","count":14,"repos_affected":1,"worst_severity":"High"},{"package":"keras","count":14,"repos_affected":1,"worst_severity":"Critical"},{"package":"mistune","count":14,"repos_affected":1,"worst_severity":"High"},{"package":"torch","count":8,"repos_affected":1,"worst_severity":"Medium"},{"package":"pypa/gh-action-pypi-publish","count":6,"repos_affected":6,"worst_severity":"Low"},{"package":"virtualenv","count":5,"repos_affected":1,"worst_severity":"High"},{"package":"soupsieve","count":4,"repos_affected":1,"worst_severity":"High"},{"package":"urllib3","count":3,"repos_affected":1,"worst_severity":"High"},{"package":"anyio","count":2,"repos_affected":1,"worst_severity":"Critical"},{"package":"bleach","count":2,"repos_affected":1,"worst_severity":"Medium"},{"package":"filelock","count":2,"repos_affected":1,"worst_severity":"Medium"},{"package":"mako","count":2,"repos_affected":1,"worst_severity":"High"},{"package":"oauthlib","count":2,"repos_affected":1,"worst_severity":"Medium"},{"package":"spring-core","count":2,"repos_affected":1,"worst_severity":"High"},{"package":"tqdm","count":2,"repos_affected":2,"worst_severity":"Low"},{"package":"Sketch","count":1,"repos_affected":1,"worst_severity":"Critical"},{"package":"dm-reverb","count":1,"repos_affected":1,"worst_severity":"Medium"},{"package":"flask","count":1,"repos_affected":1,"worst_severity":"Low"}],"packages_distinct":33}},{"id":"OBS-06","title":"Identificadores de vulnerabilidad más frecuentes","statement":"El identificador más repetido es GHSA-vxmw-7h4f-hqxh (severidad Low) con 6 aparición(es) en 6 repositorio(s); el top 20 de 198 identificadores distintos.","metric":"datasets.top_cves","evidence":{"top_cves":[{"id":"GHSA-vxmw-7h4f-hqxh","severity":"Low","count":6,"repos_affected":6},{"id":"GHSA-45hq-cxwh-f6vc","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-4x4j-2g7c-83w6","severity":"Medium","count":3,"repos_affected":3},{"id":"GHSA-5x94-69rx-g8h2","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-62p4-gmf7-7g93","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-6r8x-57c9-28j4","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-8v84-f9pq-wr9x","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-9hw9-ch79-4vh6","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-gjh7-xx4r-x345","severity":"High","count":3,"repos_affected":2},{"id":"GHSA-jjj6-mw9f-p565","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-phj9-mv4w-65pm","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-r73j-pqj5-w3x7","severity":"Medium","count":3,"repos_affected":3},{"id":"GHSA-wjx4-4jcj-g98j","severity":"Medium","count":3,"repos_affected":3},{"id":"GHSA-xj96-63gp-2gmr","severity":"High","count":3,"repos_affected":3},{"id":"GHSA-27rc-728f-x5w2","severity":"Medium","count":2,"repos_affected":1},{"id":"GHSA-368v-7v32-52fx","severity":"Medium","count":2,"repos_affected":1},{"id":"GHSA-3f63-hfp8-52jq","severity":"Critical","count":2,"repos_affected":2},{"id":"GHSA-44wm-f244-xhp3","severity":"High","count":2,"repos_affected":2},{"id":"GHSA-49rq-hwc3-x77w","severity":"High","count":2,"repos_affected":1},{"id":"GHSA-54pp-c6pp-7fpx","severity":"Medium","count":2,"repos_affected":1}],"cves_distinct":198}},{"id":"OBS-07","title":"Disponibilidad de versión corregida","statement":"El 96.8% de las vulnerabilidades (271 de 280) tiene versión corregida publicada; el resto carece de corrección conocida.","metric":"relations.fixed_version_available_share","evidence":{"total":280,"with_fixed_version":271,"fixed_version_available_share":0.9679}},{"id":"OBS-08","title":"Componentes y vulnerabilidades","statement":"Correlación de Pearson entre componentes del SBOM y vulnerabilidades por repositorio: 0.2014 (n=23); no implica causalidad.","metric":"relations.components_vs_vulnerabilities.pearson","evidence":{"pearson":0.2014,"n":23}},{"id":"OBS-09","title":"Severidad por tipo de paquete","statement":"Se observan 8 combinación(es) (tipo, severidad) sobre 4 tipo(s) de paquete: github-action, java-archive, pod, python.","metric":"relations.severity_by_package_type","evidence":{"severity_by_package_type":[{"type":"github-action","severity":"Low","count":6},{"type":"java-archive","severity":"High","count":1},{"type":"java-archive","severity":"Low","count":1},{"type":"pod","severity":"Critical","count":1},{"type":"python","severity":"Critical","count":13},{"type":"python","severity":"High","count":130},{"type":"python","severity":"Medium","count":108},{"type":"python","severity":"Low","count":20}]}},{"id":"OBS-10","title":"Nota global de vulnerabilidad (gravedad media)","statement":"La organización obtiene una nota de 6.0/10 (media ponderada de severidad 5.5107/10, peor severidad Critical); la media de las notas por repositorio es 4.5/10 sobre 13 repositorio(s) con vulnerabilidades.","metric":"datasets.risk_summary","evidence":{"score":6.0,"severity_weighted_average":5.5107,"severity_median":7.0,"mean_repository_score":4.5,"max_repository_score":7.3,"repositories_scored":13,"worst_severity":"Critical","total_vulnerabilities":280}},{"id":"OBS-11","title":"Repositorios con mayor gravedad media","statement":"'neural-structured-learning' encabeza el ranking por gravedad media (no por volumen) con nota 7.3/10 (media ponderada 7.0/10, peor severidad High, 1 vulnerabilidad(es)); 13 de 23 repositorio(s) tienen vulnerabilidades.","metric":"datasets.repository_risk","evidence":{"repository_risk":[{"repo":"neural-structured-learning","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":4,"critical":0,"high":1,"worst_severity":"High","severity_weighted_average":7.0,"severity_median":7.0,"score":7.3,"vulns_per_component":0.25,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"tensor2tensor","status":"scanned","languages":[],"vulnerabilities":52,"findings":0,"components":3,"critical":8,"high":34,"worst_severity":"Critical","severity_weighted_average":6.8462,"severity_median":7.0,"score":7.2,"vulns_per_component":17.3333,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"examples","status":"scanned","languages":[],"vulnerabilities":128,"findings":0,"components":159,"critical":5,"high":61,"worst_severity":"Critical","severity_weighted_average":5.5703,"severity_median":7.0,"score":6.0,"vulns_per_component":0.805,"findings_per_component":0.0,"fixed_version_share":0.9844},{"repo":"tensorflow","status":"scanned","languages":[],"vulnerabilities":6,"findings":0,"components":803,"critical":0,"high":3,"worst_severity":"High","severity_weighted_average":5.5,"severity_median":5.5,"score":6.0,"vulns_per_component":0.0075,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"models","status":"scanned","languages":[],"vulnerabilities":28,"findings":0,"components":42,"critical":0,"high":14,"worst_severity":"High","severity_weighted_average":5.1429,"severity_median":5.5,"score":5.6,"vulns_per_component":0.6667,"findings_per_component":0.0,"fixed_version_share":0.8929},{"repo":"tfx","status":"scanned","languages":[],"vulnerabilities":57,"findings":0,"components":281,"critical":1,"high":17,"worst_severity":"Critical","severity_weighted_average":4.7193,"severity_median":4.0,"score":5.2,"vulns_per_component":0.2028,"findings_per_component":0.0,"fixed_version_share":0.9649},{"repo":"java","status":"scanned","languages":[],"vulnerabilities":2,"findings":0,"components":33,"critical":0,"high":1,"worst_severity":"High","severity_weighted_average":4.5,"severity_median":4.5,"score":5.0,"vulns_per_component":0.0606,"findings_per_component":0.0,"fixed_version_share":0.0},{"repo":"addons","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":20,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.05,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"fairness-indicators","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":19,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.0526,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"model-analysis","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":17,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.0588,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"probability","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":12,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.0833,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"recommenders-addons","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":18,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.0556,"findings_per_component":0.0,"fixed_version_share":1.0},{"repo":"transform","status":"scanned","languages":[],"vulnerabilities":1,"findings":0,"components":16,"critical":0,"high":0,"worst_severity":"Low","severity_weighted_average":2.0,"severity_median":2.0,"score":2.8,"vulns_per_component":0.0625,"findings_per_component":0.0,"fixed_version_share":1.0}],"leader":"neural-structured-learning","leader_score":7.3,"repositories_scored":13,"repositories_total":23}},{"id":"OBS-12","title":"Densidad de vulnerabilidades","statement":"'tensor2tensor' tiene la mayor densidad: 17.3333 vulnerabilidades por componente (52 de 3 componentes).","metric":"datasets.repository_risk.vulns_per_component","evidence":{"leader":"tensor2tensor","vulns_per_component":17.3333,"repositories_with_density":13}},{"id":"OBS-13","title":"Repositorios con vulnerabilidades Critical","statement":"3 repositorio(s) tienen al menos una vulnerabilidad Critical: examples, tensor2tensor, tfx; 7 repositorio(s) tienen High o Critical.","metric":"datasets.risk_summary.critical_hotspots","evidence":{"repositories_with_critical":3,"repositories_with_high_or_critical":7,"critical_hotspots":["examples","tensor2tensor","tfx"]}}],"limitations":["El reporte no incluye hallazgos de CodeQL (findings vacío o ausente): no pueden calcularse métricas por regla ni por lenguaje.","La nota 1-10, la media ponderada y la mediana de severidad usan pesos fijos (Critical=10, High=7, Medium=4, Low=2, Negligible=1, Unknown=0): resumen la gravedad media, no el volumen ni la explotabilidad real, y no sustituyen una priorización basada en CVSS, EPSS o KEV.","Ningún repositorio declara lenguajes: no puede calcularse la severidad de vulnerabilidades por lenguaje.","La correlación entre variables (p. ej. componentes y vulnerabilidades) no implica causalidad; puede estar confundida por el tamaño o el ecosistema del repositorio.","La muestra es pequeña (23 repositorios): las proporciones y correlaciones tienen alta incertidumbre y no deben generalizarse."]}</script>
+<script>
+/* Visualizer · GitHub CodeQL Miner — tablero autocontenido.
+ *
+ * Lee el documento del Analyzer embebido en
+ * <script id="analyzer-data" type="application/json"> y monta todo el tablero
+ * dentro de #app. Sin fetch, sin CDN, sin frameworks y sin inyección de HTML
+ * con datos del documento (solo createElement/textContent).
+ *
+ * Nota de empaquetado: este archivo se embebe literalmente dentro de una
+ * etiqueta de script en el HTML generado, por lo que nunca debe contener la
+ * secuencia de cierre de esa etiqueta.
+ */
+(function () {
+  "use strict";
+
+  // ---------------------------------------------------------------------------
+  // Constantes del contrato
+  // ---------------------------------------------------------------------------
+
+  var SEVERITIES = ["Critical", "High", "Medium", "Low", "Negligible", "Unknown"];
+  var ROW_LIMIT = 300;
+
+  var COLS = [
+    { key: "repo", label: "Repositorio", type: "text" },
+    { key: "status", label: "Estado", type: "text" },
+    { key: "score", label: "Nota", type: "num" },
+    { key: "severity_weighted_average", label: "Gravedad media", type: "num" },
+    { key: "severity_median", label: "Mediana", type: "num" },
+    { key: "worst_severity", label: "Peor", type: "sev" },
+    { key: "critical", label: "Critical", type: "num" },
+    { key: "high", label: "High", type: "num" },
+    { key: "vulnerabilities", label: "Vulns", type: "num" },
+    { key: "findings", label: "Findings", type: "num" },
+    { key: "components", label: "Comp.", type: "num" },
+    { key: "vulns_per_component", label: "Vulns/comp", type: "num" },
+    { key: "findings_per_component", label: "Findings/comp", type: "num" },
+    { key: "fixed_version_share", label: "Reparable", type: "num" }
+  ];
+
+  // ---------------------------------------------------------------------------
+  // Estado del tablero
+  // ---------------------------------------------------------------------------
+
+  var state = {
+    doc: null,
+    filters: null,
+    sort: { key: "score", dir: "desc" },
+    selectedRepo: null,
+    scatterDensity: false,
+    view: null,
+    contentEl: null,
+    drillEl: null,
+    statusEl: null,
+    tipEl: null,
+    tipTarget: null
+  };
+
+  var updateTimer = null;
+  var booted = false;
+
+  // ---------------------------------------------------------------------------
+  // Utilidades de DOM
+  // ---------------------------------------------------------------------------
+
+  function applyAttrs(node, attrs) {
+    if (!attrs) return;
+    Object.keys(attrs).forEach(function (key) {
+      var value = attrs[key];
+      if (value == null) return;
+      if (key === "text") node.textContent = String(value);
+      else if (key === "class" || key === "className") node.setAttribute("class", String(value));
+      else if (key === "style" && typeof value === "object") {
+        Object.keys(value).forEach(function (prop) { node.style[prop] = value[prop]; });
+      } else if (key === "checked" || key === "disabled" || key === "selected") node[key] = !!value;
+      else if (key === "value") node.value = String(value);
+      else node.setAttribute(key, String(value));
+    });
+  }
+
+  function appendChildren(node, children) {
+    (children || []).forEach(function (child) {
+      if (child == null || child === false) return;
+      if (typeof child === "string" || typeof child === "number") {
+        node.appendChild(document.createTextNode(String(child)));
+      } else {
+        node.appendChild(child);
+      }
+    });
+  }
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    applyAttrs(node, attrs);
+    appendChildren(node, children);
+    return node;
+  }
+
+  function svgEl(tag, attrs, children) {
+    var node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    applyAttrs(node, attrs);
+    appendChildren(node, children);
+    return node;
+  }
+
+  function clear(node) {
+    if (!node) return;
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function sinDatos(mensaje) {
+    return el("p", { class: "empty", text: mensaje || "Sin datos." });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Formato y matemáticas
+  // ---------------------------------------------------------------------------
+
+  function num(x) { var n = Number(x); return isFinite(n) ? n : 0; }
+
+  function fmtInt(x) { var n = Number(x); return isFinite(n) ? String(Math.round(n)) : "0"; }
+  function fmt1(x) { var n = Number(x); return isFinite(n) ? n.toFixed(1) : "—"; }
+  function fmt2(x) { var n = Number(x); return isFinite(n) ? n.toFixed(2) : "—"; }
+  function fmt4(x) { var n = Number(x); return isFinite(n) ? n.toFixed(4) : "—"; }
+  function fmtIntOrDash(x) { return x == null ? "—" : fmtInt(x); }
+  function fmt1OrDash(x) { return x == null ? "—" : fmt1(x); }
+  function fmt2OrDash(x) { return x == null ? "—" : fmt2(x); }
+  function fmt4OrDash(x) { return x == null ? "—" : fmt4(x); }
+  function pct(x, digits) {
+    var d = digits == null ? 1 : digits;
+    return (num(x) * 100).toFixed(d) + "%";
+  }
+  function fmtPctOrDash(x) { return x == null ? "—" : pct(x); }
+
+  function byRepo(a, b) {
+    var x = String(a.repo), y = String(b.repo);
+    return x < y ? -1 : x > y ? 1 : 0;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Severidad
+  // ---------------------------------------------------------------------------
+
+  function isCanonical(s) { return SEVERITIES.indexOf(String(s)) >= 0; }
+
+  function canonical(s) {
+    var v = String(s);
+    return isCanonical(v) ? v : "Unknown";
+  }
+
+  function sevIndex(s) {
+    var i = SEVERITIES.indexOf(canonical(s));
+    return i < 0 ? SEVERITIES.length - 1 : i;
+  }
+
+  function sevClass(s) { return "sev-" + canonical(s).toLowerCase(); }
+  function sevColorVar(s) { return "var(--sev-" + canonical(s).toLowerCase() + ")"; }
+
+  function emptySeverityMap() {
+    var map = {};
+    SEVERITIES.forEach(function (s) { map[s] = 0; });
+    return map;
+  }
+
+  function sevBadge(s) {
+    var c = canonical(s);
+    return el("span", { class: "badge " + sevClass(c), text: c });
+  }
+
+  function prefersReduced() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    } catch (e) { return false; }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Lectura del documento y filtros
+  // ---------------------------------------------------------------------------
+
+  function readDocument() {
+    var node = document.getElementById("analyzer-data");
+    if (!node) return null;
+    try {
+      return JSON.parse(node.textContent);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function defaultFilters() {
+    var sev = {};
+    SEVERITIES.forEach(function (s) { sev[s] = true; });
+    return { repoQuery: "", severities: sev, packageType: "all", language: "all" };
+  }
+
+  function filtersActive(f) {
+    if (f.repoQuery) return true;
+    if (f.packageType !== "all") return true;
+    if (f.language !== "all") return true;
+    for (var i = 0; i < SEVERITIES.length; i++) {
+      if (f.severities[SEVERITIES[i]] === false) return true;
+    }
+    return false;
+  }
+
+  // Recolecta la información de repositorio de todos los datasets que la traen.
+  function collectRepos(doc) {
+    var ds = doc.datasets || {};
+    var map = {};
+    var order = [];
+
+    function ensure(name) {
+      if (!name) return null;
+      if (!map[name]) {
+        map[name] = { repo: name, status: "", languages: [], components: 0, findings: 0, vulnerabilities: 0 };
+        order.push(name);
+      }
+      return map[name];
+    }
+
+    (ds.repositories || []).forEach(function (r) {
+      var e = ensure(r.repo); if (!e) return;
+      if (r.status) e.status = r.status;
+      if (Array.isArray(r.languages)) e.languages = r.languages.slice();
+      if (typeof r.sbom_components === "number") e.components = r.sbom_components;
+      if (typeof r.findings_total === "number") e.findings = r.findings_total;
+      if (typeof r.vuln_total === "number") e.vulnerabilities = r.vuln_total;
+    });
+    (ds.repository_risk || []).forEach(function (r) {
+      var e = ensure(r.repo); if (!e) return;
+      if (r.status) e.status = r.status;
+      if (Array.isArray(r.languages) && r.languages.length) e.languages = r.languages.slice();
+      if (typeof r.components === "number") e.components = r.components;
+      if (typeof r.findings === "number") e.findings = r.findings;
+      if (typeof r.vulnerabilities === "number") e.vulnerabilities = r.vulnerabilities;
+    });
+    (ds.repository_distribution || []).forEach(function (r) {
+      var e = ensure(r.repo); if (!e) return;
+      if (r.status) e.status = r.status;
+      if (typeof r.components === "number") e.components = r.components;
+      if (typeof r.findings === "number") e.findings = r.findings;
+      if (typeof r.vulnerabilities === "number") e.vulnerabilities = r.vulnerabilities;
+    });
+    (ds.vulnerabilities || []).forEach(function (v) { ensure(v.repo); });
+    (ds.findings || []).forEach(function (f) { ensure(f.repo); });
+
+    return order.map(function (name) { return map[name]; }).sort(byRepo);
+  }
+
+  function allPackageTypes(doc) {
+    var ds = doc.datasets || {};
+    var set = {};
+    (ds.vulnerabilities || []).forEach(function (v) {
+      set[String(v.type == null || v.type === "" ? "unknown" : v.type)] = true;
+    });
+    var rel = ds.relations || {};
+    (rel.severity_by_package_type || []).forEach(function (r) {
+      set[String(r.type == null || r.type === "" ? "unknown" : r.type)] = true;
+    });
+    return Object.keys(set).sort();
+  }
+
+  function allLanguages(doc) {
+    var ds = doc.datasets || {};
+    var set = {};
+    (ds.repositories || []).forEach(function (r) {
+      (r.languages || []).forEach(function (l) { if (l) set[String(l)] = true; });
+    });
+    (ds.repository_risk || []).forEach(function (r) {
+      (r.languages || []).forEach(function (l) { if (l) set[String(l)] = true; });
+    });
+    var rel = ds.relations || {};
+    (rel.severity_by_language || []).forEach(function (r) { if (r.language) set[String(r.language)] = true; });
+    (rel.findings_by_language || []).forEach(function (r) { if (r.language) set[String(r.language)] = true; });
+    return Object.keys(set).sort();
+  }
+
+  // ¿Hay algún filtro de severidad desmarcado?
+  function severityFilterActive(f) {
+    for (var i = 0; i < SEVERITIES.length; i++) {
+      if (f.severities[SEVERITIES[i]] === false) return true;
+    }
+    return false;
+  }
+
+  // Filtra el CONJUNTO DE REPOSITORIOS de las vistas por repositorio.
+  // No recalcula métricas: solo decide qué repos entran en la vista.
+  // Un repo coincide si tiene al menos una vulnerabilidad que cumpla los
+  // filtros de severidad y tipo (según datasets.vulnerabilities) y, para
+  // lenguaje, si el lenguaje está declarado en el repositorio.
+  function filterScope(repos, f, vulnDetail, hasVulnDetail) {
+    var query = f.repoQuery.toLowerCase();
+    var needsDetail = hasVulnDetail && (severityFilterActive(f) || f.packageType !== "all");
+    var byRepo = null;
+    if (needsDetail) {
+      byRepo = {};
+      vulnDetail.forEach(function (v) {
+        if (!byRepo[v.repo]) byRepo[v.repo] = [];
+        byRepo[v.repo].push(v);
+      });
+    }
+    return repos.filter(function (repo) {
+      if (query && String(repo.repo).toLowerCase().indexOf(query) < 0) return false;
+      if (f.language !== "all" && (repo.languages || []).indexOf(f.language) < 0) return false;
+      if (needsDetail) {
+        var rows = byRepo[repo.repo];
+        if (!rows) return false;
+        for (var i = 0; i < rows.length; i++) {
+          var v = rows[i];
+          if (f.severities[canonical(v.severity)] === false) continue;
+          var type = String(v.type == null || v.type === "" ? "unknown" : v.type);
+          if (f.packageType !== "all" && type !== f.packageType) continue;
+          return true;
+        }
+        return false;
+      }
+      return true;
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Construcción de la vista
+  // ---------------------------------------------------------------------------
+  // Regla de oro: el tablero NO recalcula métricas derivadas. Toda métrica
+  // agregada (score, severity_weighted_average, severity_median, Pearson, HHI,
+  // fixed_version_share, vulns_per_component, mean_repository_score, …) se
+  // muestra tal cual viene del documento del Analyzer. Los filtros solo acotan
+  // el conjunto de repositorios de las vistas por repositorio.
+
+  function normalizeRiskRow(r) {
+    return {
+      repo: r.repo,
+      status: r.status || "",
+      languages: Array.isArray(r.languages) ? r.languages : [],
+      vulnerabilities: num(r.vulnerabilities),
+      findings: num(r.findings),
+      components: num(r.components),
+      critical: num(r.critical),
+      high: num(r.high),
+      worst_severity: canonical(r.worst_severity),
+      severity_weighted_average: r.severity_weighted_average == null ? null : num(r.severity_weighted_average),
+      severity_median: r.severity_median == null ? null : num(r.severity_median),
+      score: r.score == null ? null : num(r.score),
+      vulns_per_component: r.vulns_per_component == null ? null : num(r.vulns_per_component),
+      findings_per_component: r.findings_per_component == null ? null : num(r.findings_per_component),
+      fixed_version_share: r.fixed_version_share == null ? null : num(r.fixed_version_share)
+    };
+  }
+
+  function compareRiskRows(a, b) {
+    var as = a.score == null ? -Infinity : a.score;
+    var bs = b.score == null ? -Infinity : b.score;
+    if (bs !== as) return bs - as;
+    var aa = a.severity_weighted_average == null ? -Infinity : a.severity_weighted_average;
+    var ba = b.severity_weighted_average == null ? -Infinity : b.severity_weighted_average;
+    if (ba !== aa) return ba - aa;
+    return byRepo(a, b);
+  }
+
+  // Filas por repositorio tal cual vienen del Analyzer (repository_risk).
+  // Fallback: si falta, se derivan solo los campos base de repository_distribution
+  // sin inventar métricas (score/medias quedan a null).
+  function riskRowsFromDoc(ds) {
+    var rows = (ds.repository_risk || []).map(normalizeRiskRow);
+    if (!rows.length && (ds.repository_distribution || []).length) {
+      rows = ds.repository_distribution.map(function (r) {
+        return normalizeRiskRow({
+          repo: r.repo,
+          status: r.status,
+          vulnerabilities: r.vulnerabilities,
+          findings: r.findings,
+          components: r.components,
+          worst_severity: "Unknown"
+        });
+      });
+    }
+    return rows;
+  }
+
+  // Construye la vista sin recalcular nada: indicadores globales precalculados
+  // y filas por repositorio del Analyzer acotadas al conjunto filtrado.
+  function buildView(doc, filters) {
+    var ds = doc.datasets || {};
+    var meta = doc.meta || {};
+    var cov = doc.coverage || {};
+    var info = collectRepos(doc);
+    var vulnDetail = Array.isArray(ds.vulnerabilities) ? ds.vulnerabilities : [];
+    var findDetail = Array.isArray(ds.findings) ? ds.findings : [];
+    var hasVulnDetail = vulnDetail.length > 0;
+
+    var scope = filterScope(info, filters, vulnDetail, hasVulnDetail);
+    var scopeMap = {};
+    scope.forEach(function (r) { scopeMap[r.repo] = true; });
+
+    // --- Indicadores globales: SIEMPRE precalculados por el Analyzer ---
+    var counts = emptySeverityMap();
+    (ds.severity_distribution || []).forEach(function (r) {
+      if (counts.hasOwnProperty(r.severity)) counts[r.severity] = num(r.count);
+    });
+    var sevTotal = 0;
+    SEVERITIES.forEach(function (s) { sevTotal += counts[s]; });
+    var rs = ds.risk_summary || {};
+    var hotspots = Array.isArray(rs.critical_hotspots) ? rs.critical_hotspots.filter(Boolean) : [];
+    var rel = ds.relations || {};
+    var cvs = rel.components_vs_vulnerabilities || {};
+
+    // --- Vistas por repositorio: filas del Analyzer acotadas al alcance ---
+    var riskRows = riskRowsFromDoc(ds).filter(function (r) { return !!scopeMap[r.repo]; });
+    riskRows.sort(compareRiskRows);
+
+    var view = {
+      filtersActive: filtersActive(filters),
+      scopeCount: scope.length,
+      totalRepos: info.length,
+      canFilterDetail: hasVulnDetail,
+      kpi: {
+        repositories: meta.repositories == null ? info.length : num(meta.repositories),
+        vulnerabilities: rs.total_vulnerabilities == null ? sevTotal : num(rs.total_vulnerabilities),
+        critical: counts.Critical,
+        high: counts.High,
+        score: rs.score == null ? null : num(rs.score),
+        coverage: cov.coverage_ratio == null ? null : num(cov.coverage_ratio),
+        hotspots: hotspots.length
+      },
+      severityCounts: counts,
+      severityTotal: sevTotal,
+      riskRows: riskRows,
+      riskSummary: rs,
+      concentration: ds.concentration || {},
+      relations: {
+        pearson: cvs.pearson == null ? null : num(cvs.pearson),
+        pearsonN: cvs.n == null ? info.length : num(cvs.n),
+        fixedVersionShare: rel.fixed_version_available_share == null ? null : num(rel.fixed_version_available_share),
+        severityByPackageType: rel.severity_by_package_type || [],
+        findingsByLanguage: rel.findings_by_language || [],
+        severityByLanguage: rel.severity_by_language || []
+      },
+      topPackages: ds.top_packages || [],
+      topCves: ds.top_cves || [],
+      topRules: ds.top_rules || [],
+      detailVulns: vulnDetail,
+      detailFindings: findDetail,
+      hasVulnDetail: hasVulnDetail,
+      hasFindingDetail: findDetail.length > 0,
+      repoNames: {}
+    };
+    scope.forEach(function (r) { view.repoNames[r.repo] = true; });
+    return view;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Ordenación de la tabla de riesgo
+  // ---------------------------------------------------------------------------
+
+  function colType(key) {
+    for (var i = 0; i < COLS.length; i++) if (COLS[i].key === key) return COLS[i].type;
+    return "text";
+  }
+
+  function sortRows(rows, key, dir) {
+    var type = colType(key);
+    var sign = dir === "asc" ? 1 : -1;
+    return rows.slice().sort(function (a, b) {
+      var av = a[key], bv = b[key];
+      var an = av == null, bn = bv == null;
+      if (an && bn) return byRepo(a, b);
+      if (an) return 1;
+      if (bn) return -1;
+      var c;
+      if (type === "num") c = num(av) - num(bv);
+      else if (type === "sev") c = sevIndex(av) - sevIndex(bv);
+      else c = String(av) < String(bv) ? -1 : String(av) > String(bv) ? 1 : 0;
+      if (c !== 0) return sign * c;
+      return byRepo(a, b);
+    });
+  }
+
+  function toggleSort(key) {
+    if (state.sort.key === key) {
+      state.sort.dir = state.sort.dir === "asc" ? "desc" : "asc";
+    } else {
+      state.sort.key = key;
+      var type = colType(key);
+      state.sort.dir = (type === "text" || type === "sev") ? "asc" : "desc";
+    }
+    update();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Tooltips
+  // ---------------------------------------------------------------------------
+
+  function initTooltip() {
+    var tip = el("div", { id: "vis-tooltip", class: "tooltip", role: "tooltip", "aria-hidden": "true" });
+    document.body.appendChild(tip);
+    state.tipEl = tip;
+
+    var app = document.getElementById("app");
+    if (app) {
+      app.addEventListener("mouseover", function (e) { showTipFor(e.target); });
+      app.addEventListener("mouseout", function (e) {
+        var t = closestTip(e.target);
+        if (t && t === state.tipTarget && !containsNode(t, e.relatedTarget)) hideTip();
+      });
+      app.addEventListener("focusin", function (e) { showTipFor(e.target); });
+      app.addEventListener("focusout", function (e) {
+        var t = closestTip(e.target);
+        if (t && t === state.tipTarget && !containsNode(t, e.relatedTarget)) hideTip();
+      });
+    }
+    window.addEventListener("scroll", hideTip, true);
+    window.addEventListener("resize", hideTip);
+  }
+
+  function closestTip(node) {
+    while (node && node !== document) {
+      if (node.getAttribute && node.getAttribute("data-tip")) return node;
+      node = node.parentNode;
+    }
+    return null;
+  }
+
+  function containsNode(parent, child) {
+    if (!parent || !child) return false;
+    return parent === child || (parent.contains ? parent.contains(child) : false);
+  }
+
+  function showTipFor(target) {
+    var node = closestTip(target);
+    if (!node) return;
+    var text = node.getAttribute("data-tip");
+    if (!text) return;
+    state.tipTarget = node;
+    state.tipEl.textContent = text;
+    state.tipEl.setAttribute("aria-hidden", "false");
+    state.tipEl.classList.add("visible");
+    positionTip(node);
+  }
+
+  function positionTip(node) {
+    var rect = node.getBoundingClientRect();
+    var tip = state.tipEl;
+    var tw = tip.offsetWidth || 160;
+    var th = tip.offsetHeight || 30;
+    var left = rect.left + rect.width / 2 - tw / 2;
+    var top = rect.top - th - 8;
+    if (top < 4) top = rect.bottom + 8;
+    left = Math.max(4, Math.min(left, window.innerWidth - tw - 4));
+    top = Math.max(4, Math.min(top, window.innerHeight - th - 4));
+    tip.style.left = left + "px";
+    tip.style.top = top + "px";
+  }
+
+  function hideTip() {
+    if (!state.tipEl) return;
+    state.tipEl.classList.remove("visible");
+    state.tipEl.setAttribute("aria-hidden", "true");
+    state.tipTarget = null;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Cabecera, barra de filtros y secciones estáticas
+  // ---------------------------------------------------------------------------
+
+  function renderHeader(doc) {
+    var meta = doc.meta || {};
+    var header = el("header", { class: "app-header card" });
+    header.appendChild(el("h1", { text: "Visualizer · " + (meta.organization || "organización") }));
+
+    var line = el("div", { class: "meta-line" });
+    if (meta.source_kind) line.appendChild(el("span", { class: "kind-badge", text: String(meta.source_kind) }));
+    line.appendChild(el("span", { text: "Origen: " + (meta.source || "—") }));
+    line.appendChild(el("span", { text: "Generado: " + (meta.generated_at || "—") }));
+    line.appendChild(el("span", { text: "Esquema: " + (doc.schema_version || "—") }));
+    var repoTotal = meta.repositories != null
+      ? meta.repositories
+      : ((doc.datasets && doc.datasets.repositories) ? doc.datasets.repositories.length : 0);
+    line.appendChild(el("span", { text: "Repositorios: " + fmtInt(repoTotal) }));
+    header.appendChild(line);
+
+    var warnings = (meta.warnings || []).filter(function (w) { return w != null && String(w).length; });
+    if (warnings.length) {
+      var box = el("div", { class: "warnbox", role: "status" }, [
+        el("strong", { text: "Avisos (" + warnings.length + ")" })
+      ]);
+      var list = el("ul");
+      warnings.forEach(function (w) { list.appendChild(el("li", { text: String(w) })); });
+      box.appendChild(list);
+      header.appendChild(box);
+    }
+    return header;
+  }
+
+  function renderToolbar(doc) {
+    var hasDetail = Array.isArray((doc.datasets || {}).vulnerabilities)
+      && doc.datasets.vulnerabilities.length > 0;
+    var toolbar = el("div", { class: "toolbar", role: "group", "aria-label": "Filtros del tablero" });
+    var row = el("div", { class: "toolbar-row" });
+
+    // Búsqueda por repositorio
+    var searchField = el("div", { class: "field" });
+    searchField.appendChild(el("label", { for: "f-repo", text: "Repositorio" }));
+    var input = el("input", { type: "search", id: "f-repo", placeholder: "Buscar repositorio…", "aria-label": "Buscar repositorio" });
+    input.value = state.filters.repoQuery;
+    searchField.appendChild(input);
+    row.appendChild(searchField);
+
+    // Severidades
+    var sevField = el("div", { class: "field", role: "group", "aria-label": "Filtrar por severidad" });
+    sevField.appendChild(el("span", { class: "field-label", text: "Severidad" }));
+    var checks = el("div", { class: "sev-checks" });
+    SEVERITIES.forEach(function (s) {
+      var id = "sev-" + s.toLowerCase();
+      var lab = el("label", { class: "sev-check", for: id });
+      var cb = el("input", { type: "checkbox", id: id, checked: state.filters.severities[s] !== false, disabled: !hasDetail });
+      cb.setAttribute("data-sev", s);
+      lab.appendChild(cb);
+      lab.appendChild(el("span", { class: "swatch " + sevClass(s), "aria-hidden": "true" }));
+      lab.appendChild(el("span", { text: s }));
+      checks.appendChild(lab);
+    });
+    sevField.appendChild(checks);
+    row.appendChild(sevField);
+
+    // Tipo de paquete
+    var ptField = el("div", { class: "field" });
+    ptField.appendChild(el("label", { for: "f-type", text: "Tipo de paquete" }));
+    var ptSelect = el("select", { id: "f-type", "aria-label": "Filtrar por tipo de paquete", disabled: !hasDetail });
+    ptSelect.appendChild(el("option", { value: "all", text: "Todos" }));
+    allPackageTypes(doc).forEach(function (x) { ptSelect.appendChild(el("option", { value: x, text: x })); });
+    ptSelect.value = state.filters.packageType;
+    ptField.appendChild(ptSelect);
+    row.appendChild(ptField);
+
+    // Lenguaje
+    var lgField = el("div", { class: "field" });
+    lgField.appendChild(el("label", { for: "f-lang", text: "Lenguaje" }));
+    var lgSelect = el("select", { id: "f-lang", "aria-label": "Filtrar por lenguaje" });
+    lgSelect.appendChild(el("option", { value: "all", text: "Todos" }));
+    allLanguages(doc).forEach(function (x) { lgSelect.appendChild(el("option", { value: x, text: x })); });
+    lgSelect.value = state.filters.language;
+    lgField.appendChild(lgSelect);
+    row.appendChild(lgField);
+
+    // Botón de reinicio
+    var resetField = el("div", { class: "field" });
+    resetField.appendChild(el("span", { class: "field-label", "aria-hidden": "true", text: "\u00a0" }));
+    var reset = el("button", { type: "button", class: "btn", text: "Restablecer" });
+    resetField.appendChild(reset);
+    row.appendChild(resetField);
+
+    toolbar.appendChild(row);
+    if (!hasDetail) {
+      toolbar.appendChild(el("p", {
+        class: "note",
+        text: "El documento no incluye detalle de vulnerabilidades: los filtros de severidad y tipo de paquete están deshabilitados. No se recalcula ninguna métrica."
+      }));
+    }
+    state.statusEl = el("span", { class: "sr-only", role: "status", "aria-live": "polite" });
+    toolbar.appendChild(state.statusEl);
+
+    input.addEventListener("input", function () {
+      state.filters.repoQuery = input.value;
+      scheduleUpdate();
+    });
+    checks.addEventListener("change", function (e) {
+      var s = e.target.getAttribute("data-sev");
+      if (!s) return;
+      state.filters.severities[s] = e.target.checked;
+      update();
+    });
+    ptSelect.addEventListener("change", function () { state.filters.packageType = ptSelect.value; update(); });
+    lgSelect.addEventListener("change", function () { state.filters.language = lgSelect.value; update(); });
+    reset.addEventListener("click", function () {
+      state.filters = defaultFilters();
+      input.value = "";
+      ptSelect.value = "all";
+      lgSelect.value = "all";
+      var boxes = checks.querySelectorAll("input[data-sev]");
+      for (var i = 0; i < boxes.length; i++) boxes[i].checked = true;
+      update();
+      input.focus();
+    });
+
+    return toolbar;
+  }
+
+  function renderObservations(doc) {
+    var card = el("section", { class: "card" });
+    card.appendChild(el("div", { class: "card-head" }, [el("h2", { text: "Observaciones" })]));
+    var observations = doc.observations || [];
+    if (!observations.length) { card.appendChild(sinDatos()); return card; }
+
+    var list = el("div", { class: "obs" });
+    observations.forEach(function (obs) {
+      var item = el("div", { class: "obs-item" });
+      var head = el("div", { class: "obs-head" });
+      head.appendChild(el("span", { class: "obs-id", text: String(obs.id || "—") }));
+      head.appendChild(el("span", { class: "obs-title", text: String(obs.title || "") }));
+      if (obs.metric) head.appendChild(el("span", { class: "obs-metric mono", text: String(obs.metric) }));
+      item.appendChild(head);
+      if (obs.statement) item.appendChild(el("p", { text: String(obs.statement) }));
+      if (obs.evidence != null) {
+        var details = el("details");
+        details.appendChild(el("summary", { text: "Evidencia" }));
+        var pre = el("pre");
+        pre.textContent = prettyJson(obs.evidence);
+        details.appendChild(pre);
+        item.appendChild(details);
+      }
+      list.appendChild(item);
+    });
+    card.appendChild(list);
+    return card;
+  }
+
+  function prettyJson(value) {
+    try { return JSON.stringify(value, null, 2); } catch (e) { return String(value); }
+  }
+
+  function renderLimitations(doc) {
+    var card = el("section", { class: "card" });
+    card.appendChild(el("div", { class: "card-head" }, [el("h2", { text: "Limitaciones" })]));
+    var limits = doc.limitations || [];
+    if (!limits.length) { card.appendChild(sinDatos()); return card; }
+    var list = el("ul", { class: "limits" });
+    limits.forEach(function (text) { list.appendChild(el("li", { text: String(text) })); });
+    card.appendChild(list);
+    return card;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Tarjetas dinámicas
+  // ---------------------------------------------------------------------------
+
+  function renderKpiCard(view) {
+    var card = el("section", { class: "card" });
+    card.appendChild(el("div", { class: "card-head" }, [
+      el("h2", { text: "Indicadores" }),
+      el("span", { class: "sub", text: "Globales · sin filtrar (Analyzer)" })
+    ]));
+    var grid = el("div", { class: "kpis" });
+    grid.appendChild(kpiItem("Repositorios", fmtInt(view.kpi.repositories), "En el alcance de los filtros"));
+    grid.appendChild(kpiItem("Vulnerabilidades", fmtInt(view.kpi.vulnerabilities), null));
+    grid.appendChild(kpiItem("Critical", fmtInt(view.kpi.critical), null, "sev-critical"));
+    grid.appendChild(kpiItem("High", fmtInt(view.kpi.high), null, "sev-high"));
+    grid.appendChild(kpiItem("Nota global", (view.kpi.score == null ? "—" : fmt1(view.kpi.score)) + " / 10", "Gravedad media ponderada", scoreClass(view.kpi.score)));
+    grid.appendChild(kpiItem("Cobertura", fmtPctOrDash(view.kpi.coverage), "Al menos una dimensión con éxito", covClass(view.kpi.coverage)));
+    grid.appendChild(kpiItem("Hotspots Critical", fmtInt(view.kpi.hotspots), "Repos con ≥1 Critical", view.kpi.hotspots > 0 ? "sev-critical" : "ok"));
+    card.appendChild(grid);
+    return card;
+  }
+
+  function kpiItem(label, value, hint, cls) {
+    var node = el("div", { class: "kpi" + (cls ? " " + cls : "") });
+    node.appendChild(el("div", { class: "value", text: value }));
+    node.appendChild(el("div", { class: "label", text: label }));
+    if (hint) node.appendChild(el("div", { class: "hint", text: hint }));
+    return node;
+  }
+
+  function scoreClass(score) {
+    if (score == null) return "";
+    if (score >= 7) return "sev-critical";
+    if (score >= 4) return "warn";
+    return "ok";
+  }
+
+  function covClass(ratio) {
+    if (ratio == null) return "";
+    if (ratio >= 0.999) return "ok";
+    if (ratio >= 0.75) return "warn";
+    return "sev-high";
+  }
+
+  function renderSeverityCard(view) {
+    var card = el("section", { class: "card" });
+    card.appendChild(el("div", { class: "card-head" }, [
+      el("h2", { text: "Distribución de severidad" }),
+      el("span", { class: "sub", text: fmtInt(view.severityTotal) + " vulnerabilidades" })
+    ]));
+    var total = view.severityTotal;
+    if (!total) { card.appendChild(sinDatos()); return card; }
+
+    var wrap = el("div", { class: "donut-wrap" });
+    var size = 200, r = 72, cx = 100, cy = 100, stroke = 24;
+    var circumference = 2 * Math.PI * r;
+    var svg = svgEl("svg", {
+      class: "donut", viewBox: "0 0 " + size + " " + size, role: "group",
+      "aria-label": "Dona de distribución global de severidad"
+    });
+    svg.appendChild(svgEl("title", { text: "Distribución global de severidad de las vulnerabilidades" }));
+    var offset = 0;
+    SEVERITIES.forEach(function (s) {
+      var count = view.severityCounts[s] || 0;
+      if (!count) return;
+      var frac = count / total;
+      var len = frac * circumference;
+      var circle = svgEl("circle", {
+        cx: cx, cy: cy, r: r, fill: "none", "stroke-width": stroke,
+        "stroke-dasharray": len + " " + (circumference - len),
+        "stroke-dashoffset": String(-offset),
+        transform: "rotate(-90 " + cx + " " + cy + ")", tabindex: "0"
+      });
+      circle.style.stroke = sevColorVar(s);
+      var tip = s + ": " + count + " (" + pct(frac) + ")";
+      circle.setAttribute("data-tip", tip);
+      circle.setAttribute("aria-label", tip);
+      svg.appendChild(circle);
+      offset += len;
+    });
+    svg.appendChild(svgEl("text", { class: "donut-total", x: cx, y: cy + 2, "text-anchor": "middle", text: String(total) }));
+    svg.appendChild(svgEl("text", { class: "donut-sub", x: cx, y: cy + 20, "text-anchor": "middle", text: "vulnerabilidades" }));
+    wrap.appendChild(svg);
+
+    var legend = el("ul", { class: "legend" });
+    SEVERITIES.forEach(function (s) {
+      var count = view.severityCounts[s] || 0;
+      var li = el("li");
+      li.appendChild(el("span", { class: "swatch " + sevClass(s), "aria-hidden": "true" }));
+      li.appendChild(el("span", { class: "legend-name", text: s }));
+      li.appendChild(el("span", { class: "legend-val", text: fmtInt(count) + " · " + pct(total ? count / total : 0) }));
+      legend.appendChild(li);
+    });
+    wrap.appendChild(legend);
+    card.appendChild(wrap);
+    return card;
+  }
+
+  function renderRiskCard(view) {
+    var card = el("section", { class: "card" });
+    card.appendChild(el("div", { class: "card-head" }, [
+      el("h2", { text: "Riesgo por repositorio" }),
+      el("span", { class: "sub", text: "Clic en el encabezado para ordenar; clic en el nombre para ver el detalle." })
+    ]));
+    if (!view.riskRows.length) { card.appendChild(sinDatos()); return card; }
+
+    var wrap = el("div", { class: "table-wrap" });
+    var table = el("table", { class: "data" });
+    table.appendChild(el("caption", { class: "sr-only", text: "Riesgo por repositorio, ordenable por columnas" }));
+
+    var thead = el("thead");
+    var headRow = el("tr");
+    COLS.forEach(function (col) {
+      var th = el("th", { scope: "col" });
+      th.setAttribute("class", "sortable" + (col.type === "num" ? " num" : ""));
+      var active = state.sort.key === col.key;
+      th.setAttribute("aria-sort", active ? (state.sort.dir === "asc" ? "ascending" : "descending") : "none");
+      var button = el("button", { type: "button", "data-focus-id": "sort:" + col.key, "aria-label": "Ordenar por " + col.label });
+      button.appendChild(el("span", { text: col.label }));
+      button.appendChild(el("span", { class: "sort-arrow", "aria-hidden": "true" }));
+      (function (key) {
+        button.addEventListener("click", function () { toggleSort(key); });
+      })(col.key);
+      th.appendChild(button);
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    var rows = sortRows(view.riskRows, state.sort.key, state.sort.dir);
+    var tbody = el("tbody");
+    rows.forEach(function (r) {
+      var tr = el("tr", { "data-repo": r.repo });
+      if (state.selectedRepo === r.repo) tr.setAttribute("class", "selected");
+
+      var tdRepo = el("td");
+      var repoBtn = el("button", { type: "button", class: "btn link", "data-focus-id": "repo:" + r.repo, text: r.repo, "aria-label": "Ver detalle de " + r.repo });
+      (function (name) {
+        repoBtn.addEventListener("click", function () { selectRepo(name); });
+      })(r.repo);
+      tdRepo.appendChild(repoBtn);
+      tr.appendChild(tdRepo);
+
+      tr.appendChild(el("td", {}, [el("span", { class: "badge status", text: r.status || "—" })]));
+
+      var tdScore = el("td");
+      var scoreCell = el("div", { class: "score-cell" });
+      var scoreBar = el("div", { class: "score-bar" });
+      var scoreFill = el("span");
+      var sc = r.score == null ? 0 : r.score;
+      scoreFill.style.width = Math.max(0, Math.min(100, sc / 10 * 100)) + "%";
+      scoreFill.style.background = sevColorVar(r.worst_severity);
+      scoreBar.appendChild(scoreFill);
+      scoreCell.appendChild(scoreBar);
+      scoreCell.appendChild(el("span", { class: "score-num", text: r.score == null ? "—" : fmt1(r.score) }));
+      tdScore.appendChild(scoreCell);
+      tr.appendChild(tdScore);
+
+      tr.appendChild(el("td", { class: "num", text: fmt2OrDash(r.severity_weighted_average) }));
+      tr.appendChild(el("td", { class: "num", text: fmt2OrDash(r.severity_median) }));
+      tr.appendChild(el("td", {}, [sevBadge(r.worst_severity)]));
+      tr.appendChild(el("td", { class: "num", text: fmtInt(r.critical) }));
+      tr.appendChild(el("td", { class: "num", text: fmtInt(r.high) }));
+      tr.appendChild(el("td", { class: "num", text: fmtInt(r.vulnerabilities) }));
+      tr.appendChild(el("td", { class: "num", text: fmtInt(r.findings) }));
+      tr.appendChild(el("td", { class: "num", text: fmtInt(r.components) }));
+      tr.appendChild(el("td", { class: "num", text: fmt2OrDash(r.vulns_per_component) }));
+      tr.appendChild(el("td", { class: "num", text: fmt2OrDash(r.findings_per_component) }));
+      tr.appendChild(el("td", { class: "num", text: fmtPctOrDash(r.fixed_version_share) }));
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    card.appendChild(wrap);
+    return card;
+  }
+
+  function renderVulnsByRepoCard(view) {
+    var card = el("section", { class: "card" });
+    card.appendChild(el("div", { class: "card-head" }, [
+      el("h2", { text: "Vulnerabilidades por repositorio" }),
+      el("span", { class: "sub", text: "Color por peor severidad" })
+    ]));
+    var rows = view.riskRows.filter(function (r) { return r.vulnerabilities > 0; })
+      .slice().sort(function (a, b) {
+        if (b.vulnerabilities !== a.vulnerabilities) return b.vulnerabilities - a.vulnerabilities;
+        return byRepo(a, b);
+      });
+    if (!rows.length) { card.appendChild(sinDatos()); return card; }
+
+    var limit = 25;
+    var shown = rows.slice(0, limit);
+    var max = shown[0].vulnerabilities;
+    var list = el("ul", { class: "bars" });
+    shown.forEach(function (r) {
+      var worst = canonical(r.worst_severity);
+      var li = el("li", {
+        class: "bar-row",
+        "data-tip": r.repo + ": " + r.vulnerabilities + " vulnerabilidades, peor " + worst,
+        "aria-label": r.repo + ": " + r.vulnerabilities + " vulnerabilidades, peor " + worst
+      });
+      li.appendChild(el("span", { class: "bar-label", text: r.repo, title: r.repo }));
+      var track = el("span", { class: "bar-track" });
+      var fill = el("span", { class: "bar-fill" });
+      fill.style.width = (max > 0 ? Math.max(1.5, r.vulnerabilities / max * 100) : 0) + "%";
+      fill.style.background = sevColorVar(worst);
+      track.appendChild(fill);
+      li.appendChild(track);
+      li.appendChild(el("span", { class: "bar-value", text: fmtInt(r.vulnerabilities) }));
+      list.appendChild(li);
+    });
+    card.appendChild(list);
+    if (rows.length > limit) {
+      card.appendChild(el("p", { class: "note", text: "Mostrando " + limit + " de " + rows.length + " repositorios con vulnerabilidades." }));
+    }
+    return card;
+  }
+
+  function renderScatterCard(view) {
+    var card = el("section", { class: "card" });
+    var pear = view.relations.pearson;
+    var sub = el("span", {
+      class: "sub",
+      text: pear == null ? "Pearson global: no calculable" : "Pearson global (Analyzer) r = " + fmt4(pear) + " (n=" + fmtInt(view.relations.pearsonN) + ")"
+    });
+    var toggleId = "scatter-density";
+    var lab = el("label", { class: "sev-check", for: toggleId });
+    var cb = el("input", { type: "checkbox", id: toggleId, "data-focus-id": "density", checked: !!state.scatterDensity });
+    cb.addEventListener("change", function () { state.scatterDensity = cb.checked; update(); });
+    lab.appendChild(cb);
+    lab.appendChild(el("span", { text: "Ver densidad" }));
+    card.appendChild(el("div", { class: "card-head" }, [
+      el("h2", { text: "Componentes vs vulnerabilidades" }),
+      el("div", { class: "toolbar-row" }, [sub, lab])
+    ]));
+
+    var points = view.riskRows.map(function (r) {
+      return {
+        repo: r.repo,
+        components: num(r.components),
+        vulnerabilities: num(r.vulnerabilities),
+        findings: num(r.findings),
+        worst_severity: canonical(r.worst_severity)
+      };
+    });
+    if (!points.length) { card.appendChild(sinDatos()); return card; }
+
+    var W = 640, H = 360, M = { l: 52, r: 18, t: 16, b: 44 };
+    var pw = W - M.l - M.r, ph = H - M.t - M.b;
+    var maxX = 0, maxY = 0, maxF = 0;
+    points.forEach(function (p) {
+      if (p.components > maxX) maxX = p.components;
+      if (p.vulnerabilities > maxY) maxY = p.vulnerabilities;
+      if (p.findings > maxF) maxF = p.findings;
+    });
+    if (maxX <= 0) maxX = 1;
+    if (maxY <= 0) maxY = 1;
+
+    var svg = svgEl("svg", {
+      class: "scatter", viewBox: "0 0 " + W + " " + H, role: "group",
+      "aria-label": "Dispersión de " + points.length + " repositorios: componentes del SBOM frente a vulnerabilidades"
+        + (pear == null ? "" : "; correlación de Pearson " + fmt4(pear))
+    });
+    svg.appendChild(svgEl("title", { text: "Dispersión de componentes del SBOM frente a vulnerabilidades" }));
+
+    var i, t, vx, vy;
+    for (i = 0; i <= 4; i++) {
+      t = i / 4;
+      vy = M.t + ph - t * ph;
+      svg.appendChild(svgEl("line", { class: "gridline", x1: M.l, y1: vy, x2: M.l + pw, y2: vy }));
+      svg.appendChild(svgEl("text", { class: "tick", x: M.l - 6, y: vy + 3, "text-anchor": "end", text: String(Math.round(t * maxY)) }));
+      vx = M.l + t * pw;
+      svg.appendChild(svgEl("line", { class: "gridline", x1: vx, y1: M.t, x2: vx, y2: M.t + ph }));
+      svg.appendChild(svgEl("text", { class: "tick", x: vx, y: M.t + ph + 14, "text-anchor": "middle", text: String(Math.round(t * maxX)) }));
+    }
+    svg.appendChild(svgEl("line", { class: "axis", x1: M.l, y1: M.t, x2: M.l, y2: M.t + ph }));
+    svg.appendChild(svgEl("line", { class: "axis", x1: M.l, y1: M.t + ph, x2: M.l + pw, y2: M.t + ph }));
+    svg.appendChild(svgEl("text", { class: "axis-title", x: M.l + pw / 2, y: H - 4, "text-anchor": "middle", text: "Componentes del SBOM" }));
+    svg.appendChild(svgEl("text", {
+      class: "axis-title", x: 14, y: M.t + ph / 2, "text-anchor": "middle",
+      transform: "rotate(-90 14 " + (M.t + ph / 2) + ")", text: "Vulnerabilidades"
+    }));
+
+    if (state.scatterDensity) {
+      var cols = 8, rowsGrid = 6, grid = [];
+      for (i = 0; i < cols * rowsGrid; i++) grid.push(0);
+      points.forEach(function (p) {
+        var gx = Math.min(cols - 1, Math.floor(p.components / maxX * cols));
+        var gy = Math.min(rowsGrid - 1, Math.floor(p.vulnerabilities / maxY * rowsGrid));
+        grid[gy * cols + gx]++;
+      });
+      var maxCell = 0;
+      grid.forEach(function (c) { if (c > maxCell) maxCell = c; });
+      var cw = pw / cols, ch = ph / rowsGrid;
+      for (var gy2 = 0; gy2 < rowsGrid; gy2++) {
+        for (var gx2 = 0; gx2 < cols; gx2++) {
+          var cellCount = grid[gy2 * cols + gx2];
+          if (!cellCount) continue;
+          var rect = svgEl("rect", {
+            class: "cell", x: M.l + gx2 * cw, y: M.t + (rowsGrid - 1 - gy2) * ch,
+            width: cw, height: ch, rx: 2
+          });
+          rect.style.fill = "var(--accent)";
+          rect.style.opacity = String(0.12 + 0.7 * (cellCount / maxCell));
+          rect.setAttribute("data-tip", "Densidad: " + cellCount + " repositorio(s) en esta celda");
+          svg.appendChild(rect);
+        }
+      }
+    }
+
+    points.forEach(function (p) {
+      var px = M.l + (p.components / maxX) * pw;
+      var py = M.t + ph - (p.vulnerabilities / maxY) * ph;
+      var radius = maxF > 0 ? 4 + 7 * Math.sqrt(p.findings / maxF) : 5;
+      var circle = svgEl("circle", { class: "pt", cx: px, cy: py, r: radius, tabindex: "0" });
+      circle.style.fill = sevColorVar(p.worst_severity);
+      var tip = p.repo + ": " + p.components + " componentes, " + p.vulnerabilities + " vulnerabilidades, "
+        + p.findings + " hallazgos, peor " + p.worst_severity;
+      circle.setAttribute("data-tip", tip);
+      circle.setAttribute("aria-label", tip);
+      svg.appendChild(circle);
+    });
+
+    card.appendChild(el("div", { class: "scatter-wrap" }, [svg]));
+    card.appendChild(el("p", { class: "scatter-note", text: "Tamaño de burbuja: hallazgos CodeQL. Color: peor severidad del repositorio. El coeficiente de Pearson es global (Analyzer); los puntos se acotan a los filtros. Correlación ≠ causalidad." }));
+    if (state.scatterDensity) {
+      card.appendChild(el("p", { class: "scatter-note", text: "La rejilla muestra el número de repositorios por celda (densidad)." }));
+    }
+    return card;
+  }
+
+  function barCard(title, sub, items, note) {
+    var card = el("section", { class: "card" });
+    var head = el("div", { class: "card-head" }, [el("h2", { text: title })]);
+    if (sub) head.appendChild(el("span", { class: "sub", text: sub }));
+    card.appendChild(head);
+    if (!items.length) {
+      card.appendChild(sinDatos());
+      if (note) card.appendChild(el("p", { class: "note", text: note }));
+      return card;
+    }
+
+    var max = 0;
+    items.forEach(function (it) { if (it.value > max) max = it.value; });
+    var list = el("ul", { class: "bars" });
+    items.forEach(function (it) {
+      var li = el("li", { class: "bar-row", "data-tip": it.tip, "aria-label": it.tip || it.label + ": " + it.value });
+      li.appendChild(el("span", { class: "bar-label", text: it.label, title: it.label }));
+      var track = el("span", { class: "bar-track" });
+      var fill = el("span", { class: "bar-fill" });
+      fill.style.width = (max > 0 ? Math.max(1.5, it.value / max * 100) : 0) + "%";
+      fill.style.background = it.color || "var(--accent)";
+      track.appendChild(fill);
+      li.appendChild(track);
+      li.appendChild(el("span", { class: "bar-value", text: fmtInt(it.value) }));
+      list.appendChild(li);
+    });
+    card.appendChild(list);
+    if (note) card.appendChild(el("p", { class: "note", text: note }));
+    return card;
+  }
+
+  function renderTopPackagesCard(view) {
+    var items = (view.topPackages || []).map(function (p) {
+      var worst = canonical(p.worst_severity);
+      return {
+        label: String(p.package == null ? "unknown" : p.package),
+        value: num(p.count),
+        color: sevColorVar(worst),
+        tip: p.package + ": " + num(p.count) + " vulnerabilidades en " + num(p.repos_affected) + " repositorio(s), peor " + worst
+      };
+    });
+    return barCard("Top paquetes", "Por vulnerabilidades acumuladas", items, null);
+  }
+
+  function renderTopCvesCard(view) {
+    var items = (view.topCves || []).map(function (c) {
+      var sev = canonical(c.severity);
+      return {
+        label: String(c.id == null ? "unknown" : c.id),
+        value: num(c.count),
+        color: sevColorVar(sev),
+        tip: c.id + " (" + sev + "): " + num(c.count) + " aparición(es) en " + num(c.repos_affected) + " repositorio(s)"
+      };
+    });
+    return barCard("Top CVEs / GHSA", "Identificadores más repetidos", items, null);
+  }
+
+  function renderTopRulesCard(view) {
+    var items = (view.topRules || []).map(function (r) {
+      return {
+        label: String(r.rule_id == null ? "unknown" : r.rule_id),
+        value: num(r.count),
+        color: "var(--accent)",
+        tip: r.rule_id + ": " + num(r.count) + " hallazgo(s) en " + num(r.repos_affected) + " repositorio(s)"
+      };
+    });
+    var note = view.hasFindingDetail ? null : "El documento no incluye hallazgos de CodeQL.";
+    return barCard("Top reglas CodeQL", "Hallazgos por regla", items, note);
+  }
+
+  // Agrupa filas {clave, severity} en grupos con total y desglose por severidad.
+  function groupStack(rows, keyField) {
+    var map = {}, order = [];
+    rows.forEach(function (r) {
+      var key = String(r[keyField] == null || r[keyField] === "" ? "unknown" : r[keyField]);
+      if (!map[key]) {
+        var sev = {};
+        SEVERITIES.forEach(function (s) { sev[s] = 0; });
+        map[key] = { key: key, total: 0, sev: sev };
+        order.push(key);
+      }
+      var s = canonical(r.severity);
+      map[key].sev[s] += num(r.count);
+      map[key].total += num(r.count);
+    });
+    return order.map(function (k) { return map[k]; }).sort(function (a, b) {
+      if (b.total !== a.total) return b.total - a.total;
+      return a.key < b.key ? -1 : a.key > b.key ? 1 : 0;
+    });
+  }
+
+  function stackCard(title, sub, rows, keyField, note) {
+    var card = el("section", { class: "card" });
+    var head = el("div", { class: "card-head" }, [el("h2", { text: title })]);
+    if (sub) head.appendChild(el("span", { class: "sub", text: sub }));
+    card.appendChild(head);
+    var groups = groupStack(rows || [], keyField);
+    if (!groups.length) { card.appendChild(sinDatos()); return card; }
+
+    var limit = 12;
+    var shown = groups.slice(0, limit);
+    shown.forEach(function (g) {
+      var row = el("div", { class: "stack-row" });
+      row.appendChild(el("span", { class: "bar-label", text: g.key, title: g.key }));
+      var track = el("span", { class: "stack-track" });
+      SEVERITIES.forEach(function (s) {
+        var count = g.sev[s] || 0;
+        if (!count) return;
+        var seg = el("span", { class: "stack-seg" });
+        seg.style.width = (g.total ? count / g.total * 100 : 0) + "%";
+        seg.style.background = sevColorVar(s);
+        seg.setAttribute("data-tip", g.key + " · " + s + ": " + count);
+        track.appendChild(seg);
+      });
+      row.appendChild(track);
+      row.appendChild(el("span", { class: "bar-value", text: fmtInt(g.total) }));
+      card.appendChild(row);
+    });
+    if (groups.length > limit) {
+      card.appendChild(el("p", { class: "note", text: "Mostrando " + limit + " de " + groups.length + " grupos." }));
+    }
+    if (note) card.appendChild(el("p", { class: "note", text: note }));
+    return card;
+  }
+
+  function renderSevByTypeCard(view) {
+    return stackCard("Severidad por tipo de paquete", "Barras apiladas por severidad", view.relations.severityByPackageType, "type", null);
+  }
+
+  function renderSevByLangCard(view) {
+    var note = (view.relations.severityByLanguage && view.relations.severityByLanguage.length)
+      ? "Los repos multi-lenguaje cuentan la vulnerabilidad una vez por lenguaje; los totales no suman el global."
+      : null;
+    return stackCard("Severidad por lenguaje", "Barras apiladas por severidad", view.relations.severityByLanguage, "language", note);
+  }
+
+  function renderContextCard(view) {
+    var card = el("section", { class: "card" });
+    card.appendChild(el("div", { class: "card-head" }, [el("h2", { text: "Concentración y reparabilidad" })]));
+    var c = view.concentration || {};
+    var rs = view.riskSummary || {};
+    var rel = view.relations || {};
+    var items = [
+      ["Repos con vulnerabilidades", fmtIntOrDash(c.repositories_with_vulns)],
+      ["Top N efectivo", fmtIntOrDash(c.top_n)],
+      ["Cuota top N", fmtPctOrDash(c.top_n_share)],
+      ["Cuota decil superior", fmtPctOrDash(c.top_10pct_share)],
+      ["HHI", fmt4OrDash(c.hhi)],
+      ["Repos puntuados", fmtIntOrDash(rs.repositories_scored)],
+      ["Nota media por repo", fmt1OrDash(rs.mean_repository_score) + " / 10"],
+      ["Nota máxima por repo", fmt1OrDash(rs.max_repository_score) + " / 10"],
+      ["Peor severidad global", canonical(rs.worst_severity || "Unknown")],
+      ["Corrección disponible", fmtPctOrDash(rel.fixedVersionShare)]
+    ];
+    var grid = el("div", { class: "kpis" });
+    items.forEach(function (it) {
+      grid.appendChild(el("div", { class: "kpi" }, [
+        el("div", { class: "value", text: it[1] }),
+        el("div", { class: "label", text: it[0] })
+      ]));
+    });
+    card.appendChild(grid);
+    card.appendChild(el("p", { class: "note", text: "La nota 1-10 resume gravedad media con pesos fijos (Critical=10 … Unknown=0), no volumen ni explotabilidad; la correlación no implica causalidad." }));
+    return card;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Drill-down por repositorio
+  // ---------------------------------------------------------------------------
+
+  function renderDrilldown(view) {
+    var container = state.drillEl;
+    if (!container) return;
+    clear(container);
+    var repo = state.selectedRepo;
+    if (!repo) return;
+
+    var row = null;
+    for (var i = 0; i < view.riskRows.length; i++) {
+      if (view.riskRows[i].repo === repo) { row = view.riskRows[i]; break; }
+    }
+
+    var card = el("section", { class: "card drill", id: "vis-drill" });
+    var head = el("div", { class: "drill-head" });
+    head.appendChild(el("h2", { class: "drill-title", tabindex: "-1", text: "Detalle · " + repo }));
+    var close = el("button", { type: "button", class: "btn", "data-focus-id": "drill-close", text: "Cerrar" });
+    close.addEventListener("click", function () {
+      state.selectedRepo = null;
+      renderDrilldown(view);
+      restoreRepoFocus(repo);
+    });
+    head.appendChild(close);
+    card.appendChild(head);
+
+    if (row) {
+      var summary = el("div", { class: "drill-summary" });
+      var pairs = [
+        ["Estado", row.status || "—"],
+        ["Lenguajes", (row.languages && row.languages.length ? row.languages.join(", ") : "—")],
+        ["Componentes", fmtInt(row.components)],
+        ["Nota", row.score == null ? "—" : fmt1(row.score) + " / 10"],
+        ["Peor severidad", canonical(row.worst_severity)],
+        ["Vulns", fmtInt(row.vulnerabilities)],
+        ["Findings", fmtInt(row.findings)]
+      ];
+      pairs.forEach(function (p) {
+        summary.appendChild(el("span", {}, [el("strong", { text: p[0] + ": " }), el("span", { text: String(p[1]) })]));
+      });
+      card.appendChild(summary);
+    }
+
+    var vulns = (view.detailVulns || []).filter(function (v) { return v.repo === repo; });
+    var findings = (view.detailFindings || []).filter(function (f) { return f.repo === repo; });
+
+    card.appendChild(el("h3", { text: "Vulnerabilidades (" + vulns.length + ")" }));
+    card.appendChild(vulnTable(vulns));
+    card.appendChild(el("h3", { text: "Hallazgos CodeQL (" + findings.length + ")" }));
+    card.appendChild(findingTable(findings));
+    container.appendChild(card);
+  }
+
+  function vulnTable(vulns) {
+    if (!vulns.length) return sinDatos("Sin vulnerabilidades registradas.");
+    var rows = vulns.slice().sort(function (a, b) {
+      var c = sevIndex(a.severity) - sevIndex(b.severity);
+      if (c !== 0) return c;
+      return String(a.id) < String(b.id) ? -1 : String(a.id) > String(b.id) ? 1 : 0;
+    });
+    var table = el("table", { class: "data" });
+    table.appendChild(el("caption", { class: "sr-only", text: "Vulnerabilidades del repositorio" }));
+    var thead = el("thead");
+    var hr = el("tr");
+    ["ID", "Severidad", "Paquete", "Versión", "Tipo", "Corregida", "Namespace"].forEach(function (h) {
+      hr.appendChild(el("th", { scope: "col", text: h }));
+    });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+    var tbody = el("tbody");
+    rows.slice(0, ROW_LIMIT).forEach(function (v) {
+      var tr = el("tr");
+      tr.appendChild(el("td", { class: "mono", text: String(v.id == null ? "—" : v.id) }));
+      tr.appendChild(el("td", {}, [sevBadge(v.severity)]));
+      tr.appendChild(el("td", { text: String(v.package == null ? "—" : v.package) }));
+      tr.appendChild(el("td", { text: String(v.version == null ? "—" : v.version) }));
+      tr.appendChild(el("td", { text: String(v.type == null ? "—" : v.type) }));
+      tr.appendChild(el("td", { text: String(v.fixed_version == null || v.fixed_version === "" ? "—" : v.fixed_version) }));
+      tr.appendChild(el("td", { text: String(v.namespace == null ? "—" : v.namespace) }));
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    var wrap = el("div", { class: "table-wrap" }, [table]);
+    if (rows.length > ROW_LIMIT) {
+      wrap.appendChild(el("p", { class: "note", text: "Mostrando " + ROW_LIMIT + " de " + rows.length + " vulnerabilidades." }));
+    }
+    return wrap;
+  }
+
+  function findingTable(findings) {
+    if (!findings.length) return sinDatos("Sin hallazgos registrados (o CodeQL no se ejecutó: 'no evaluado', no 'limpio').");
+    var rows = findings.slice().sort(function (a, b) {
+      var c = sevIndex(a.severity) - sevIndex(b.severity);
+      if (c !== 0) return c;
+      if (String(a.file) !== String(b.file)) return String(a.file) < String(b.file) ? -1 : 1;
+      return num(a.start_line) - num(b.start_line);
+    });
+    var table = el("table", { class: "data" });
+    table.appendChild(el("caption", { class: "sr-only", text: "Hallazgos CodeQL del repositorio" }));
+    var thead = el("thead");
+    var hr = el("tr");
+    ["Regla", "Severidad", "Archivo", "Línea"].forEach(function (h) { hr.appendChild(el("th", { scope: "col", text: h })); });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+    var tbody = el("tbody");
+    rows.slice(0, ROW_LIMIT).forEach(function (f) {
+      var tr = el("tr");
+      tr.appendChild(el("td", { class: "mono", text: String(f.rule_id == null ? "—" : f.rule_id) }));
+      tr.appendChild(el("td", {}, [sevBadge(f.severity)]));
+      tr.appendChild(el("td", { text: String(f.file == null ? "—" : f.file) }));
+      tr.appendChild(el("td", { class: "num", text: String(f.start_line == null ? "—" : f.start_line) }));
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    var wrap = el("div", { class: "table-wrap" }, [table]);
+    if (rows.length > ROW_LIMIT) {
+      wrap.appendChild(el("p", { class: "note", text: "Mostrando " + ROW_LIMIT + " de " + rows.length + " hallazgos." }));
+    }
+    return wrap;
+  }
+
+  function selectRepo(name) {
+    state.selectedRepo = name;
+    if (state.contentEl) {
+      var trs = state.contentEl.querySelectorAll("tr[data-repo]");
+      for (var i = 0; i < trs.length; i++) {
+        if (trs[i].getAttribute("data-repo") === name) trs[i].setAttribute("class", "selected");
+        else trs[i].removeAttribute("class");
+      }
+    }
+    renderDrilldown(state.view);
+    var heading = state.drillEl ? state.drillEl.querySelector(".drill-title") : null;
+    if (heading) { try { heading.focus(); } catch (e) { /* sin foco */ } }
+    if (state.drillEl && state.drillEl.scrollIntoView) {
+      try {
+        state.drillEl.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
+      } catch (e) {
+        state.drillEl.scrollIntoView(true);
+      }
+    }
+  }
+
+  function restoreRepoFocus(name) {
+    if (!name) return;
+    var nodes = document.querySelectorAll("[data-focus-id]");
+    var wanted = "repo:" + name;
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].getAttribute("data-focus-id") === wanted) {
+        try { nodes[i].focus(); } catch (e) { /* sin foco */ }
+        return;
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Render principal y actualización
+  // ---------------------------------------------------------------------------
+
+  function renderContent(container, view) {
+    if (view.filtersActive) {
+      container.appendChild(el("p", {
+        class: "note filter-note",
+        text: "Filtros aplicados a las vistas por repositorio (" + fmtInt(view.scopeCount) + " de "
+          + fmtInt(view.totalRepos) + " repositorios); los indicadores y rankings globales provienen del Analyzer (sin filtrar)."
+      }));
+    }
+    container.appendChild(renderKpiCard(view));
+    container.appendChild(renderSeverityCard(view));
+    container.appendChild(renderRiskCard(view));
+    container.appendChild(renderVulnsByRepoCard(view));
+    container.appendChild(renderScatterCard(view));
+
+    var pair1 = el("div", { class: "grid-2" });
+    pair1.appendChild(renderTopPackagesCard(view));
+    pair1.appendChild(renderTopCvesCard(view));
+    container.appendChild(pair1);
+
+    var pair2 = el("div", { class: "grid-2" });
+    pair2.appendChild(renderSevByTypeCard(view));
+    pair2.appendChild(renderSevByLangCard(view));
+    container.appendChild(pair2);
+
+    container.appendChild(renderTopRulesCard(view));
+    container.appendChild(renderContextCard(view));
+  }
+
+  function captureFocusId() {
+    var active = document.activeElement;
+    if (active && active.getAttribute) return active.getAttribute("data-focus-id");
+    return null;
+  }
+
+  function restoreFocusId(fid) {
+    if (!fid) return;
+    var nodes = document.querySelectorAll("[data-focus-id]");
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].getAttribute("data-focus-id") === fid) {
+        try { nodes[i].focus(); } catch (e) { /* sin foco */ }
+        return;
+      }
+    }
+  }
+
+  function update() {
+    var view = buildView(state.doc, state.filters);
+    state.view = view;
+    if (state.selectedRepo && !view.repoNames[state.selectedRepo]) state.selectedRepo = null;
+
+    var fid = captureFocusId();
+    clear(state.contentEl);
+    renderContent(state.contentEl, view);
+    renderDrilldown(view);
+    restoreFocusId(fid);
+
+    if (state.statusEl) {
+      state.statusEl.textContent = fmtInt(view.scopeCount) + " de " + fmtInt(view.totalRepos)
+        + " repositorios en las vistas por repositorio; los indicadores globales provienen del Analyzer (sin filtrar).";
+    }
+  }
+
+  function scheduleUpdate() {
+    if (updateTimer) clearTimeout(updateTimer);
+    updateTimer = setTimeout(update, 140);
+  }
+
+  function renderShell(doc) {
+    var app = document.getElementById("app");
+    clear(app);
+    app.appendChild(renderHeader(doc));
+    app.appendChild(renderToolbar(doc));
+    state.contentEl = el("div", { class: "content" });
+    app.appendChild(state.contentEl);
+    state.drillEl = el("div", { id: "vis-drilldown" });
+    app.appendChild(state.drillEl);
+    app.appendChild(renderObservations(doc));
+    app.appendChild(renderLimitations(doc));
+  }
+
+  function boot() {
+    if (booted) return;
+    booted = true;
+    var app = document.getElementById("app");
+    var doc = readDocument();
+    if (!doc) {
+      if (app) {
+        clear(app);
+        app.appendChild(el("p", { class: "empty", text: "No se pudo leer el documento del Analyzer." }));
+      }
+      return;
+    }
+    state.doc = doc;
+    state.filters = defaultFilters();
+    initTooltip();
+    renderShell(doc);
+    update();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+
+</script>
+</body>
+</html>
