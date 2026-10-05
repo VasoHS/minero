@@ -2,24 +2,33 @@
 
 El **Analyzer** transforma la evidencia cruda que produce el Miner en información
 lista para el **Visualizer**. No vuelve a ejecutar CodeQL, Syft ni Grype: consume
-los reportes JSON que ya generó la CLI y los convierte en métricas, observaciones
-y un documento estructurado, versionado y autocontenido.
+los reportes JSON que ya generó la CLI, **los fusiona por repositorio** y los
+convierte en métricas, observaciones y un documento estructurado, versionado y
+autocontenido.
 
 ## Propósito y relación con el Miner y el Visualizer
 
 ```
-Miner (CLI)                    Analyzer                        Visualizer
-────────────                   ────────                        ──────────
-miner scan  ──► results.json ─┐
-miner vuln  ──► results-vuln.json ─┼─► loader → metrics → contract ─► analysis/outputs/analyzer_output.json
-miner sbom  ──► results-sbom.json ─┘        (notebooks + pipeline)        (datasets, observaciones,
-                                                                          limitaciones, CSV y figuras)
+Miner (CLI)                          Analyzer                             Visualizer
+────────────                         ────────                             ──────────
+miner scan ─► results.json ────┐
+miner sbom ─► results-sbom.json ┼─► load_report(s) → merge_reports ─┐
+miner vuln ─► results-vuln.json ┘   (fusión por repositorio)        │
+                                                                     ▼
+                     to_records → metrics → contract ─► analysis/outputs/analyzer_output.json
+                                                        (datasets, observaciones, limitaciones,
+                                                         CSV y figuras)
 ```
 
 - El **Miner** genera tres tipos de reporte: `results.json` (`scan`),
   `results-vuln.json` (`vuln`) y `results-sbom.json` (`sbom`).
-- El **Analyzer** los carga de forma tolerante, calcula métricas y emite el
-  contrato de salida `schema_version` `1.0`.
+- El **Analyzer** acepta **uno o varios** reportes. Cuando recibe varios, los
+  fusiona por nombre de repositorio con `merge_reports`: combina los componentes
+  del SBOM con las vulnerabilidades de Grype, deduplica hallazgos y
+  vulnerabilidades, conserva el mejor estado de SBOM/Grype y recalcula el
+  resumen. Así, fusionar `results-sbom.json` con `results-vuln.json` permite
+  calcular la correlación componentes↔vulnerabilidades sobre datos reales. El
+  documento resultante queda con `source_kind` `merged`.
 - El **Visualizer** consume ese documento (y no el código de los notebooks ni
   `metrics.py`). El contrato se detalla en
   [`contracts/README.md`](contracts/README.md).
@@ -39,16 +48,16 @@ El extra añade `pandas`, `matplotlib`, `nbformat`, `nbclient` e `ipykernel`
 
 ## Arquitectura
 
-El flujo es siempre el mismo: `load_report → to_records → metrics → contract`. La
-lógica vive en módulos, de modo que se puede invocar desde los notebooks, desde
-`pytest` o desde la CLI sin depender de Jupyter.
+El flujo es siempre el mismo: `load_report(s) → merge_reports → to_records →
+metrics → contract`. La lógica vive en módulos, de modo que se puede invocar
+desde los notebooks, desde `pytest` o desde la CLI sin depender de Jupyter.
 
 | Módulo | Responsabilidad |
 | --- | --- |
-| `analysis/loader.py` | Carga y normalización tolerante de los reportes del Miner; `load_report` y `to_records`. Solo librería estándar. |
+| `analysis/loader.py` | Carga y normalización tolerante de los reportes del Miner (`load_report`, `to_records`) y fusión por repositorio (`merge_reports`). Solo librería estándar. |
 | `analysis/metrics.py` | Métricas puras y deterministas: cobertura, severidad, topes, concentración, relaciones, observaciones y limitaciones. |
 | `analysis/contract.py` | Ensamblado (`build_document`), validación (`validate_document`) y escritura (`write_document`) del documento de salida. |
-| `analysis/pipeline.py` | Punto de entrada `run_analysis(input, output)` que encadena todo el pipeline. |
+| `analysis/pipeline.py` | Punto de entrada `run_analysis(input_paths, output_path)`; acepta una ruta o una lista y encadena todo el pipeline. |
 | `analysis/contracts/` | JSON Schema (`analyzer_output.schema.json`), ejemplo válido y guía del contrato. |
 | `analysis/METRICAS.md` | Referencia detallada de cada métrica, su fórmula y su interpretación. |
 | `analysis/outputs/` | Salidas generadas (JSON, CSV y figuras); ignoradas por git. |
@@ -70,34 +79,46 @@ el kernel use el intérprete correcto.
 
 | Notebook | Qué hace | Escribe en disco |
 | --- | --- | --- |
-| `01_carga_y_calidad.ipynb` | Carga el reporte, describe la organización y el origen, mide la cobertura y audita la calidad/coherencia de los datos. | No |
+| `01_carga_y_calidad.ipynb` | Carga los reportes y los fusiona por repositorio, describe la organización y el origen, mide la cobertura y audita la calidad/coherencia de los datos. | No |
 | `02_analisis_vulnerabilidades.ipynb` | Analiza severidad, CVE/GHSA, paquetes, distribución por repositorio, concentración y relaciones; muestra figuras inline. | No |
 | `03_sintesis_visualizer.ipynb` | Ejecuta `run_analysis`, valida el contrato y exporta el documento, los CSV y las figuras. | Sí |
 
-Cada notebook resuelve su `INPUT_PATH` con esta regla: `results.json` si existe;
-en caso contrario, `results-vuln.json`. `03` permite fijar `meta.generated_at`
-con la variable `GENERATED_AT` (por defecto, la hora real de ejecución).
+Cada notebook resuelve su `INPUT_PATHS` (lista) con esta regla: si existe
+`results.json` (`scan`) usa solo ese; en caso contrario, fusiona los que existan
+de `[results-sbom.json, results-vuln.json]`, en ese orden. `03` permite fijar
+`meta.generated_at` con la variable de entorno `GENERATED_AT`; si no se define,
+usa la hora real de ejecución:
+
+```bash
+GENERATED_AT="2026-01-01T00:00:00+00:00" .venv/bin/python notebooks/execute.py
+```
 
 ## Entrada soportada
 
-El Analyzer acepta cualquiera de los tres reportes del Miner y **no asume** que
-todas las secciones estén presentes:
+El Analyzer acepta uno o varios reportes del Miner y **no asume** que todas las
+secciones estén presentes:
 
-| Reporte | Origen (`source_kind`) | Trae hallazgos CodeQL | Trae SBOM | Trae vulnerabilidades |
+| Reporte(s) | Origen (`source_kind`) | Trae hallazgos CodeQL | Trae SBOM | Trae vulnerabilidades |
 | --- | --- | --- | --- | --- |
 | `results.json` | `scan` | Sí | Sí | Sí |
 | `results-vuln.json` | `vuln` | No | No | Sí |
 | `results-sbom.json` | `sbom` | No | Sí | No |
+| Varios (p. ej. `results-sbom.json` + `results-vuln.json`) | `merged` | Según los reportes | Sí | Sí |
 
 Comportamiento tolerante:
 
+- Al pasar **varios** reportes se fusionan por repositorio (`merge_reports`):
+  lenguajes, hallazgos y vulnerabilidades se unen con deduplicación; se conserva
+  el mejor estado de SBOM y de Grype; y se recalculan `by_severity`,
+  `vuln_total` y el `summary`. Un solo reporte se devuelve tal cual, sin
+  recalcular.
 - Un reporte sin `findings`, sin `vulnerabilities` o sin `sbom` se carga igual:
   las secciones ausentes quedan vacías y las métricas que dependen de ellas no se
   emiten.
 - Las incoherencias de datos no se corrigen en silencio: se registran como
   advertencias en `meta.warnings` y como limitaciones.
 - Si el archivo no existe, `load_report` lanza `FileNotFoundError`; si no es un
-  objeto JSON válido, lanza `ValueError`.
+  objeto JSON válido, lanza `ValueError`. `run_analysis` exige al menos una ruta.
 
 ## Salida
 
@@ -123,9 +144,9 @@ Documento de nivel superior (contrato completo en
 | Clave | Contenido |
 | --- | --- |
 | `schema_version` | Versión del contrato; actualmente `"1.0"`. |
-| `meta` | `organization`, `source`, `source_kind` (`scan`/`vuln`/`sbom`/`unknown`), `generated_at`, `repositories`, `warnings`. |
-| `summary` | Bloque `summary` del reporte del Miner, tal cual. |
-| `coverage` | `repositories_total` (obligatoria) y `by_repo_status`, `by_vuln_status`, `by_sbom_status`, `unsupported`, `vuln_failed`, `sbom_failed`, `coverage_ratio`, `warnings`. |
+| `meta` | `organization`, `source`, `source_kind` (`scan`/`vuln`/`sbom`/`merged`/`unknown`), `generated_at`, `repositories`, `warnings`. Con varios reportes, `source` une los nombres (`results-sbom.json + results-vuln.json`). |
+| `summary` | Bloque `summary` del Miner; con varios reportes se recalcula a partir de la fusión. |
+| `coverage` | `repositories_total` (obligatoria) y `by_repo_status`, `by_vuln_status`, `by_sbom_status`, `unsupported`, `repo_failed`, `vuln_failed`, `sbom_failed`, `coverage_ratio`, `code_coverage_ratio`, `sbom_coverage_ratio`, `vuln_coverage_ratio`, `warnings`. |
 | `datasets` | Datasets tabulares y objetos de apoyo (ver abajo). |
 | `observations` | Lista de `{id, title, statement, metric, evidence}`; cada afirmación cita cifras verificables. |
 | `limitations` | Lista de limitaciones que condicionan las conclusiones. |
@@ -160,19 +181,24 @@ Catálogo de datasets:
 ```python
 from analysis.pipeline import run_analysis
 
+# Una ruta: analiza ese reporte. Varias: se fusionan por repositorio.
 document = run_analysis(
-    "results-vuln.json",
+    ["results-sbom.json", "results-vuln.json"],
     "analysis/outputs/analyzer_output.json",
 )
 ```
 
-`run_analysis` devuelve el documento validado y, si se indica `output_path`, lo
-escribe en UTF-8 con JSON indentado. Acepta `generated_at` para fijar la marca
-temporal en ejecuciones reproducibles.
+`run_analysis` acepta una ruta o una lista de rutas. Con varias, fusiona la
+evidencia por repositorio antes de analizar (`source_kind` queda como `merged`).
+Devuelve el documento validado y, si se indica `output_path`, lo escribe en UTF-8
+con JSON indentado. Acepta `generated_at` para fijar la marca temporal en
+ejecuciones reproducibles.
 
 ## Métricas
 
-El Analyzer calcula, entre otras: cobertura por estados, distribución de
+El Analyzer calcula, entre otras: cobertura global (`coverage_ratio`) y por
+dimensión (`code_coverage_ratio`, `sbom_coverage_ratio`, `vuln_coverage_ratio`),
+el recuento de repos fallidos en fases previas (`repo_failed`), distribución de
 severidad, topes de reglas/CVE/paquetes, distribución y concentración por
 repositorio (cuota top-N, decil superior, HHI), y relaciones (componentes vs
 vulnerabilidades, disponibilidad de corrección, severidad por tipo de paquete y

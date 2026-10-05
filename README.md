@@ -446,8 +446,10 @@ Consulta [`docs/Vulnerabilidades.md`](docs/Vulnerabilidades.md) para la referenc
 
 El **Analyzer** convierte los reportes JSON del Miner en información lista para
 el **Visualizer**. No vuelve a ejecutar CodeQL, Syft ni Grype: carga la evidencia
-ya generada (`results.json`, `results-vuln.json` o `results-sbom.json`), calcula
-métricas, genera observaciones respaldadas por cifras y escribe un documento
+ya generada (`results.json`, `results-vuln.json` o `results-sbom.json`) y, cuando
+recibe **varios** reportes, los **fusiona por repositorio** (por ejemplo, los
+componentes del SBOM con las vulnerabilidades de Grype) antes de calcular
+métricas, generar observaciones respaldadas por cifras y escribir un documento
 estructurado y versionado (`schema_version` `1.0`).
 
 El núcleo del Analyzer solo usa la librería estándar y funciona con la
@@ -465,9 +467,14 @@ source .venv/bin/activate
 python notebooks/execute.py
 ```
 
+Cada notebook resuelve su lista `INPUT_PATHS`: usa `results.json` (`scan`) si
+existe; en caso contrario, fusiona los que existan de `results-sbom.json` y
+`results-vuln.json`. Con `GENERATED_AT` se fija `meta.generated_at` para
+reproducibilidad exacta.
+
 | Notebook | Qué hace | Escribe en disco |
 | --- | --- | --- |
-| `01_carga_y_calidad.ipynb` | Carga el reporte, mide la cobertura y audita la calidad de los datos. | No |
+| `01_carga_y_calidad.ipynb` | Carga los reportes, los fusiona, mide la cobertura y audita la calidad de los datos. | No |
 | `02_analisis_vulnerabilidades.ipynb` | Analiza severidad, CVE/GHSA, paquetes, concentración y relaciones. | No |
 | `03_sintesis_visualizer.ipynb` | Ejecuta el pipeline, valida el contrato y exporta las salidas. | Sí |
 
@@ -485,8 +492,9 @@ También puedes ejecutar el pipeline desde Python:
 ```python
 from analysis.pipeline import run_analysis
 
+# Una ruta: analiza ese reporte. Varias: se fusionan por repositorio.
 document = run_analysis(
-    "results-vuln.json",
+    ["results-sbom.json", "results-vuln.json"],
     "analysis/outputs/analyzer_output.json",
 )
 ```
