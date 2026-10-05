@@ -647,7 +647,7 @@ def test_scan_summary_counts_all_repositories(tmp_path, monkeypatch):
     ]
 
 
-def test_scan_limit_processes_only_first_n_alphabetically(tmp_path, monkeypatch):
+def test_scan_limit_processes_first_n_in_github_order(tmp_path, monkeypatch):
     repos = [
         make_repo("zeta"),
         make_repo("alpha"),
@@ -657,8 +657,9 @@ def test_scan_limit_processes_only_first_n_alphabetically(tmp_path, monkeypatch)
 
     assert run.result.exit_code == 0
     data = json.loads(run.out.read_text())
-    # Los repos se ordenan alfabéticamente y se toman los dos primeros.
-    assert [r["name"] for r in data["repositories"]] == ["alpha", "beta"]
+    # Se conserva el orden de GitHub (aquí simulado por el orden de entrada) y
+    # se toman los dos primeros, sin reordenar alfabéticamente.
+    assert [r["name"] for r in data["repositories"]] == ["zeta", "alpha"]
     assert data["summary"]["repositories"] == 2
     assert len(data["repositories"]) == 2
     assert (
@@ -667,10 +668,10 @@ def test_scan_limit_processes_only_first_n_alphabetically(tmp_path, monkeypatch)
     )
     # Solo se clonan los repos seleccionados.
     cloned = [call.args[1].name for call in run.clone.call_args_list]
-    assert cloned == ["alpha", "beta"]
+    assert cloned == ["zeta", "alpha"]
 
 
-def test_scan_limit_selects_alphabetically_even_with_mixed_case(tmp_path, monkeypatch):
+def test_scan_limit_keeps_github_order_not_alphabetical(tmp_path, monkeypatch):
     repos = [
         make_repo("Beta"),
         make_repo("alpha"),
@@ -680,8 +681,9 @@ def test_scan_limit_selects_alphabetically_even_with_mixed_case(tmp_path, monkey
 
     assert run.result.exit_code == 0
     data = json.loads(run.out.read_text())
-    # La comparación es case-insensitive: "alpha" < "Beta" < "gamma".
-    assert [r["name"] for r in data["repositories"]] == ["alpha", "Beta"]
+    # El orden de GitHub manda: no se reordena por nombre (que daría
+    # "alpha", "Beta"), se toman los dos primeros de la lista devuelta.
+    assert [r["name"] for r in data["repositories"]] == ["Beta", "alpha"]
     assert data["summary"]["repositories"] == 2
 
 
@@ -753,11 +755,11 @@ def test_scan_without_limit_processes_all_repositories(tmp_path, monkeypatch):
 
     assert run.result.exit_code == 0
     data = json.loads(run.out.read_text())
-    # Sin --limit se procesan todos (aunque queden ordenados alfabéticamente).
+    # Sin --limit se procesan todos, conservando el orden de GitHub.
     assert [r["name"] for r in data["repositories"]] == [
+        "zeta",
         "alpha",
         "beta",
-        "zeta",
     ]
     assert data["summary"]["repositories"] == 3
     assert "Límite aplicado" not in run.result.output

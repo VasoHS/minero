@@ -54,8 +54,77 @@ def test_get_organization_repos_headers_and_timeout(monkeypatch):
     assert captured["headers"]["Accept"] == "application/vnd.github+json"
     assert captured["headers"]["X-GitHub-Api-Version"] == "2022-11-28"
     assert captured["timeout"] == 30
-    assert captured["params"] == {"per_page": 100, "type": "all"}
+    assert captured["params"] == {
+        "per_page": 100, "type": "all", "sort": "updated", "direction": "desc"
+    }
     assert response.raise_for_status_called is True
+
+
+def test_get_organization_repos_custom_sort(monkeypatch):
+    monkeypatch.setenv("GITHUB_TOKEN", "test-token")
+    captured = {}
+
+    def fake_get(url, headers=None, params=None, timeout=None):
+        captured["params"] = params
+        return FakeResponse([])
+
+    monkeypatch.setattr("miner.github_api.requests.get", fake_get)
+    get_organization_repos("test-org", sort="pushed", direction="asc")
+
+    assert captured["params"]["sort"] == "pushed"
+    assert captured["params"]["direction"] == "asc"
+
+
+def test_get_organization_repos_preserves_api_order(monkeypatch):
+    monkeypatch.setenv("GITHUB_TOKEN", "test-token")
+    payload = [{"name": "zeta"}, {"name": "alpha"}, {"name": "beta"}]
+    monkeypatch.setattr(
+        "miner.github_api.requests.get", lambda *args, **kwargs: FakeResponse(payload)
+    )
+
+    repos = get_organization_repos("test-org")
+
+    # No se reordena: se respeta el orden (de GitHub) tal cual llega.
+    assert [r["name"] for r in repos] == ["zeta", "alpha", "beta"]
+
+
+def test_get_organization_repos_deduplicates_by_id_across_pages(monkeypatch):
+    monkeypatch.setenv("GITHUB_TOKEN", "test-token")
+    next_link = '<https://api.github.com/orgs/test-org/repos?page=2>; rel="next"'
+    page1 = FakeResponse(
+        [{"id": 1, "name": "repo-a"}, {"id": 2, "name": "repo-b"}],
+        headers={"Link": next_link},
+    )
+    # 'repo-b' vuelve a aparecer por actualizarse entre páginas.
+    page2 = FakeResponse([{"id": 2, "name": "repo-b"}, {"id": 3, "name": "repo-c"}])
+    calls = []
+
+    def fake_get(url, headers=None, params=None, timeout=None):
+        calls.append(url)
+        return page1 if len(calls) == 1 else page2
+
+    monkeypatch.setattr("miner.github_api.requests.get", fake_get)
+    repos = get_organization_repos("test-org")
+
+    assert [r["id"] for r in repos] == [1, 2, 3]
+
+
+def test_get_organization_repos_ignores_insecure_next_link(monkeypatch):
+    monkeypatch.setenv("GITHUB_TOKEN", "test-token")
+    next_link = '<http://api.github.com/orgs/test-org/repos?page=2>; rel="next"'
+    page1 = FakeResponse([{"name": "repo-a"}], headers={"Link": next_link})
+    calls = []
+
+    def fake_get(url, headers=None, params=None, timeout=None):
+        calls.append(url)
+        return page1
+
+    monkeypatch.setattr("miner.github_api.requests.get", fake_get)
+    repos = get_organization_repos("test-org")
+
+    # No se sigue un Link sin https (evita enviar el token en claro).
+    assert [r["name"] for r in repos] == ["repo-a"]
+    assert len(calls) == 1
 
 
 def test_get_organization_repos_follows_link_pagination(monkeypatch):
@@ -77,7 +146,9 @@ def test_get_organization_repos_follows_link_pagination(monkeypatch):
 
     assert [r["name"] for r in repos] == ["repo-a", "repo-b"]
     assert len(calls) == 2
-    assert calls[0]["params"] == {"per_page": 100, "type": "all"}
+    assert calls[0]["params"] == {
+        "per_page": 100, "type": "all", "sort": "updated", "direction": "desc"
+    }
     assert calls[1]["params"] is None
     assert calls[1]["url"] == "https://api.github.com/orgs/test-org/repos?page=2"
 
