@@ -20,6 +20,8 @@ La generación del SBOM y el escaneo de vulnerabilidades son independientes del 
 - **Syft** disponible en el `PATH` (generación de SBOM; solo es necesario si no usas `--no-sbom`).
 - **Grype** disponible en el `PATH` (detección de vulnerabilidades; solo es necesario si no usas `--no-vuln`).
 
+Si prefieres no instalar nada de esto en tu equipo, usa la [imagen de Docker](#ejecución-con-docker), que incluye Python, `git`, CodeQL CLI, Syft y Grype.
+
 Comprueba que los cuatro binarios están accesibles:
 
 ```bash
@@ -177,6 +179,63 @@ El análisis descarga los query packs (`codeql/<lenguaje>-queries`) desde `ghcr.
    ```bash
    pip install -e .[dev]
    ```
+
+## Ejecución con Docker
+
+Si prefieres no instalar nada en el anfitrión, la imagen incluye Python, `git`, CodeQL CLI, Syft y Grype. Solo necesitas **Docker** y conexión a Internet.
+
+Construye la imagen desde la raíz del proyecto:
+
+```bash
+docker build -t github-codeql-miner .
+```
+
+El directorio del proyecto se monta en `/data`, que es el directorio de trabajo de la imagen, de modo que los clones (`workdir/`), los SBOM (`sboms/`), las vulnerabilidades (`vulns/`) y el reporte (`--output`) se escriben en el anfitrión. El token se pasa como variable de entorno:
+
+```bash
+# Opción 1: leer el token desde .env (recomendado)
+docker run --rm --env-file .env -v "$PWD:/data" github-codeql-miner \
+  scan --organization nombre-organizacion --output results.json
+
+# Opción 2: pasar el token directamente
+docker run --rm -e GITHUB_TOKEN="$GITHUB_TOKEN" -v "$PWD:/data" \
+  github-codeql-miner scan --organization nombre-organizacion --output results.json
+```
+
+El comando por defecto de la imagen es `miner --help`. Puedes encadenar cualquier subcomando de la CLI (`scan`, `sbom`, `vuln`) igual que en una instalación local:
+
+```bash
+docker run --rm -v "$PWD:/data" github-codeql-miner \
+  sbom --repos-dir ./workdir --sbom-dir ./sboms --output results-sbom.json
+
+docker run --rm -v "$PWD:/data" github-codeql-miner \
+  vuln --sbom-dir ./sboms --vuln-dir ./vulns --output results-vuln.json
+```
+
+### Docker Compose
+
+El archivo `docker-compose.yml` automatiza el montaje del directorio y la carga del token desde `.env`:
+
+```bash
+cp .env.example .env      # y define GITHUB_TOKEN
+docker compose build
+docker compose run --rm miner scan --organization nombre-organizacion --output results.json
+```
+
+### Notas sobre la imagen
+
+- Las versiones de CodeQL, Syft y Grype están fijadas en el `Dockerfile` (`CODEQL_VERSION`, `SYFT_VERSION`, `GRYPE_VERSION`) y se pueden sobrescribir en la construcción:
+  ```bash
+  docker build --build-arg GRYPE_VERSION=0.120.0 -t github-codeql-miner .
+  ```
+- La imagen se construye para la arquitectura del anfitrión (`amd64` o `arm64`); las herramientas se descargan desde los releases oficiales de GitHub.
+- El escaneo se ejecuta como el usuario sin privilegios `miner` (UID 1000). Si tu UID no es 1000, añade `--user "$(id -u):$(id -g)"` para que los archivos generados te pertenezcan:
+  ```bash
+  docker run --rm --user "$(id -u):$(id -g)" --env-file .env -v "$PWD:/data" \
+    github-codeql-miner scan --organization nombre-organizacion --output results.json
+  ```
+- La creación de bases CodeQL para lenguajes compilados (C/C++, Go, Java, C#, Swift) requiere sus compiladores, que **no** se incluyen para mantener la imagen ligera; esos repositorios pueden quedar como `db_failed` (ver **Solución de problemas**). Los lenguajes interpretados (Python, JavaScript, Ruby, etc.) funcionan sin herramientas adicionales.
+- La primera ejecución necesita red para clonar repositorios, descargar los query packs de CodeQL (`ghcr.io`) y la base de vulnerabilidades de Grype.
 
 ## Configuración del Token de GitHub
 
