@@ -151,7 +151,7 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
          output: Path = typer.Option(..., help="Archivo JSON de salida"),
          limit: Optional[int] = typer.Option(
              None, "--limit",
-             help="Máximo de repositorios a analizar: toma los primeros N tras ordenar alfabéticamente"),
+             help="Máximo de repositorios a analizar: toma los primeros N en el orden de GitHub (actualizados más recientemente primero)"),
          repos_dir: Path = typer.Option(DEFAULT_REPOS_DIR,
                                         help="Directorio donde se clonan los repositorios"),
          sbom_dir: Path = typer.Option(DEFAULT_SBOM_DIR,
@@ -186,10 +186,11 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
         typer.secho(f"Error al obtener repositorios: {e}", fg=typer.colors.RED)
         raise typer.Exit(code=1)
     
-    # Ordenar alfabéticamente para resultados reproducibles
-    repos_data.sort(key=lambda r: (r.get("name") or "").lower())
+    # Se conserva el orden devuelto por GitHub, que es el mismo con el que
+    # muestra los repositorios de la organización (actualizados más recientes
+    # primero). Así, limitar equivale a tomar los primeros N de esa lista.
     
-    # Aplicar el límite opcional sobre la lista ya ordenada (primeros N).
+    # Aplicar el límite opcional sobre la lista en ese orden (primeros N).
     if limit is not None and limit < len(repos_data):
         total_repos = len(repos_data)
         repos_data = repos_data[:limit]

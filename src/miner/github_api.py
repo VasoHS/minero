@@ -5,13 +5,31 @@ from urllib.parse import quote, urlparse
 
 API_HOST = "api.github.com"
 
+# Orden por defecto con el que GitHub muestra los repositorios de una
+# organización (página "Repositories"): los actualizados más recientemente
+# primero. La API lo expone con sort=updated y direction=desc.
+DEFAULT_REPO_SORT = "updated"
+DEFAULT_REPO_DIRECTION = "desc"
+
 def get_github_token() -> str:
     token = os.getenv("GITHUB_TOKEN")
     if not token:
         raise ValueError("La variable de entorno GITHUB_TOKEN no está configurada.")
     return token
 
-def get_organization_repos(org_name: str) -> List[Dict]:
+def get_organization_repos(
+    org_name: str,
+    sort: str = DEFAULT_REPO_SORT,
+    direction: str = DEFAULT_REPO_DIRECTION,
+) -> List[Dict]:
+    """Lista los repositorios de una organización en el mismo orden que GitHub.
+
+    Por defecto usa ``sort=updated`` y ``direction=desc``, que es el orden con
+    el que la página de repositorios de la organización los muestra (los
+    actualizados más recientemente primero). Los repositorios se devuelven en
+    ese orden, de modo que aplicar un límite a la lista equivale a quedarse con
+    los primeros N tal y como los presenta GitHub.
+    """
     token = get_github_token()
     headers = {
         "Authorization": f"Bearer {token}",
@@ -21,7 +39,7 @@ def get_organization_repos(org_name: str) -> List[Dict]:
     
     repos = []
     url = f"https://api.github.com/orgs/{quote(org_name, safe='')}/repos"
-    params = {"per_page": 100, "type": "all"}
+    params = {"per_page": 100, "type": "all", "sort": sort, "direction": direction}
     
     while url:
         response = requests.get(url, headers=headers, params=params, timeout=30)
