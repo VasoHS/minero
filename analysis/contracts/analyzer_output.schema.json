@@ -1,0 +1,366 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:github-codeql-miner:analyzer-output:1.0",
+  "title": "Documento de salida del Analyzer",
+  "description": "Contrato versionado (schema_version 1.0) del documento JSON que el Analyzer entrega al Visualizer. Es autocontenido: incluye metadatos de la ejecución, el resumen original del Miner, la cobertura del análisis, datasets tabulares, observaciones respaldadas por métricas y limitaciones. Las filas de cada dataset deben tener orden determinista.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "meta",
+    "summary",
+    "coverage",
+    "datasets",
+    "observations",
+    "limitations"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Versión del contrato de salida. Cambia solo ante rupturas de compatibilidad."
+    },
+    "meta": {
+      "type": "object",
+      "description": "Metadatos de la ejecución del Analyzer.",
+      "required": [
+        "organization",
+        "source",
+        "source_kind",
+        "generated_at",
+        "repositories",
+        "warnings"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "organization": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Organización analizada (tal como la reporta el Miner)."
+        },
+        "source": {
+          "type": "string",
+          "description": "Ruta del archivo del Miner usado como fuente principal."
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": ["scan", "vuln", "sbom", "unknown"],
+          "description": "Comando del Miner que originó la evidencia."
+        },
+        "generated_at": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Marca temporal ISO-8601 (UTC) de generación del documento."
+        },
+        "repositories": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Número de repositorios. Debe coincidir con len(datasets.repositories) y con coverage.repositories_total."
+        },
+        "warnings": {
+          "type": "array",
+          "description": "Advertencias de la carga/normalización del reporte del Miner.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "description": "Resumen del Miner tal cual (bloque 'summary' del reporte).",
+      "additionalProperties": true
+    },
+    "coverage": {
+      "type": "object",
+      "description": "Cobertura del análisis. repositories_total es obligatoria y debe coincidir con meta.repositories. El resto de claves provienen de metrics.compute_coverage: by_repo_status, by_vuln_status, by_sbom_status, unsupported, vuln_failed, sbom_failed, coverage_ratio y warnings.",
+      "required": ["repositories_total"],
+      "additionalProperties": true,
+      "properties": {
+        "repositories_total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total de repositorios considerados en el análisis."
+        },
+        "by_repo_status": {
+          "type": "object",
+          "description": "Conteo de repositorios por estado.",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "by_vuln_status": {
+          "type": "object",
+          "description": "Conteo de repositorios por estado del escaneo de Grype.",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "by_sbom_status": {
+          "type": "object",
+          "description": "Conteo de repositorios por estado de generación del SBOM.",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "unsupported": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Repositorios no soportados por el análisis."
+        },
+        "vuln_failed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Repositorios que fallaron en el escaneo de Grype."
+        },
+        "sbom_failed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Repositorios que fallaron al generar el SBOM."
+        },
+        "coverage_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Proporción de repositorios con al menos un análisis exitoso."
+        },
+        "warnings": {
+          "type": "array",
+          "description": "Advertencias de cobertura derivadas de los estados no exitosos.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "datasets": {
+      "type": "object",
+      "description": "Colección de datasets tabulares y objetos de apoyo que consume el Visualizer.",
+      "required": [
+        "repositories",
+        "findings",
+        "vulnerabilities",
+        "severity_distribution",
+        "severity_by_repo",
+        "top_rules",
+        "top_cves",
+        "top_packages",
+        "repository_distribution",
+        "concentration",
+        "relations"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "description": "Fila = un repositorio. Una fila por repositorio; el orden debe ser determinista.",
+          "items": { "$ref": "#/$defs/repository" }
+        },
+        "findings": {
+          "type": "array",
+          "description": "Fila = un hallazgo de CodeQL. Una fila por hallazgo.",
+          "items": { "$ref": "#/$defs/finding" }
+        },
+        "vulnerabilities": {
+          "type": "array",
+          "description": "Fila = una vulnerabilidad (CVE/GHSA) de Grype. Una fila por vulnerabilidad.",
+          "items": { "$ref": "#/$defs/vulnerability" }
+        },
+        "severity_distribution": {
+          "type": "array",
+          "description": "Fila = una severidad con su conteo global.",
+          "items": { "$ref": "#/$defs/severity_count" }
+        },
+        "severity_by_repo": {
+          "type": "array",
+          "description": "Fila = (repositorio, severidad) con su conteo.",
+          "items": { "$ref": "#/$defs/severity_by_repo" }
+        },
+        "top_rules": {
+          "type": "array",
+          "description": "Fila = una regla de CodeQL y su frecuencia.",
+          "items": { "$ref": "#/$defs/top_rule" }
+        },
+        "top_cves": {
+          "type": "array",
+          "description": "Fila = un identificador de vulnerabilidad y su frecuencia.",
+          "items": { "$ref": "#/$defs/top_cve" }
+        },
+        "top_packages": {
+          "type": "array",
+          "description": "Fila = un paquete afectado y su frecuencia.",
+          "items": { "$ref": "#/$defs/top_package" }
+        },
+        "repository_distribution": {
+          "type": "array",
+          "description": "Fila = un repositorio con sus conteos de vulnerabilidades, hallazgos y componentes.",
+          "items": { "$ref": "#/$defs/repository_distribution" }
+        },
+        "concentration": {
+          "type": "object",
+          "description": "Índices de concentración. Claves típicas: top_1_share, top_10_share, gini, hhi.",
+          "additionalProperties": true
+        },
+        "relations": {
+          "type": "object",
+          "description": "Relaciones entre dimensiones (severidad vs tipo, componentes vs vulnerabilidades, fixed_version presente/ausente...).",
+          "additionalProperties": true
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "description": "Observaciones sobre la seguridad de la organización, cada una respaldada por una métrica y su evidencia.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "statement", "metric", "evidence"],
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Identificador único de la observación."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Afirmación respaldada por la evidencia."
+          },
+          "metric": {
+            "description": "Nombre o descriptor de la métrica usada."
+          },
+          "evidence": {
+            "description": "Evidencia (valores, dataset o celdas) que respalda la observación."
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "description": "Limitaciones conocidas del análisis que condicionan las conclusiones.",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "severity": {
+      "type": "string",
+      "enum": ["Critical", "High", "Medium", "Low", "Negligible", "Unknown"],
+      "description": "Severidad canónica de Grype."
+    },
+    "repository": {
+      "type": "object",
+      "description": "Fila = un repositorio.",
+      "required": ["repo"],
+      "additionalProperties": true,
+      "properties": {
+        "repo": { "type": "string", "minLength": 1 },
+        "full_name": { "type": ["string", "null"] },
+        "url": { "type": "string" },
+        "commit": { "type": ["string", "null"] },
+        "status": { "type": "string" },
+        "languages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "sbom_status": { "type": "string" },
+        "sbom_components": { "type": "integer", "minimum": 0 },
+        "vuln_status": { "type": "string" },
+        "vuln_total": { "type": "integer", "minimum": 0 },
+        "findings_total": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "description": "Fila = un hallazgo de CodeQL. La severidad es el nivel SARIF (error/warning/note), no la severidad de Grype.",
+      "required": ["repo", "rule_id"],
+      "additionalProperties": true,
+      "properties": {
+        "repo": { "type": "string", "minLength": 1 },
+        "rule_id": { "type": "string", "minLength": 1 },
+        "severity": { "type": ["string", "null"] },
+        "file": { "type": "string" },
+        "start_line": { "type": ["integer", "null"] }
+      }
+    },
+    "vulnerability": {
+      "type": "object",
+      "description": "Fila = una vulnerabilidad de Grype.",
+      "required": ["repo", "id", "severity", "package"],
+      "additionalProperties": true,
+      "properties": {
+        "repo": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1 },
+        "severity": { "$ref": "#/$defs/severity" },
+        "package": { "type": "string", "minLength": 1 },
+        "version": { "type": ["string", "null"] },
+        "type": { "type": ["string", "null"] },
+        "fixed_version": { "type": ["string", "null"] },
+        "namespace": { "type": ["string", "null"] }
+      }
+    },
+    "severity_count": {
+      "type": "object",
+      "description": "Fila = severidad + conteo global.",
+      "required": ["severity", "count"],
+      "additionalProperties": true,
+      "properties": {
+        "severity": { "$ref": "#/$defs/severity" },
+        "count": { "type": "integer", "minimum": 0 },
+        "percent": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "severity_by_repo": {
+      "type": "object",
+      "description": "Fila = repositorio + severidad + conteo.",
+      "required": ["repo"],
+      "additionalProperties": true,
+      "properties": {
+        "repo": { "type": "string", "minLength": 1 },
+        "severity": { "$ref": "#/$defs/severity" },
+        "count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "top_rule": {
+      "type": "object",
+      "description": "Fila = regla de CodeQL + frecuencia.",
+      "required": ["rule_id"],
+      "additionalProperties": true,
+      "properties": {
+        "rule_id": { "type": "string", "minLength": 1 },
+        "count": { "type": "integer", "minimum": 0 },
+        "repos_affected": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "top_cve": {
+      "type": "object",
+      "description": "Fila = identificador de vulnerabilidad + frecuencia.",
+      "required": ["id"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "severity": { "$ref": "#/$defs/severity" },
+        "count": { "type": "integer", "minimum": 0 },
+        "repos_affected": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "top_package": {
+      "type": "object",
+      "description": "Fila = paquete afectado + frecuencia.",
+      "required": ["package"],
+      "additionalProperties": true,
+      "properties": {
+        "package": { "type": "string", "minLength": 1 },
+        "count": { "type": "integer", "minimum": 0 },
+        "repos_affected": { "type": "integer", "minimum": 0 },
+        "worst_severity": { "$ref": "#/$defs/severity" }
+      }
+    },
+    "repository_distribution": {
+      "type": "object",
+      "description": "Fila = un repositorio con sus conteos de vulnerabilidades, hallazgos y componentes.",
+      "required": ["repo"],
+      "additionalProperties": true,
+      "properties": {
+        "repo": { "type": "string", "minLength": 1 },
+        "vulnerabilities": { "type": "integer", "minimum": 0 },
+        "findings": { "type": "integer", "minimum": 0 },
+        "components": { "type": "integer", "minimum": 0 },
+        "status": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "organization": "acme",
+    "source": "results-vuln.json",
+    "source_kind": "vuln",
+    "generated_at": "2026-10-05T12:00:00+00:00",
+    "repositories": 2,
+    "warnings": []
+  },
+  "summary": {
+    "repositories": 2,
+    "analyzed": 0,
+    "failed": 0,
+    "unsupported": 0,
+    "findings": 0,
+    "sboms_generated": 0,
+    "sboms_failed": 0,
+    "components": 0,
+    "vulns_scanned": 2,
+    "vulns_failed": 0,
+    "vulnerabilities": 1,
+    "vulns_critical": 0,
+    "vulns_high": 1,
+    "vulns_medium": 0,
+    "vulns_low": 0
+  },
+  "coverage": {
+    "repositories_total": 2,
+    "repositories_analyzed": 2,
+    "repositories_not_analyzed": 0,
+    "repositories_failed": 0,
+    "repositories_unsupported": 0,
+    "coverage_ratio": 1.0,
+    "by_status": { "scanned": 2 },
+    "notes": []
+  },
+  "datasets": {
+    "repositories": [
+      {
+        "repo": "alpha",
+        "full_name": "acme/alpha",
+        "url": "https://github.com/acme/alpha.git",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "status": "scanned",
+        "languages": ["Python"],
+        "sbom_status": "generated",
+        "sbom_components": 10,
+        "vuln_status": "scanned",
+        "vuln_total": 1,
+        "findings_total": 1
+      },
+      {
+        "repo": "beta",
+        "full_name": "acme/beta",
+        "url": "https://github.com/acme/beta.git",
+        "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "status": "scanned",
+        "languages": ["JavaScript"],
+        "sbom_status": "no_components",
+        "sbom_components": 0,
+        "vuln_status": "no_vulnerabilities",
+        "vuln_total": 0,
+        "findings_total": 0
+      }
+    ],
+    "findings": [
+      {
+        "repo": "alpha",
+        "rule_id": "py/sql-injection",
+        "severity": "error",
+        "file": "app/db.py",
+        "start_line": 42
+      }
+    ],
+    "vulnerabilities": [
+      {
+        "repo": "alpha",
+        "id": "CVE-2024-0001",
+        "severity": "High",
+        "package": "requests",
+        "version": "2.0.0",
+        "type": "python",
+        "fixed_version": "2.1.0",
+        "namespace": "nvd"
+      }
+    ],
+    "severity_distribution": [
+      { "severity": "High", "count": 1, "percent": 100.0 }
+    ],
+    "severity_by_repo": [
+      { "repo": "alpha", "severity": "High", "count": 1 }
+    ],
+    "top_rules": [
+      { "rule_id": "py/sql-injection", "count": 1, "repos": 1 }
+    ],
+    "top_cves": [
+      { "id": "CVE-2024-0001", "severity": "High", "count": 1 }
+    ],
+    "top_packages": [
+      { "package": "requests", "count": 1, "repos": 1 }
+    ],
+    "repository_distribution": [
+      {
+        "repo": "alpha",
+        "vulnerabilities": 1,
+        "findings": 1,
+        "components": 10,
+        "status": "scanned"
+      },
+      {
+        "repo": "beta",
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 0,
+        "status": "scanned"
+      }
+    ],
+    "concentration": {
+      "repositories_with_vulns": 1,
+      "top_n": 3,
+      "top_n_share": 1.0,
+      "top_10pct_share": 1.0,
+      "hhi": 1.0
+    },
+    "relations": {
+      "components_vs_vulnerabilities": { "pearson": null, "n": 2 },
+      "fixed_version_available_share": 1.0,
+      "severity_by_package_type": [
+        { "type": "python", "severity": "High", "count": 1 }
+      ],
+      "findings_by_language": [
+        { "language": "Python", "rule_id": "py/sql-injection", "count": 1 }
+      ]
+    }
+  },
+  "observations": [
+    {
+      "id": "OBS-001",
+      "title": "Concentración de vulnerabilidades",
+      "statement": "La única vulnerabilidad High se concentra en el repositorio alpha.",
+      "metric": "severity_by_repo",
+      "evidence": { "repo": "alpha", "severity": "High", "count": 1 }
+    }
+  ],
+  "limitations": [
+    "Ejemplo mínimo sintético; no representa una organización real."
+  ]
+}
