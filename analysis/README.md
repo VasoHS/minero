@@ -126,14 +126,15 @@ Al ejecutar el notebook `03` (o `run_analysis` con `output_path`) se escribe:
 
 ```
 analysis/outputs/
-├── analyzer_output.json      # contrato validado (schema_version 1.0)
-├── csv/                      # un CSV por dataset tabular + concentration/relations
-└── figures/                  # figuras PNG de severidad, paquetes, CVE y repos
+├── analyzer_output.json      # contrato validado (schema_version 1.1)
+├── csv/                      # un CSV por dataset tabular + concentration/risk_summary/relations
+└── figures/                  # figuras PNG de severidad, paquetes, CVE, repos y riesgo
 ```
 
-Los nombres de los CSV coinciden con las claves de `datasets`; `concentration` y
-`relations` se aplanan en archivos propios. Las figuras se omiten cuando no hay
-datos. Todo `analysis/outputs/` está ignorado por git.
+Los nombres de los CSV coinciden con las claves de `datasets`; `concentration`,
+`risk_summary` y `relations` (incluida `severity_by_language`) se aplanan en
+archivos propios. Las figuras se omiten cuando no hay datos. Todo
+`analysis/outputs/` está ignorado por git.
 
 ### Resumen del contrato
 
@@ -143,7 +144,7 @@ Documento de nivel superior (contrato completo en
 
 | Clave | Contenido |
 | --- | --- |
-| `schema_version` | Versión del contrato; actualmente `"1.0"`. |
+| `schema_version` | Versión del contrato; actualmente `"1.1"` (1.1 es un cambio **aditivo** sobre 1.0: añade los datasets `repository_risk` y `risk_summary` y la relación `severity_by_language`). |
 | `meta` | `organization`, `source`, `source_kind` (`scan`/`vuln`/`sbom`/`merged`/`unknown`), `generated_at`, `repositories`, `warnings`. Con varios reportes, `source` une los nombres (`results-sbom.json + results-vuln.json`). |
 | `summary` | Bloque `summary` del Miner; con varios reportes se recalcula a partir de la fusión. |
 | `coverage` | `repositories_total` (obligatoria) y `by_repo_status`, `by_vuln_status`, `by_sbom_status`, `unsupported`, `repo_failed`, `vuln_failed`, `sbom_failed`, `coverage_ratio`, `code_coverage_ratio`, `sbom_coverage_ratio`, `vuln_coverage_ratio`, `warnings`. |
@@ -153,7 +154,7 @@ Documento de nivel superior (contrato completo en
 
 Invariantes que valida `validate_document`:
 
-- `schema_version == "1.0"`.
+- `schema_version == "1.1"`.
 - `meta.repositories == len(datasets["repositories"])`.
 - `coverage.repositories_total == meta.repositories`.
 - Todos los datasets presentes y con los tipos esperados; severidades dentro de
@@ -173,8 +174,10 @@ Catálogo de datasets:
 | `top_cves` | un identificador CVE/GHSA | `id`, `severity`, `count`, `repos_affected` |
 | `top_packages` | un paquete afectado | `package`, `count`, `repos_affected`, `worst_severity` |
 | `repository_distribution` | un repositorio | `repo`, `vulnerabilities`, `findings`, `components`, `status` |
+| `repository_risk` | un repositorio | `repo`, `status`, `languages`, `vulnerabilities`, `findings`, `components`, `critical`, `high`, `worst_severity`, `severity_weighted_average`, `severity_median`, `score` (obligatorio, 1-10), `vulns_per_component`, `findings_per_component`, `fixed_version_share` |
 | `concentration` | objeto (no tabular) | `repositories_with_vulns`, `top_n`, `top_n_share`, `top_10pct_share`, `hhi` |
-| `relations` | objeto (no tabular) | `components_vs_vulnerabilities`, `fixed_version_available_share`, `severity_by_package_type`, `findings_by_language` |
+| `risk_summary` | objeto (no tabular) | `score`, `severity_weighted_average`, `severity_median`, `total_vulnerabilities`, `repositories_scored`, `repositories_with_critical`, `repositories_with_high_or_critical`, `mean_repository_score`, `max_repository_score`, `critical_hotspots`, `worst_severity` |
+| `relations` | objeto (no tabular) | `components_vs_vulnerabilities`, `fixed_version_available_share`, `severity_by_package_type`, `findings_by_language`, `severity_by_language` |
 
 ### Uso programático
 
@@ -201,9 +204,18 @@ dimensión (`code_coverage_ratio`, `sbom_coverage_ratio`, `vuln_coverage_ratio`)
 el recuento de repos fallidos en fases previas (`repo_failed`), distribución de
 severidad, topes de reglas/CVE/paquetes, distribución y concentración por
 repositorio (cuota top-N, decil superior, HHI), y relaciones (componentes vs
-vulnerabilidades, disponibilidad de corrección, severidad por tipo de paquete y
-hallazgos por lenguaje). La referencia completa —fórmulas, denominadores e
-interpretación— está en [`METRICAS.md`](METRICAS.md).
+vulnerabilidades, disponibilidad de corrección, severidad por tipo de paquete,
+hallazgos por lenguaje y severidad por lenguaje).
+
+Además, desde la versión 1.1 del contrato incorpora el **riesgo por
+repositorio** y la **nota de vulnerabilidad 1-10**: `repository_risk` puntúa cada
+repositorio con una nota 1-10 (gravedad media con pesos fijos `Critical=10`,
+`High=7`, `Medium=4`, `Low=2`, `Negligible=1`, `Unknown=0`), su densidad
+(`vulns_per_component`, `findings_per_component`) y su reparabilidad
+(`fixed_version_share`); `risk_summary` agrega la nota global (ponderada por
+volumen), los hotspots Critical y las notas media y máxima por repositorio. La
+referencia completa —fórmulas, denominadores e interpretación— está en
+[`METRICAS.md`](METRICAS.md).
 
 ## Limitaciones y buenas prácticas
 

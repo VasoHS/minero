@@ -540,7 +540,14 @@ ya generada (`results.json`, `results-vuln.json` o `results-sbom.json`) y, cuand
 recibe **varios** reportes, los **fusiona por repositorio** (por ejemplo, los
 componentes del SBOM con las vulnerabilidades de Grype) antes de calcular
 métricas, generar observaciones respaldadas por cifras y escribir un documento
-estructurado y versionado (`schema_version` `1.0`).
+estructurado y versionado (`schema_version` `1.1`).
+
+Entre sus métricas incluye una **nota de vulnerabilidad 1-10** (gravedad media
+con pesos fijos por severidad, no volumen), el **ranking de repositorios** por
+gravedad con su densidad de vulnerabilidades y un **resumen global de riesgo**
+con los hotspots `Critical`. Se exponen en los datasets `repository_risk` y
+`risk_summary` y en la relación `severity_by_language` (versión 1.1, aditiva
+sobre 1.0).
 
 El núcleo del Analyzer solo usa la librería estándar y funciona con la
 instalación base. Para ejecutar los notebooks y exportar CSV y figuras instala el
@@ -574,7 +581,7 @@ Las salidas quedan en `analysis/outputs/` (ignorado por git):
 analysis/outputs/
 ├── analyzer_output.json      # contrato validado para el Visualizer
 ├── csv/                      # un CSV por dataset tabular
-└── figures/                  # figuras PNG (severidad, paquetes, CVE, repos)
+└── figures/                  # figuras PNG (severidad, paquetes, CVE, repos y riesgo)
 ```
 
 También puedes ejecutar el pipeline desde Python:

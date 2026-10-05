@@ -10,13 +10,13 @@ notebooks ni de `metrics.py`.
 | --- | --- |
 | `contract.py` | Ensamblado, validación y escritura del documento (solo librería estándar). |
 | `contracts/analyzer_output.schema.json` | JSON Schema draft 2020-12 del documento. |
-| `contracts/example_analyzer_output.json` | Ejemplo mínimo válido (2 repos, 1 finding, 1 vulnerabilidad). |
+| `contracts/example_analyzer_output.json` | Ejemplo mínimo válido (2 repositorios, 0 findings y 2 vulnerabilidades). |
 
 ## Estructura del documento
 
 ```jsonc
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "meta": {
     "organization": "acme",
     "source": "results-vuln.json",
@@ -35,12 +35,20 @@ notebooks ni de `metrics.py`.
 
 Invariantes verificadas por `validate_document`:
 
-- `schema_version == "1.0"`.
+- `schema_version == "1.1"`.
 - `meta.repositories == len(datasets["repositories"])`.
 - `coverage.repositories_total == meta.repositories`.
 - `meta.organization` no vacío; `source_kind` dentro del enum.
 - Todos los datasets presentes; severidades dentro de
   `Critical, High, Medium, Low, Negligible, Unknown`; conteos `>= 0`.
+- `repository_risk`: `score` es **obligatorio** y está en `[1, 10]`;
+  `severity_weighted_average` y `severity_median` en `[0, 10]`;
+  `vulns_per_component` y `findings_per_component` `>= 0` o `null`;
+  `fixed_version_share` en `[0, 1]` o `null`.
+- `risk_summary`: `score`, `severity_weighted_average`, `severity_median`,
+  `mean_repository_score` y `max_repository_score` en `[0, 10]` (pueden ser `0.0`
+  si no hay repositorios puntuados); `critical_hotspots` es una lista de cadenas
+  no vacías.
 - Cada observación tiene las 5 claves y `id` únicos.
 
 ## Catálogo de datasets
@@ -56,8 +64,10 @@ Invariantes verificadas por `validate_document`:
 | `top_cves` | un identificador CVE/GHSA | `id`, `severity`, `count`, `repos_affected` |
 | `top_packages` | un paquete afectado | `package`, `count`, `repos_affected`, `worst_severity` |
 | `repository_distribution` | un repositorio | `repo`, `vulnerabilities`, `findings`, `components`, `status` |
+| `repository_risk` | un repositorio | `repo`, `status`, `languages`, `vulnerabilities`, `findings`, `components`, `critical`, `high`, `worst_severity`, `severity_weighted_average`, `severity_median`, `score` (obligatorio, 1-10), `vulns_per_component`, `findings_per_component`, `fixed_version_share` |
 | `concentration` | objeto (no tabular) | `repositories_with_vulns`, `top_n`, `top_n_share`, `top_10pct_share`, `hhi` |
-| `relations` | objeto (no tabular) | `components_vs_vulnerabilities`, `fixed_version_available_share`, `severity_by_package_type`, `findings_by_language` |
+| `risk_summary` | objeto (no tabular) | `score`, `severity_weighted_average`, `severity_median`, `total_vulnerabilities`, `repositories_scored`, `repositories_with_critical`, `repositories_with_high_or_critical`, `mean_repository_score`, `max_repository_score`, `critical_hotspots`, `worst_severity` |
+| `relations` | objeto (no tabular) | `components_vs_vulnerabilities`, `fixed_version_available_share`, `severity_by_package_type`, `findings_by_language`, `severity_by_language` |
 
 Las columnas no listadas se permiten (`additionalProperties`), pero las
 anteriores son el mínimo estable. La semántica de cada métrica está en
@@ -88,6 +98,16 @@ de las filas lo fija `metrics` (determinista); el contrato no reordena datos.
 
 ## Versionado
 
-`schema_version` es `"1.0"`. Un cambio incompatible (renombrar/eliminar claves
-obligatorias o cambiar tipos) requiere incrementar la versión y actualizar el
-JSON Schema. Añadir columnas opcionales a un dataset no rompe el contrato.
+`schema_version` es `"1.1"`. La versión 1.1 es un cambio **aditivo en el
+esquema**: añade los datasets `repository_risk` (nota 1-10, gravedad
+media/mediana, densidad y reparabilidad por repositorio) y `risk_summary` (nota
+global y hotspots), la relación `severity_by_language` y cinco nuevas
+observaciones. Sin embargo, **no es transparente para los consumidores**: un
+documento 1.0 no valida porque `validate_document` exige las 13 claves de
+`datasets` (incluidas `repository_risk` y `risk_summary`) y el JSON Schema las
+declara `required` con `additionalProperties: false`. Para migrar hay que generar
+esos datasets nuevos y subir `schema_version` a `"1.1"`.
+
+Un cambio incompatible (renombrar/eliminar claves obligatorias o cambiar tipos)
+requiere incrementar la versión y actualizar el JSON Schema. Añadir columnas
+opcionales a un dataset no rompe el contrato.
