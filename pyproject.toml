@@ -23,3 +23,7 @@ analyzer = [
     "nbclient>=0.9",
     "ipykernel>=6.0"
 ]
+
+[tool.pytest.ini_options]
+# Evita que pytest recoja artefactos generados (p. ej. workdir/ con repos clonados).
+testpaths = ["tests"]

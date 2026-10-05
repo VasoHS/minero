@@ -188,12 +188,12 @@
         },
         "concentration": {
           "type": "object",
-          "description": "Índices de concentración. Claves típicas: top_1_share, top_10_share, gini, hhi.",
+          "description": "Índices de concentración de metrics.compute_concentration: repositories_with_vulns, top_n, top_n_share, top_10pct_share, hhi.",
           "additionalProperties": true
         },
         "relations": {
           "type": "object",
-          "description": "Relaciones entre dimensiones (severidad vs tipo, componentes vs vulnerabilidades, fixed_version presente/ausente...).",
+          "description": "Relaciones de metrics.compute_relations: components_vs_vulnerabilities {pearson, n}, fixed_version_available_share, severity_by_package_type y findings_by_language.",
           "additionalProperties": true
         }
       }
@@ -294,13 +294,12 @@
     },
     "severity_count": {
       "type": "object",
-      "description": "Fila = severidad + conteo global.",
+      "description": "Fila = severidad + conteo global (incluye las seis severidades canónicas, con ceros).",
       "required": ["severity", "count"],
       "additionalProperties": true,
       "properties": {
         "severity": { "$ref": "#/$defs/severity" },
-        "count": { "type": "integer", "minimum": 0 },
-        "percent": { "type": "number", "minimum": 0, "maximum": 100 }
+        "count": { "type": "integer", "minimum": 0 }
       }
     },
     "severity_by_repo": {

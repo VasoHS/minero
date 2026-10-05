@@ -131,10 +131,10 @@ META_REQUIRED = (
     "warnings",
 )
 
-#: Claves obligatorias de ``coverage``. El resto son recomendadas y opcionales
-#: (``repositories_analyzed``, ``repositories_not_analyzed``,
-#: ``repositories_failed``, ``repositories_unsupported``,
-#: ``repositories_pending``, ``coverage_ratio``, ``by_status``, ``notes``).
+#: Claves obligatorias de ``coverage``. La salida real de
+#: ``metrics.compute_coverage`` es: ``repositories_total``, ``by_repo_status``,
+#: ``by_vuln_status``, ``by_sbom_status``, ``unsupported``, ``vuln_failed``,
+#: ``sbom_failed``, ``coverage_ratio`` y ``warnings``.
 COVERAGE_REQUIRED = ("repositories_total",)
 
 #: Claves obligatorias de cada observación.
@@ -441,15 +441,12 @@ def validate_document(document: Any) -> List[str]:
             errors.append("coverage.repositories_total debe ser un entero >= 0.")
         else:
             coverage_total = int(coverage["repositories_total"])
-        for key in (
-            "repositories_analyzed",
-            "repositories_not_analyzed",
-            "repositories_failed",
-            "repositories_unsupported",
-            "repositories_pending",
-        ):
+        for key in ("unsupported", "vuln_failed", "sbom_failed"):
             if key in coverage and not _is_non_negative_int(coverage[key]):
                 errors.append(f"coverage.{key} debe ser un entero >= 0.")
+        for key in ("by_repo_status", "by_vuln_status", "by_sbom_status"):
+            if key in coverage and not isinstance(coverage[key], dict):
+                errors.append(f"coverage.{key} debe ser un objeto.")
         ratio = coverage.get("coverage_ratio")
         if ratio is not None and not (
             isinstance(ratio, (int, float))
