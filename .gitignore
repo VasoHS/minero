@@ -23,9 +23,7 @@ vulns/
 *.cdx.json
 *.grype.json
 errores.log
-results.json
-results-sbom.json
-results-vuln.json
+results*.json
 resultados*.json
 sboms*.zip
 
