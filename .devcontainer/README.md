@@ -79,10 +79,11 @@ Hay dos formas admitidas:
    "remoteEnv": { "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}" }
    ```
 
-   Defínela antes de abrir el contenedor, por ejemplo:
+   Defínela antes de abrir el contenedor, por ejemplo leyéndola de tu gestor de
+   secretos o de un archivo local:
 
    ```bash
-   export GITHUB_TOKEN="<tu_token>"
+   export GITHUB_TOKEN=$(cat ~/.config/miner/github_token)
    ```
 
    Si no está definida, la variable llega vacía y `miner scan` fallará con un
@@ -93,7 +94,7 @@ Hay dos formas admitidas:
 
    ```bash
    cp .env.example .env
-   # edita .env y define GITHUB_TOKEN=<tu_token>
+   # edita .env y asigna tu token a la clave GITHUB_TOKEN
    ```
 
    El contenedor monta el repositorio, así que `.env` está disponible dentro.
