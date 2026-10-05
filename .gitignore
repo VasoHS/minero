@@ -8,12 +8,22 @@ codeql_dbs/
 *.sarif
 workdir/
 
+# Empaquetado y pruebas (generados por pip/setuptools y pytest)
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
 # Artefactos generados por la CLI (SBOM, vulnerabilidades y reportes)
 sboms/
 vulns/
+*.cdx.json
+*.grype.json
+errores.log
 results.json
 results-sbom.json
 results-vuln.json
+resultados*.json
 sboms*.zip
 
 # Enlaces y archivos locales varios
