@@ -666,7 +666,9 @@ def test_compute_datasets_exposes_expected_keys(tmp_path):
         "top_cves",
         "top_packages",
         "repository_distribution",
+        "repository_risk",
         "concentration",
+        "risk_summary",
         "relations",
     }
     assert len(datasets["severity_distribution"]) == len(SEVERITIES)

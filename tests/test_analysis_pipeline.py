@@ -93,7 +93,7 @@ def test_run_analysis_returns_valid_document(tmp_path):
     document = run_analysis(path, generated_at=FIXED_TS)
 
     assert validate_document(document) == []
-    assert document["schema_version"] == "1.0"
+    assert document["schema_version"] == "1.1"
     assert document["meta"]["organization"] == "acme"
     assert document["meta"]["source_kind"] == "scan"
     assert document["meta"]["repositories"] == 2

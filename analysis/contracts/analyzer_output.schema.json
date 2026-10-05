@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:github-codeql-miner:analyzer-output:1.0",
+  "$id": "urn:github-codeql-miner:analyzer-output:1.1",
   "title": "Documento de salida del Analyzer",
   "description": "Contrato versionado (schema_version 1.0) del documento JSON que el Analyzer entrega al Visualizer. Es autocontenido: incluye metadatos de la ejecución, el resumen original del Miner, la cobertura del análisis, datasets tabulares, observaciones respaldadas por métricas y limitaciones. Las filas de cada dataset deben tener orden determinista.",
   "type": "object",
@@ -17,8 +17,8 @@
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "1.0",
-      "description": "Versión del contrato de salida. Cambia solo ante rupturas de compatibilidad."
+      "const": "1.1",
+      "description": "Versión del contrato de salida. Cambia solo ante rupturas de compatibilidad. 1.1 añade los datasets repository_risk y risk_summary y la relación severity_by_language."
     },
     "meta": {
       "type": "object",
@@ -159,7 +159,9 @@
         "top_cves",
         "top_packages",
         "repository_distribution",
+        "repository_risk",
         "concentration",
+        "risk_summary",
         "relations"
       ],
       "additionalProperties": false,
@@ -209,14 +211,24 @@
           "description": "Fila = un repositorio con sus conteos de vulnerabilidades, hallazgos y componentes.",
           "items": { "$ref": "#/$defs/repository_distribution" }
         },
+        "repository_risk": {
+          "type": "array",
+          "description": "Fila = un repositorio con su nota 1-10, gravedad media/mediana, densidad y reparabilidad. Ordenado por gravedad descendente.",
+          "items": { "$ref": "#/$defs/repository_risk" }
+        },
         "concentration": {
           "type": "object",
           "description": "Índices de concentración de metrics.compute_concentration: repositories_with_vulns, top_n, top_n_share, top_10pct_share, hhi.",
           "additionalProperties": true
         },
+        "risk_summary": {
+          "type": "object",
+          "description": "Resumen global de metrics.compute_risk_summary: score 1-10 de la organización, agregados de severidad, hotspots Critical y ranking resumido.",
+          "additionalProperties": true
+        },
         "relations": {
           "type": "object",
-          "description": "Relaciones de metrics.compute_relations: components_vs_vulnerabilities {pearson, n}, fixed_version_available_share, severity_by_package_type y findings_by_language.",
+          "description": "Relaciones de metrics.compute_relations: components_vs_vulnerabilities {pearson, n}, fixed_version_available_share, severity_by_package_type, findings_by_language y severity_by_language.",
           "additionalProperties": true
         }
       }
@@ -382,6 +394,32 @@
         "findings": { "type": "integer", "minimum": 0 },
         "components": { "type": "integer", "minimum": 0 },
         "status": { "type": "string" }
+      }
+    },
+    "repository_risk": {
+      "type": "object",
+      "description": "Fila = un repositorio con su nota 1-10 y métricas de gravedad, densidad y reparabilidad.",
+      "required": ["repo", "score"],
+      "additionalProperties": true,
+      "properties": {
+        "repo": { "type": "string", "minLength": 1 },
+        "status": { "type": "string" },
+        "languages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "vulnerabilities": { "type": "integer", "minimum": 0 },
+        "findings": { "type": "integer", "minimum": 0 },
+        "components": { "type": "integer", "minimum": 0 },
+        "critical": { "type": "integer", "minimum": 0 },
+        "high": { "type": "integer", "minimum": 0 },
+        "worst_severity": { "$ref": "#/$defs/severity" },
+        "severity_weighted_average": { "type": "number", "minimum": 0, "maximum": 10 },
+        "severity_median": { "type": "number", "minimum": 0, "maximum": 10 },
+        "score": { "type": "number", "minimum": 0, "maximum": 10 },
+        "vulns_per_component": { "type": ["number", "null"], "minimum": 0 },
+        "findings_per_component": { "type": ["number", "null"], "minimum": 0 },
+        "fixed_version_share": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
       }
     }
   }

@@ -128,7 +128,7 @@ def test_build_document_meta_and_schema(tmp_path):
         generated_at=generated_at,
     )
 
-    assert document["schema_version"] == SCHEMA_VERSION == "1.0"
+    assert document["schema_version"] == SCHEMA_VERSION == "1.1"
     meta = document["meta"]
     assert meta["organization"] == "acme"
     assert meta["source"] == report.source_path
@@ -179,7 +179,7 @@ def test_validate_document_accepts_example():
 
 
 def test_validate_document_constants():
-    assert SCHEMA_VERSION == "1.0"
+    assert SCHEMA_VERSION == "1.1"
     assert DATASET_KEYS == (
         "repositories",
         "findings",
@@ -190,7 +190,9 @@ def test_validate_document_constants():
         "top_cves",
         "top_packages",
         "repository_distribution",
+        "repository_risk",
         "concentration",
+        "risk_summary",
         "relations",
     )
 
@@ -329,4 +331,4 @@ def test_analysis_modules_do_not_import_analyzer_extras():
         source = (analysis_dir / module).read_text(encoding="utf-8")
         assert not pattern.search(source), f"{module} importa un extra del Analyzer"
 
-    assert contract.SCHEMA_VERSION == "1.0"
+    assert contract.SCHEMA_VERSION == "1.1"

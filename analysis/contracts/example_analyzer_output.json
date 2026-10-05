@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "meta": {
     "organization": "acme",
     "source": "results-sbom.json + results-vuln.json",
@@ -186,12 +186,65 @@
         "status": "scanned"
       }
     ],
+    "repository_risk": [
+      {
+        "repo": "alpha",
+        "status": "scanned",
+        "languages": [
+          "python"
+        ],
+        "vulnerabilities": 2,
+        "findings": 0,
+        "components": 4,
+        "critical": 0,
+        "high": 1,
+        "worst_severity": "High",
+        "severity_weighted_average": 5.5,
+        "severity_median": 5.5,
+        "score": 6.0,
+        "vulns_per_component": 0.5,
+        "findings_per_component": 0.0,
+        "fixed_version_share": 0.5
+      },
+      {
+        "repo": "beta",
+        "status": "scanned",
+        "languages": [
+          "javascript"
+        ],
+        "vulnerabilities": 0,
+        "findings": 0,
+        "components": 2,
+        "critical": 0,
+        "high": 0,
+        "worst_severity": "Unknown",
+        "severity_weighted_average": 0.0,
+        "severity_median": 0.0,
+        "score": 1.0,
+        "vulns_per_component": 0.0,
+        "findings_per_component": 0.0,
+        "fixed_version_share": null
+      }
+    ],
     "concentration": {
       "repositories_with_vulns": 1,
       "top_n": 1,
       "top_n_share": 1.0,
       "top_10pct_share": 1.0,
       "hhi": 1.0
+    },
+    "risk_summary": {
+      "score": 6.0,
+      "severity_weighted_average": 5.5,
+      "severity_median": 5.5,
+      "total_vulnerabilities": 2,
+      "repositories_scored": 1,
+      "repositories_with_critical": 0,
+      "repositories_with_high_or_critical": 1,
+      "mean_repository_score": 6.0,
+      "max_repository_score": 6.0,
+      "critical_hotspots": [],
+      "worst_severity": "High"
     },
     "relations": {
       "components_vs_vulnerabilities": {
@@ -211,7 +264,19 @@
           "count": 1
         }
       ],
-      "findings_by_language": []
+      "findings_by_language": [],
+      "severity_by_language": [
+        {
+          "language": "python",
+          "severity": "High",
+          "count": 1
+        },
+        {
+          "language": "python",
+          "severity": "Medium",
+          "count": 1
+        }
+      ]
     }
   },
   "observations": [
@@ -365,11 +430,92 @@
           }
         ]
       }
+    },
+    {
+      "id": "OBS-10",
+      "title": "Nota global de vulnerabilidad",
+      "statement": "La organización obtiene una nota de 6.0/10 (media ponderada de severidad 5.5/10, peor severidad High); la media de las notas por repositorio es 6.0/10 sobre 1 repositorio(s) con vulnerabilidades.",
+      "metric": "datasets.risk_summary",
+      "evidence": {
+        "score": 6.0,
+        "severity_weighted_average": 5.5,
+        "severity_median": 5.5,
+        "mean_repository_score": 6.0,
+        "max_repository_score": 6.0,
+        "repositories_scored": 1,
+        "worst_severity": "High",
+        "total_vulnerabilities": 2
+      }
+    },
+    {
+      "id": "OBS-11",
+      "title": "Repositorios con vulnerabilidades más graves",
+      "statement": "'alpha' encabeza el ranking con nota 6.0/10 (media ponderada 5.5/10, peor severidad High, 2 vulnerabilidad(es)); 1 de 2 repositorio(s) tienen vulnerabilidades.",
+      "metric": "datasets.repository_risk",
+      "evidence": {
+        "repository_risk": [
+          {
+            "repo": "alpha",
+            "status": "scanned",
+            "languages": [
+              "python"
+            ],
+            "vulnerabilities": 2,
+            "findings": 0,
+            "components": 4,
+            "critical": 0,
+            "high": 1,
+            "worst_severity": "High",
+            "severity_weighted_average": 5.5,
+            "severity_median": 5.5,
+            "score": 6.0,
+            "vulns_per_component": 0.5,
+            "findings_per_component": 0.0,
+            "fixed_version_share": 0.5
+          }
+        ],
+        "leader": "alpha",
+        "leader_score": 6.0,
+        "repositories_scored": 1,
+        "repositories_total": 2
+      }
+    },
+    {
+      "id": "OBS-12",
+      "title": "Densidad de vulnerabilidades",
+      "statement": "'alpha' tiene la mayor densidad: 0.5 vulnerabilidades por componente (2 de 4 componentes).",
+      "metric": "datasets.repository_risk.vulns_per_component",
+      "evidence": {
+        "leader": "alpha",
+        "vulns_per_component": 0.5,
+        "repositories_with_density": 2
+      }
+    },
+    {
+      "id": "OBS-13",
+      "title": "Severidad de vulnerabilidades por lenguaje",
+      "statement": "Se observan 2 combinación(es) (lenguaje, severidad) sobre 1 lenguaje(s): python.",
+      "metric": "relations.severity_by_language",
+      "evidence": {
+        "severity_by_language": [
+          {
+            "language": "python",
+            "severity": "High",
+            "count": 1
+          },
+          {
+            "language": "python",
+            "severity": "Medium",
+            "count": 1
+          }
+        ]
+      }
     }
   ],
   "limitations": [
     "El reporte no incluye hallazgos de CodeQL (findings vacío o ausente): no pueden calcularse métricas por regla ni por lenguaje.",
     "Solo 1 repositorio(s) tienen vulnerabilidades: el top-N y el decil superior son poco informativos y las medidas de concentración (top_n_share, top_10pct_share, HHI) deben interpretarse con cautela.",
+    "La nota 1-10, la media ponderada y la mediana de severidad usan pesos fijos (Critical=10, High=7, Medium=4, Low=2, Negligible=1, Unknown=0): resumen la gravedad media, no el volumen ni la explotabilidad real, y no sustituyen una priorización basada en CVSS, EPSS o KEV.",
     "La correlación entre variables (p. ej. componentes y vulnerabilidades) no implica causalidad; puede estar confundida por el tamaño o el ecosistema del repositorio.",
     "La muestra es pequeña (2 repositorios): las proporciones y correlaciones tienen alta incertidumbre y no deben generalizarse."
   ]

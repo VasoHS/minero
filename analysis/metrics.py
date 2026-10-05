@@ -34,12 +34,15 @@ from analysis.loader import (
 )
 
 __all__ = [
+    "SEVERITY_WEIGHTS",
     "compute_coverage",
     "compute_severity_distribution",
     "compute_top_rules",
     "compute_top_cves",
     "compute_top_packages",
     "compute_repository_distribution",
+    "compute_repository_risk",
+    "compute_risk_summary",
     "compute_concentration",
     "compute_relations",
     "compute_datasets",
@@ -54,6 +57,18 @@ __all__ = [
 # Índice canónico de severidad (menor = más grave).
 _SEVERITY_INDEX = {severity: index for index, severity in enumerate(SEVERITIES)}
 
+#: Peso de gravedad (0..10) por severidad canónica. Se usa para la nota 1-10,
+#: la media ponderada de severidad y la mediana de severidad. Los pesos son una
+#: decisión metodológica explícita, no una medida oficial de explotabilidad.
+SEVERITY_WEIGHTS: Dict[str, float] = {
+    "Critical": 10.0,
+    "High": 7.0,
+    "Medium": 4.0,
+    "Low": 2.0,
+    "Negligible": 1.0,
+    "Unknown": 0.0,
+}
+
 
 # ---------------------------------------------------------------------------
 # Utilidades internas
@@ -63,6 +78,12 @@ _SEVERITY_INDEX = {severity: index for index, severity in enumerate(SEVERITIES)}
 def _round4(value: float) -> float:
     """Redondea a 4 decimales de forma estable (evita -0.0)."""
     rounded = round(float(value), 4)
+    return 0.0 if rounded == 0 else rounded
+
+
+def _round1(value: float) -> float:
+    """Redondea a 1 decimal de forma estable (evita -0.0)."""
+    rounded = round(float(value), 1)
     return 0.0 if rounded == 0 else rounded
 
 
@@ -80,6 +101,36 @@ def _worst_severity(severities: Iterable[Any]) -> str:
     """Elige la severidad más grave según el orden canónico."""
     normalized = [_norm_severity(severity) for severity in severities]
     return min(normalized, key=_severity_rank) if normalized else "Unknown"
+
+
+def _severity_weight(severity: Any) -> float:
+    """Peso de gravedad (0..10) de una severidad; ``Unknown``/inválida = 0."""
+    return SEVERITY_WEIGHTS.get(_norm_severity(severity), 0.0)
+
+
+def _median(values: Sequence[float]) -> float:
+    """Mediana de una serie de números (``0.0`` si está vacía)."""
+    ordered = sorted(values)
+    count = len(ordered)
+    if count == 0:
+        return 0.0
+    middle = count // 2
+    if count % 2:
+        return ordered[middle]
+    return (ordered[middle - 1] + ordered[middle]) / 2.0
+
+
+def _severity_score(weights: Sequence[float]) -> float:
+    """Nota 1-10 a partir de los pesos de severidad (0..10).
+
+    Es el promedio de los pesos reescalado linealmente a ``[1, 10]``: un
+    promedio de 10 (todas Critical) da 10.0 y un promedio de 0 (todas Unknown o
+    sin vulnerabilidades) da 1.0. Mide **gravedad media**, no volumen.
+    """
+    if not weights:
+        return 1.0
+    average = sum(weights) / len(weights)
+    return _round1(1.0 + 9.0 * (average / 10.0))
 
 
 def _sorted_counter(counter: Counter) -> Dict[str, int]:
@@ -325,6 +376,120 @@ def compute_repository_distribution(report: MinerReport) -> List[Dict[str, Any]]
     return rows
 
 
+def compute_repository_risk(report: MinerReport) -> List[Dict[str, Any]]:
+    """Riesgo por repositorio: nota 1-10, gravedad media, densidad y corrección.
+
+    Una fila por repositorio (también los que no tienen vulnerabilidades, con
+    ``score = 1.0``). Campos:
+
+    - ``score``: nota 1-10 (promedio ponderado de severidad reescalado).
+    - ``severity_weighted_average``: media de los pesos (0..10).
+    - ``severity_median``: mediana de los pesos (0..10).
+    - ``worst_severity``: severidad más grave observada.
+    - ``critical``/``high``: conteos de esas severidades.
+    - ``vulns_per_component``/``findings_per_component``: densidad (``null`` si
+      no hay componentes de SBOM).
+    - ``fixed_version_share``: fracción con corrección publicada (``null`` si no
+      hay vulnerabilidades).
+
+    Ordenado por ``score`` descendente, luego por ``severity_weighted_average``
+    descendente y por ``repo`` ascendente (determinista).
+    """
+    rows: List[Dict[str, Any]] = []
+    for repo in report.repositories:
+        vulnerabilities = repo.vulnerabilities
+        weights = [_severity_weight(vuln.get("severity")) for vuln in vulnerabilities]
+        total = len(weights)
+        components = repo.sbom_components
+        findings = len(repo.findings)
+        critical = sum(
+            1 for vuln in vulnerabilities if _norm_severity(vuln.get("severity")) == "Critical"
+        )
+        high = sum(
+            1 for vuln in vulnerabilities if _norm_severity(vuln.get("severity")) == "High"
+        )
+        fixed = sum(1 for vuln in vulnerabilities if vuln.get("fixed_version"))
+
+        rows.append(
+            {
+                "repo": repo.name,
+                "status": repo.status,
+                "languages": list(repo.languages),
+                "vulnerabilities": total,
+                "findings": findings,
+                "components": components,
+                "critical": critical,
+                "high": high,
+                "worst_severity": _worst_severity(
+                    vuln.get("severity") for vuln in vulnerabilities
+                ),
+                "severity_weighted_average": _round4(sum(weights) / total) if total else 0.0,
+                "severity_median": _round4(_median(weights)) if total else 0.0,
+                "score": _severity_score(weights),
+                "vulns_per_component": _round4(total / components) if components > 0 else None,
+                "findings_per_component": _round4(findings / components)
+                if components > 0
+                else None,
+                "fixed_version_share": _round4(fixed / total) if total else None,
+            }
+        )
+
+    rows.sort(
+        key=lambda row: (-row["score"], -row["severity_weighted_average"], row["repo"])
+    )
+    return rows
+
+
+def compute_risk_summary(
+    report: MinerReport, repository_risk: List[Dict[str, Any]]
+) -> Dict[str, Any]:
+    """Resumen global de riesgo a partir del ranking por repositorio.
+
+    - ``score``: nota 1-10 de la organización, calculada sobre **todas** las
+      vulnerabilidades (ponderada por volumen).
+    - ``severity_weighted_average``/``severity_median``: agregados globales.
+    - ``mean_repository_score``/``max_repository_score``: media y máximo de las
+      notas por repositorio **con vulnerabilidades** (sin ponderar por volumen).
+    - ``repositories_scored``: repositorios con al menos una vulnerabilidad.
+    - ``repositories_with_critical``/``repositories_with_high_or_critical``:
+      hotspots.
+    - ``critical_hotspots``: nombres ordenados de repos con al menos una
+      vulnerabilidad ``Critical``.
+    - ``worst_severity``: severidad más grave de la organización.
+    """
+    all_weights = [
+        _severity_weight(vuln.get("severity"))
+        for repo in report.repositories
+        for vuln in repo.vulnerabilities
+    ]
+    total = len(all_weights)
+    scored = [row for row in repository_risk if row["vulnerabilities"] > 0]
+    scores = [row["score"] for row in scored]
+    critical_hotspots = sorted(
+        row["repo"] for row in repository_risk if row["critical"] > 0
+    )
+
+    return {
+        "score": _severity_score(all_weights),
+        "severity_weighted_average": _round4(sum(all_weights) / total) if total else 0.0,
+        "severity_median": _round4(_median(all_weights)) if total else 0.0,
+        "total_vulnerabilities": total,
+        "repositories_scored": len(scored),
+        "repositories_with_critical": len(critical_hotspots),
+        "repositories_with_high_or_critical": sum(
+            1 for row in repository_risk if row["critical"] + row["high"] > 0
+        ),
+        "mean_repository_score": _round1(sum(scores) / len(scores)) if scores else 0.0,
+        "max_repository_score": max(scores) if scores else 0.0,
+        "critical_hotspots": critical_hotspots,
+        "worst_severity": _worst_severity(
+            vuln.get("severity")
+            for repo in report.repositories
+            for vuln in repo.vulnerabilities
+        ),
+    }
+
+
 def compute_concentration(
     records: Dict[str, List[Dict[str, Any]]], top_n: int = 3
 ) -> Dict[str, Any]:
@@ -431,11 +596,27 @@ def compute_relations(
         )
     ]
 
+    # Severidad de vulnerabilidades por lenguaje del repositorio. Igual que
+    # ``findings_by_language``, cada lenguaje declarado cuenta la vulnerabilidad
+    # una vez, por lo que los conteos por lenguaje no suman el total global.
+    lang_sev: Counter = Counter()
+    for repo in report.repositories:
+        for language in repo.languages:
+            for vuln in repo.vulnerabilities:
+                lang_sev[(language, _norm_severity(vuln.get("severity")))] += 1
+    severity_by_language = [
+        {"language": language, "severity": severity, "count": count}
+        for (language, severity), count in sorted(
+            lang_sev.items(), key=lambda item: (item[0][0], _severity_rank(item[0][1]))
+        )
+    ]
+
     return {
         "components_vs_vulnerabilities": {"pearson": pearson, "n": len(report.repositories)},
         "fixed_version_available_share": fixed_share,
         "severity_by_package_type": severity_by_package_type,
         "findings_by_language": findings_by_language,
+        "severity_by_language": severity_by_language,
     }
 
 
@@ -455,6 +636,7 @@ def compute_datasets(
         records.get("severity_distribution", []),
         key=lambda row: (row.get("repo", ""), _severity_rank(row.get("severity", "Unknown"))),
     )
+    repository_risk = compute_repository_risk(report)
 
     return {
         "repositories": list(records.get("repositories", [])),
@@ -466,7 +648,9 @@ def compute_datasets(
         "top_cves": compute_top_cves(records),
         "top_packages": compute_top_packages(records),
         "repository_distribution": compute_repository_distribution(report),
+        "repository_risk": repository_risk,
         "concentration": compute_concentration(records),
+        "risk_summary": compute_risk_summary(report, repository_risk),
         "relations": compute_relations(report, records),
     }
 
@@ -773,6 +957,118 @@ def build_observations(
             {"severity_by_package_type": severity_by_type},
         )
 
+    # 13. Nota global de vulnerabilidad (1-10).
+    risk_summary = datasets.get("risk_summary", {})
+    if risk_summary.get("total_vulnerabilities"):
+        add(
+            "Nota global de vulnerabilidad",
+            (
+                f"La organización obtiene una nota de {risk_summary['score']}/10 "
+                f"(media ponderada de severidad "
+                f"{risk_summary['severity_weighted_average']}/10, peor severidad "
+                f"{risk_summary['worst_severity']}); la media de las notas por "
+                f"repositorio es {risk_summary['mean_repository_score']}/10 sobre "
+                f"{risk_summary['repositories_scored']} repositorio(s) con "
+                f"vulnerabilidades."
+            ),
+            "datasets.risk_summary",
+            {
+                "score": risk_summary["score"],
+                "severity_weighted_average": risk_summary["severity_weighted_average"],
+                "severity_median": risk_summary["severity_median"],
+                "mean_repository_score": risk_summary["mean_repository_score"],
+                "max_repository_score": risk_summary["max_repository_score"],
+                "repositories_scored": risk_summary["repositories_scored"],
+                "worst_severity": risk_summary["worst_severity"],
+                "total_vulnerabilities": risk_summary["total_vulnerabilities"],
+            },
+        )
+
+    # 14. Ranking de repositorios por gravedad.
+    repository_risk = datasets.get("repository_risk", [])
+    ranked = [row for row in repository_risk if row["vulnerabilities"] > 0]
+    if ranked:
+        leader = ranked[0]
+        add(
+            "Repositorios con vulnerabilidades más graves",
+            (
+                f"'{leader['repo']}' encabeza el ranking con nota {leader['score']}/10 "
+                f"(media ponderada {leader['severity_weighted_average']}/10, peor "
+                f"severidad {leader['worst_severity']}, "
+                f"{leader['vulnerabilities']} vulnerabilidad(es)); "
+                f"{len(ranked)} de {len(repository_risk)} repositorio(s) tienen "
+                f"vulnerabilidades."
+            ),
+            "datasets.repository_risk",
+            {
+                "repository_risk": ranked,
+                "leader": leader["repo"],
+                "leader_score": leader["score"],
+                "repositories_scored": len(ranked),
+                "repositories_total": len(repository_risk),
+            },
+        )
+
+    # 15. Densidad de vulnerabilidades por componente.
+    density_rows = [
+        row for row in repository_risk if row["vulns_per_component"] is not None
+    ]
+    if density_rows:
+        density_leader = min(
+            density_rows, key=lambda row: (-row["vulns_per_component"], row["repo"])
+        )
+        add(
+            "Densidad de vulnerabilidades",
+            (
+                f"'{density_leader['repo']}' tiene la mayor densidad: "
+                f"{density_leader['vulns_per_component']} vulnerabilidades por "
+                f"componente ({density_leader['vulnerabilities']} de "
+                f"{density_leader['components']} componentes)."
+            ),
+            "datasets.repository_risk.vulns_per_component",
+            {
+                "leader": density_leader["repo"],
+                "vulns_per_component": density_leader["vulns_per_component"],
+                "repositories_with_density": len(density_rows),
+            },
+        )
+
+    # 16. Hotspots de severidad Critical.
+    if risk_summary.get("repositories_with_critical"):
+        hotspots = risk_summary.get("critical_hotspots", [])
+        add(
+            "Repositorios con vulnerabilidades Critical",
+            (
+                f"{risk_summary['repositories_with_critical']} repositorio(s) tienen "
+                f"al menos una vulnerabilidad Critical: {', '.join(hotspots)}; "
+                f"{risk_summary['repositories_with_high_or_critical']} repositorio(s) "
+                f"tienen High o Critical."
+            ),
+            "datasets.risk_summary.critical_hotspots",
+            {
+                "repositories_with_critical": risk_summary["repositories_with_critical"],
+                "repositories_with_high_or_critical": risk_summary[
+                    "repositories_with_high_or_critical"
+                ],
+                "critical_hotspots": hotspots,
+            },
+        )
+
+    # 17. Severidad de vulnerabilidades por lenguaje.
+    severity_by_language = relations.get("severity_by_language", [])
+    if severity_by_language:
+        languages = sorted({row["language"] for row in severity_by_language})
+        add(
+            "Severidad de vulnerabilidades por lenguaje",
+            (
+                f"Se observan {len(severity_by_language)} combinación(es) "
+                f"(lenguaje, severidad) sobre {len(languages)} lenguaje(s): "
+                f"{', '.join(languages)}."
+            ),
+            "relations.severity_by_language",
+            {"severity_by_language": severity_by_language},
+        )
+
     return observations
 
 
@@ -882,6 +1178,37 @@ def build_limitations(report: MinerReport, coverage: Dict[str, Any]) -> List[str
             "el top-N y el decil superior son poco informativos y las medidas de "
             "concentración (top_n_share, top_10pct_share, HHI) deben interpretarse "
             "con cautela."
+        )
+
+    # Nota 1-10: explicitar que es una decisión metodológica con pesos fijos.
+    if any(repo.vulnerabilities for repo in repositories):
+        limitations.append(
+            "La nota 1-10, la media ponderada y la mediana de severidad usan pesos "
+            "fijos (Critical=10, High=7, Medium=4, Low=2, Negligible=1, Unknown=0): "
+            "resumen la gravedad media, no el volumen ni la explotabilidad real, y "
+            "no sustituyen una priorización basada en CVSS, EPSS o KEV."
+        )
+
+    # Densidad no calculable por falta de SBOM.
+    repos_without_components = sum(
+        1 for repo in repositories if repo.vulnerabilities and repo.sbom_components <= 0
+    )
+    if repos_without_components:
+        limitations.append(
+            f"{repos_without_components} repositorio(s) con vulnerabilidades no tienen "
+            "componentes de SBOM: su densidad de vulnerabilidades (vulns por "
+            "componente) no es calculable y quedan fuera de ese ranking."
+        )
+
+    # Atribución múltiple en la severidad por lenguaje.
+    multi_language = sum(
+        1 for repo in repositories if repo.vulnerabilities and len(repo.languages) > 1
+    )
+    if multi_language:
+        limitations.append(
+            f"{multi_language} repositorio(s) con vulnerabilidades declaran varios "
+            "lenguajes: la severidad por lenguaje atribuye cada vulnerabilidad a cada "
+            "lenguaje, por lo que los conteos por lenguaje no suman el total global."
         )
 
     # Advertencias metodológicas siempre presentes.

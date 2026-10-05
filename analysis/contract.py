@@ -5,10 +5,10 @@ que el Analyzer entrega al Visualizer. Solo usa la librería estándar y **no**
 importa ``metrics`` en tiempo de importación: recibe sus resultados como
 argumentos (``datasets``, ``coverage``, ``observations`` y ``limitations``).
 
-Estructura del documento (``schema_version`` = ``"1.0"``)::
+Estructura del documento (``schema_version`` = ``"1.1"``)::
 
     {
-      "schema_version": "1.0",
+      "schema_version": "1.1",
       "meta": {
         "organization": str,
         "source": str,
@@ -23,7 +23,8 @@ Estructura del documento (``schema_version`` = ``"1.0"``)::
         "repositories": [...], "findings": [...], "vulnerabilities": [...],
         "severity_distribution": [...], "severity_by_repo": [...],
         "top_rules": [...], "top_cves": [...], "top_packages": [...],
-        "repository_distribution": [...], "concentration": {...},
+        "repository_distribution": [...], "repository_risk": [...],
+        "concentration": {...}, "risk_summary": {...},
         "relations": {...}
       },
       "observations": [{"id", "title", "statement", "metric", "evidence"}],
@@ -74,7 +75,7 @@ __all__ = [
 ]
 
 #: Versión del contrato de salida. Cambia solo ante rupturas de compatibilidad.
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
 
 #: Orígenes posibles de un reporte del Miner (mismo conjunto que ``loader``).
 SOURCE_KINDS = ("scan", "vuln", "sbom", "merged", "unknown")
@@ -90,7 +91,9 @@ DATASET_KEYS = (
     "top_cves",
     "top_packages",
     "repository_distribution",
+    "repository_risk",
     "concentration",
+    "risk_summary",
     "relations",
 )
 
@@ -105,10 +108,11 @@ LIST_DATASETS = (
     "top_cves",
     "top_packages",
     "repository_distribution",
+    "repository_risk",
 )
 
 #: Datasets de apoyo representados como objeto.
-OBJECT_DATASETS = ("concentration", "relations")
+OBJECT_DATASETS = ("concentration", "risk_summary", "relations")
 
 #: Claves obligatorias del documento de nivel superior.
 TOP_LEVEL_REQUIRED = (
@@ -374,6 +378,70 @@ def _validate_repository_distribution(rows: List[Any], errors: List[str]) -> Non
                 errors.append(f"{where}.{field} debe ser un entero >= 0.")
 
 
+def _is_number(value: Any) -> bool:
+    """``True`` si ``value`` es un número (int/float, sin contar ``bool``)."""
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def _validate_repository_risk(rows: List[Any], errors: List[str]) -> None:
+    for index, row in enumerate(rows):
+        where = f"datasets.repository_risk[{index}]"
+        if not isinstance(row, dict):
+            errors.append(f"{where} debe ser un objeto.")
+            continue
+        if not _is_non_empty_str(row.get("repo")):
+            errors.append(f"{where}.repo debe ser una cadena no vacía.")
+        for field in ("vulnerabilities", "findings", "components", "critical", "high"):
+            if field in row and not _is_non_negative_int(row[field]):
+                errors.append(f"{where}.{field} debe ser un entero >= 0.")
+        if "worst_severity" in row and row["worst_severity"] not in SEVERITIES:
+            errors.append(
+                f"{where}.worst_severity={row['worst_severity']!r} no pertenece a "
+                f"{list(SEVERITIES)}."
+            )
+        for field in ("score", "severity_weighted_average", "severity_median"):
+            value = row.get(field)
+            if value is not None and not (_is_number(value) and 0 <= value <= 10):
+                errors.append(f"{where}.{field} debe ser un número en [0, 10].")
+        for field in ("vulns_per_component", "findings_per_component"):
+            value = row.get(field)
+            if value is not None and not (_is_number(value) and value >= 0):
+                errors.append(f"{where}.{field} debe ser un número >= 0 o null.")
+        share = row.get("fixed_version_share")
+        if share is not None and not (_is_number(share) and 0 <= share <= 1):
+            errors.append(f"{where}.fixed_version_share debe ser un número en [0, 1].")
+
+
+def _validate_risk_summary(summary: Any, errors: List[str]) -> None:
+    where = "datasets.risk_summary"
+    if not isinstance(summary, dict):
+        errors.append(f"{where} debe ser un objeto.")
+        return
+    for field in ("score", "severity_weighted_average", "severity_median",
+                  "mean_repository_score", "max_repository_score"):
+        value = summary.get(field)
+        if value is not None and not (_is_number(value) and 0 <= value <= 10):
+            errors.append(f"{where}.{field} debe ser un número en [0, 10].")
+    for field in (
+        "total_vulnerabilities",
+        "repositories_scored",
+        "repositories_with_critical",
+        "repositories_with_high_or_critical",
+    ):
+        if field in summary and not _is_non_negative_int(summary[field]):
+            errors.append(f"{where}.{field} debe ser un entero >= 0.")
+    if "worst_severity" in summary and summary["worst_severity"] not in SEVERITIES:
+        errors.append(
+            f"{where}.worst_severity={summary['worst_severity']!r} no pertenece a "
+            f"{list(SEVERITIES)}."
+        )
+    hotspots = summary.get("critical_hotspots")
+    if not isinstance(hotspots, list) or any(
+        not _is_non_empty_str(item) for item in hotspots
+    ):
+        errors.append(f"{where}.critical_hotspots debe ser una lista de cadenas no vacías.")
+
+
 def validate_document(document: Any) -> List[str]:
     """Valida el documento de salida en Python puro (sin ``jsonschema``).
 
@@ -490,11 +558,15 @@ def validate_document(document: Any) -> List[str]:
             "top_cves": _validate_top_cves,
             "top_packages": _validate_top_packages,
             "repository_distribution": _validate_repository_distribution,
+            "repository_risk": _validate_repository_risk,
         }
         for key, validator in row_validators.items():
             rows = datasets.get(key)
             if isinstance(rows, list):
                 validator(rows, errors)
+
+        if "risk_summary" in datasets:
+            _validate_risk_summary(datasets["risk_summary"], errors)
 
     # --- observations ------------------------------------------------------
     observations = document.get("observations")
