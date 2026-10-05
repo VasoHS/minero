@@ -38,13 +38,23 @@ def get_organization_repos(
     }
     
     repos = []
+    seen_ids = set()
     url = f"https://api.github.com/orgs/{quote(org_name, safe='')}/repos"
     params = {"per_page": 100, "type": "all", "sort": sort, "direction": direction}
     
     while url:
         response = requests.get(url, headers=headers, params=params, timeout=30)
         response.raise_for_status()
-        repos.extend(response.json())
+        for repo in response.json():
+            repo_id = repo.get("id")
+            # 'updated' no es una clave única ni estable: si un repositorio se
+            # actualiza durante la paginación puede repetirse entre páginas.
+            # Se deduplica por 'id' conservando el orden de GitHub.
+            if repo_id is not None:
+                if repo_id in seen_ids:
+                    continue
+                seen_ids.add(repo_id)
+            repos.append(repo)
         
         # Paginación mediante el header 'Link'
         url = None
@@ -54,7 +64,9 @@ def get_organization_repos(
                 if 'rel="next"' in link:
                     next_url = link[link.index("<")+1 : link.index(">")]
                     # No reenviar el token a un host distinto de api.github.com
-                    if urlparse(next_url).netloc == API_HOST:
+                    # ni por un esquema no seguro.
+                    parsed = urlparse(next_url)
+                    if parsed.scheme == "https" and parsed.hostname == API_HOST:
                         url = next_url
                         params = None # Los parámetros ya vienen en la URL del link
                     break
