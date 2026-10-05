@@ -1,0 +1,3611 @@
+{
+  "organization": "tensorflow",
+  "summary": {
+    "repositories": 23,
+    "analyzed": 0,
+    "failed": 0,
+    "unsupported": 0,
+    "findings": 0,
+    "sboms_generated": 0,
+    "sboms_failed": 0,
+    "components": 0,
+    "vulns_scanned": 23,
+    "vulns_failed": 0,
+    "vulnerabilities": 313,
+    "vulns_critical": 14,
+    "vulns_high": 150,
+    "vulns_medium": 122,
+    "vulns_low": 27
+  },
+  "repositories": [
+    {
+      "name": "addons",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "v1.1.0",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:30:01.405941+00:00",
+        "file": "vulns/addons.grype.json"
+      }
+    },
+    {
+      "name": "community",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:03.902279+00:00",
+        "file": "vulns/community.grype.json"
+      }
+    },
+    {
+      "name": "docs",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:04.758934+00:00",
+        "file": "vulns/docs.grype.json"
+      }
+    },
+    {
+      "name": "examples",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 128,
+        "by_severity": {
+          "Critical": 5,
+          "High": 61,
+          "Medium": 56,
+          "Low": 6,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "CVE-2021-40531",
+            "severity": "Critical",
+            "package": "Sketch",
+            "version": "2.0",
+            "type": "pod",
+            "fixed_version": "75",
+            "namespace": "nvd:cpe"
+          },
+          {
+            "id": "GHSA-x4wf-678h-2pmq",
+            "severity": "Critical",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "2.13.1rc0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-3f63-hfp8-52jq",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "10.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gw97-ff7c-9v96",
+            "severity": "Critical",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gw97-ff7c-9v96",
+            "severity": "Critical",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-36fq-jgmw-4r9c",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.11.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4f3f-g24h-fr8m",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.13.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5gwj-m78q-7pq3",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hjqc-jx6g-rwp9",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hqp4-2352-xf5r",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.14.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-v2w2-w228-c444",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-44wm-f244-xhp3",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "10.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-45hq-cxwh-f6vc",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5x94-69rx-g8h2",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-62p4-gmf7-7g93",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6r8x-57c9-28j4",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8v84-f9pq-wr9x",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9hw9-ch79-4vh6",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jjj6-mw9f-p565",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-phj9-mv4w-65pm",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vjc4-5qp5-m44j",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xj96-63gp-2gmr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-49rq-hwc3-x77w",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-49rq-hwc3-x77w",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-558h-mq8x-7q9g",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-558h-mq8x-7q9g",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5w96-866f-6rm8",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5w96-866f-6rm8",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-647v-r7qq-24fh",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-647v-r7qq-24fh",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-64jg-wjww-7c5w",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-64jg-wjww-7c5w",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-68v3-g9cm-rmm6",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-68v3-g9cm-rmm6",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6hg6-5c2q-7rcr",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6hg6-5c2q-7rcr",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6wfh-89q8-44jq",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6wfh-89q8-44jq",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7jvm-xxmr-v5cw",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7jvm-xxmr-v5cw",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7x4v-9gxg-9hwj",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7x4v-9gxg-9hwj",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-93vr-9q9m-pj8p",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-93vr-9q9m-pj8p",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-94mm-g2mv-8p7r",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-94mm-g2mv-8p7r",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cg88-rpvp-cjv5",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cg88-rpvp-cjv5",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f49c-87jh-g47q",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f49c-87jh-g47q",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f637-vh3r-vfh2",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f637-vh3r-vfh2",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gf97-q72m-7579",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gf97-q72m-7579",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gjh7-xx4r-x345",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.12.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gjh7-xx4r-x345",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.12.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-h6q3-vv32-2cq5",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-h6q3-vv32-2cq5",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-j5w9-hmfh-4cr6",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-j5w9-hmfh-4cr6",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qjqc-vqcf-5qvj",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qjqc-vqcf-5qvj",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rcf8-g8jv-vg6p",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rcf8-g8jv-vg6p",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xvwp-h6jv-7472",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xvwp-h6jv-7472",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-w69q-w4h4-2fx8",
+            "severity": "Medium",
+            "package": "dm-reverb",
+            "version": "0.5.0",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-26c4-7vv6-867j",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-74m6-m3xx-3vmj",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.15.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cjgq-5qmw-rcj6",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh82-f9x8-5frx",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-m8wh-29wm-52mv",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mq84-hjqx-cwf2",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4x4j-2g7c-83w6",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fj7v-r99m-22gq",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-r73j-pqj5-w3x7",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-wjx4-4jcj-g98j",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-27rc-728f-x5w2",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-27rc-728f-x5w2",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-368v-7v32-52fx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-368v-7v32-52fx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-54pp-c6pp-7fpx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-54pp-c6pp-7fpx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-66vq-54fq-6jvv",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-66vq-54fq-6jvv",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-67pf-62xr-q35m",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-67pf-62xr-q35m",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6x99-gv2v-q76v",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6x99-gv2v-q76v",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-762h-vpvw-3rcx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.7.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8fvv-46hw-vpg3",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8fvv-46hw-vpg3",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8w5g-3wcv-9g2j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8w5g-3wcv-9g2j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f2w8-jw48-fr7j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f2w8-jw48-fr7j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fqm2-gh8w-gr68",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fqm2-gh8w-gr68",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-frqp-wp83-qggv",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-frqp-wp83-qggv",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fxgc-95xx-grvq",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fxgc-95xx-grvq",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g9fm-r5mm-rf9f",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g9fm-r5mm-rf9f",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gq2j-cr96-gvqx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gq2j-cr96-gvqx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-h246-cgh4-7475",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-h246-cgh4-7475",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hq7g-wwwp-q46h",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hq7g-wwwp-q46h",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jq6x-99hj-q636",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jq6x-99hj-q636",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mv77-9g28-cwg3",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mv77-9g28-cwg3",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-pf36-r9c6-h97j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-pf36-r9c6-h97j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rjx6-v474-2ch9",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rjx6-v474-2ch9",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rmg2-f698-wq35",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rmg2-f698-wq35",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xxcj-rhqg-m46g",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xxcj-rhqg-m46g",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-58hv-7753-xmfq",
+            "severity": "Low",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cqvq-fvhr-v6hc",
+            "severity": "Low",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cqvq-fvhr-v6hc",
+            "severity": "Low",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xf83-q765-xm6m",
+            "severity": "Low",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xf83-q765-xm6m",
+            "severity": "Low",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g7vv-2v7x-gj9p",
+            "severity": "Low",
+            "package": "tqdm",
+            "version": "4.64.0",
+            "type": "python",
+            "fixed_version": "4.66.3",
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:05.624376+00:00",
+        "file": "vulns/examples.grype.json"
+      }
+    },
+    {
+      "name": "fairness-indicators",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "release/v1.12",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:06.746794+00:00",
+        "file": "vulns/fairness-indicators.grype.json"
+      }
+    },
+    {
+      "name": "gnn",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:07.644066+00:00",
+        "file": "vulns/gnn.grype.json"
+      }
+    },
+    {
+      "name": "java",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 2,
+        "by_severity": {
+          "Critical": 0,
+          "High": 1,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-jmp9-x22r-554x",
+            "severity": "High",
+            "package": "spring-core",
+            "version": "5.3.32",
+            "type": "java-archive",
+            "fixed_version": null,
+            "namespace": "github:language:java"
+          },
+          {
+            "id": "GHSA-659m-px2c-25wj",
+            "severity": "Low",
+            "package": "spring-core",
+            "version": "5.3.32",
+            "type": "java-archive",
+            "fixed_version": null,
+            "namespace": "github:language:java"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:08.501875+00:00",
+        "file": "vulns/java.grype.json"
+      }
+    },
+    {
+      "name": "mlir-hlo",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:09.385762+00:00",
+        "file": "vulns/mlir-hlo.grype.json"
+      }
+    },
+    {
+      "name": "model-analysis",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "v1",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:10.239601+00:00",
+        "file": "vulns/model-analysis.grype.json"
+      }
+    },
+    {
+      "name": "models",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 28,
+        "by_severity": {
+          "Critical": 0,
+          "High": 14,
+          "Medium": 9,
+          "Low": 5,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-qr4w-53vh-m672",
+            "severity": "High",
+            "package": "opencv-python",
+            "version": "4.2.0.32",
+            "type": "python",
+            "fixed_version": "4.8.1.78",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-45hq-cxwh-f6vc",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5x94-69rx-g8h2",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-62p4-gmf7-7g93",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6r8x-57c9-28j4",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8v84-f9pq-wr9x",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9hw9-ch79-4vh6",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cfh3-3jmp-rvhc",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.1.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jjj6-mw9f-p565",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-phj9-mv4w-65pm",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-pwv6-vv43-88gr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vjc4-5qp5-m44j",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-whj4-6x5x-4v2j",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xj96-63gp-2gmr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4x4j-2g7c-83w6",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5xmw-vc9v-4wf2",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fj7v-r99m-22gq",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-pg7v-jwj7-p798",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-r73j-pqj5-w3x7",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-wjx4-4jcj-g98j",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-887c-mr87-cxwp",
+            "severity": "Medium",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f4hp-rmr7-r7v8",
+            "severity": "Medium",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vgrw-7cvw-pwgx",
+            "severity": "Medium",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": "2.9.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-3749-ghw9-m3mg",
+            "severity": "Low",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": "2.7.1-rc1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-c678-jfcj-6jmf",
+            "severity": "Low",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qfhq-4f3w-5fph",
+            "severity": "Low",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": "2.10.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rrmf-rvhw-rf47",
+            "severity": "Low",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": "2.13.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-x3gm-94wq-g975",
+            "severity": "Low",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:11.137551+00:00",
+        "file": "vulns/models.grype.json"
+      }
+    },
+    {
+      "name": "neural-structured-learning",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 2,
+        "by_severity": {
+          "Critical": 0,
+          "High": 2,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-gjh7-xx4r-x345",
+            "severity": "High",
+            "package": "tensorflow-gpu",
+            "version": "2.12.0",
+            "type": "python",
+            "fixed_version": "2.12.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gjh7-xx4r-x345",
+            "severity": "High",
+            "package": "tensorflow-gpu",
+            "version": "2.12.0",
+            "type": "python",
+            "fixed_version": "2.12.1",
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:12.041727+00:00",
+        "file": "vulns/neural-structured-learning.grype.json"
+      }
+    },
+    {
+      "name": "playground",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:13.067294+00:00",
+        "file": "vulns/playground.grype.json"
+      }
+    },
+    {
+      "name": "privacy",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:13.922742+00:00",
+        "file": "vulns/privacy.grype.json"
+      }
+    },
+    {
+      "name": "probability",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-g7vv-2v7x-gj9p",
+            "severity": "Low",
+            "package": "tqdm",
+            "version": "4.66",
+            "type": "python",
+            "fixed_version": "4.66.3",
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:14.774829+00:00",
+        "file": "vulns/probability.grype.json"
+      }
+    },
+    {
+      "name": "recommenders-addons",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "v1.1.0",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:15.633891+00:00",
+        "file": "vulns/recommenders-addons.grype.json"
+      }
+    },
+    {
+      "name": "recommenders",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:16.544803+00:00",
+        "file": "vulns/recommenders.grype.json"
+      }
+    },
+    {
+      "name": "rust",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:17.415446+00:00",
+        "file": "vulns/rust.grype.json"
+      }
+    },
+    {
+      "name": "serving",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:18.368317+00:00",
+        "file": "vulns/serving.grype.json"
+      }
+    },
+    {
+      "name": "tensor2tensor",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 52,
+        "by_severity": {
+          "Critical": 8,
+          "High": 34,
+          "Medium": 9,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-3f63-hfp8-52jq",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "10.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-43fq-w8qq-v88h",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "7.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-57h3-9rgr-c24m",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7534-mm45-c74v",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8vj2-vxx3-667w",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.0.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-p49h-hjvm-jg3h",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-r7rm-8j6h-r933",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vcqg-3p29-xw73",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-3wvg-mj6g-m9cv",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-3xv8-3j54-hgrp",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "7.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-44wm-f244-xhp3",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "10.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-45hq-cxwh-f6vc",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5gm3-px64-rw72",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5x94-69rx-g8h2",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-62p4-gmf7-7g93",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6r8x-57c9-28j4",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-77gc-v2xv-rvvh",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7r7m-5h27-29hp",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8843-m7mw-mxqm",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "7.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8ghj-p4vj-mr35",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "10.0.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8v84-f9pq-wr9x",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8xjq-8fcg-g5hw",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-95q3-8gr9-gm8w",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9hw9-ch79-4vh6",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9j59-75qj-795w",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.0.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cqhg-xjhh-p8hf",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "7.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f4w8-cv6p-x6r5",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f5g8-5qq7-938w",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g6rj-rv7j-xwp4",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hj69-c76v-86wr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-j7hp-h8jx-5ppr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "10.0.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-j7mj-748x-7p78",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jjj6-mw9f-p565",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-m2vv-5vj5-2hm7",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mvg9-xffr-p774",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-p43w-g3c5-g5mq",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-phj9-mv4w-65pm",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-q5hq-fp76-qmrc",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rwv7-3v45-hg29",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vj42-xq3r-hr3r",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "7.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vqcj-wrf2-7v73",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xj96-63gp-2gmr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4x4j-2g7c-83w6",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9hx2-hgq2-2g4f",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hf64-x4gq-p99h",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hjfx-8p6c-g7gx",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jgpv-4h4c-xhw3",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-pw3c-h7wp-cvhx",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.0.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-r73j-pqj5-w3x7",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-wjx4-4jcj-g98j",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xrcv-f9gm-v42c",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.0.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4fx9-vc88-q2xc",
+            "severity": "Low",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.0.0",
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:19.225431+00:00",
+        "file": "vulns/tensor2tensor.grype.json"
+      }
+    },
+    {
+      "name": "tensorflow",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 38,
+        "by_severity": {
+          "Critical": 0,
+          "High": 21,
+          "Medium": 17,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8rrh-rw8j-w5fx",
+            "severity": "High",
+            "package": "wheel",
+            "version": "0.41.3",
+            "type": "python",
+            "fixed_version": "0.46.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8rrh-rw8j-w5fx",
+            "severity": "High",
+            "package": "wheel",
+            "version": "0.41.3",
+            "type": "python",
+            "fixed_version": "0.46.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8rrh-rw8j-w5fx",
+            "severity": "High",
+            "package": "wheel",
+            "version": "0.41.3",
+            "type": "python",
+            "fixed_version": "0.46.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5wmx-573v-2qwq",
+            "severity": "Medium",
+            "package": "markdown",
+            "version": "3.8",
+            "type": "python",
+            "fixed_version": "3.8.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5wmx-573v-2qwq",
+            "severity": "Medium",
+            "package": "markdown",
+            "version": "3.8",
+            "type": "python",
+            "fixed_version": "3.8.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5wmx-573v-2qwq",
+            "severity": "Medium",
+            "package": "markdown",
+            "version": "3.8",
+            "type": "python",
+            "fixed_version": "3.8.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5wmx-573v-2qwq",
+            "severity": "Medium",
+            "package": "markdown",
+            "version": "3.8",
+            "type": "python",
+            "fixed_version": "3.8.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gc5v-m9x4-r6x2",
+            "severity": "Medium",
+            "package": "requests",
+            "version": "2.32.4",
+            "type": "python",
+            "fixed_version": "2.33.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gc5v-m9x4-r6x2",
+            "severity": "Medium",
+            "package": "requests",
+            "version": "2.32.4",
+            "type": "python",
+            "fixed_version": "2.33.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gc5v-m9x4-r6x2",
+            "severity": "Medium",
+            "package": "requests",
+            "version": "2.32.4",
+            "type": "python",
+            "fixed_version": "2.33.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gc5v-m9x4-r6x2",
+            "severity": "Medium",
+            "package": "requests",
+            "version": "2.32.4",
+            "type": "python",
+            "fixed_version": "2.33.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:20.121359+00:00",
+        "file": "vulns/tensorflow.grype.json"
+      }
+    },
+    {
+      "name": "tflite-micro",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:21.584374+00:00",
+        "file": "vulns/tflite-micro.grype.json"
+      }
+    },
+    {
+      "name": "tfx",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 57,
+        "by_severity": {
+          "Critical": 1,
+          "High": 17,
+          "Medium": 31,
+          "Low": 8,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-82r6-8w77-94w6",
+            "severity": "Critical",
+            "package": "anyio",
+            "version": "4.13.0",
+            "type": "python",
+            "fixed_version": "4.14.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cq5v-8q36-5273",
+            "severity": "High",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-h95x-26f3-88hr",
+            "severity": "High",
+            "package": "js2py",
+            "version": "0.74",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vfmq-68hx-4jfw",
+            "severity": "High",
+            "package": "lxml",
+            "version": "5.3.0",
+            "type": "python",
+            "fixed_version": "6.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-2h4p-vjrc-8xpq",
+            "severity": "High",
+            "package": "mako",
+            "version": "1.3.5",
+            "type": "python",
+            "fixed_version": "1.3.12",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-v92g-xgxw-vvmm",
+            "severity": "High",
+            "package": "mako",
+            "version": "1.3.5",
+            "type": "python",
+            "fixed_version": "1.3.11",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4j32-57v6-6g45",
+            "severity": "High",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8mp2-v27r-99xp",
+            "severity": "High",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.2.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-c8j7-8cv4-2xmq",
+            "severity": "High",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-ffq3-xpv3-j92q",
+            "severity": "High",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qcq2-496w-v96p",
+            "severity": "High",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6v7p-g79w-8964",
+            "severity": "High",
+            "package": "msgpack",
+            "version": "1.1.0",
+            "type": "python",
+            "fixed_version": "1.2.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rgxp-2hwp-jwgg",
+            "severity": "High",
+            "package": "pyarrow",
+            "version": "18.1.0",
+            "type": "python",
+            "fixed_version": "23.0.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-2wc2-fm75-p42x",
+            "severity": "High",
+            "package": "soupsieve",
+            "version": "2.6",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-836r-79rf-4m37",
+            "severity": "High",
+            "package": "soupsieve",
+            "version": "2.6",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-94p9-xgh2-xp45",
+            "severity": "High",
+            "package": "virtualenv",
+            "version": "20.26.6",
+            "type": "python",
+            "fixed_version": "21.7.12",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-p58f-9548-mpm2",
+            "severity": "High",
+            "package": "virtualenv",
+            "version": "20.26.6",
+            "type": "python",
+            "fixed_version": "21.7.13",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-x78j-v8h9-3j2q",
+            "severity": "High",
+            "package": "virtualenv",
+            "version": "20.26.6",
+            "type": "python",
+            "fixed_version": "21.7.12",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4fvr-rgm6-gqmc",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-63hw-fmq6-xxg2",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g3cq-j2xw-wf74",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hg6j-4rv6-33pg",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hpj7-wq8m-9hgp",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jg22-mg44-37j8",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mfx4-hv73-q22v",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mq44-7p77-q5h7",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xcgm-r5h9-7989",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5p39-cfhj-2xmp",
+            "severity": "Medium",
+            "package": "anyio",
+            "version": "4.13.0",
+            "type": "python",
+            "fixed_version": "4.14.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gj48-438w-jh9v",
+            "severity": "Medium",
+            "package": "bleach",
+            "version": "6.1.0",
+            "type": "python",
+            "fixed_version": "6.4.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qmgc-5h2g-mvrw",
+            "severity": "Medium",
+            "package": "filelock",
+            "version": "3.16.1",
+            "type": "python",
+            "fixed_version": "3.20.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-w853-jp5j-5j7f",
+            "severity": "Medium",
+            "package": "filelock",
+            "version": "3.16.1",
+            "type": "python",
+            "fixed_version": "3.20.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-65pc-fj4g-8rjx",
+            "severity": "Medium",
+            "package": "idna",
+            "version": "3.7",
+            "type": "python",
+            "fixed_version": "3.15",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-428g-f7cq-pgp5",
+            "severity": "Medium",
+            "package": "marshmallow",
+            "version": "3.22.0",
+            "type": "python",
+            "fixed_version": "3.26.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-2hm2-hc3v-44h9",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-58cw-g322-p94v",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.2.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8c25-4j27-2rv3",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8g87-j6q8-g93x",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8mpj-m6qm-5qr8",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g97x-gvcm-x72h",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qfrw-5rxm-mhh2",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-r4rv-85jg-w4mf",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-v87v-83h2-53w7",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.2.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hj66-6f7g-4r5v",
+            "severity": "Medium",
+            "package": "oauthlib",
+            "version": "3.2.2",
+            "type": "python",
+            "fixed_version": "4.0.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xpv3-w29h-x7cv",
+            "severity": "Medium",
+            "package": "oauthlib",
+            "version": "3.2.2",
+            "type": "python",
+            "fixed_version": "4.0.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6w46-j5rx-g56g",
+            "severity": "Medium",
+            "package": "pytest",
+            "version": "8.0.0",
+            "type": "python",
+            "fixed_version": "9.0.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gjv8-xp57-g29c",
+            "severity": "Medium",
+            "package": "soupsieve",
+            "version": "2.6",
+            "type": "python",
+            "fixed_version": "2.9.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-j934-xhv5-fg8f",
+            "severity": "Medium",
+            "package": "soupsieve",
+            "version": "2.6",
+            "type": "python",
+            "fixed_version": "2.9.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-597g-3phw-6986",
+            "severity": "Medium",
+            "package": "virtualenv",
+            "version": "20.26.6",
+            "type": "python",
+            "fixed_version": "20.36.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9h9j-4vrj-gf7g",
+            "severity": "Medium",
+            "package": "virtualenv",
+            "version": "20.26.6",
+            "type": "python",
+            "fixed_version": "21.7.11",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-2fqr-mr3j-6wp8",
+            "severity": "Low",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4m7w-qmgq-4wj5",
+            "severity": "Low",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9x8q-7h8h-wcw9",
+            "severity": "Low",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-m6qw-4cw2-hm4m",
+            "severity": "Low",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8rfp-98v4-mmr6",
+            "severity": "Low",
+            "package": "bleach",
+            "version": "6.1.0",
+            "type": "python",
+            "fixed_version": "6.4.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-68rp-wp8r-4726",
+            "severity": "Low",
+            "package": "flask",
+            "version": "2.2.5",
+            "type": "python",
+            "fixed_version": "3.1.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5239-wwwm-4pmq",
+            "severity": "Low",
+            "package": "pygments",
+            "version": "2.19.1",
+            "type": "python",
+            "fixed_version": "2.20.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "v1",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:22.610961+00:00",
+        "file": "vulns/tfx.grype.json"
+      }
+    },
+    {
+      "name": "transform",
+      "full_name": null,
+      "url": "",
+      "commit": null,
+      "status": "scanned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "skipped",
+        "components": 0,
+        "syft_version": null,
+        "generated_at": null,
+        "file": null
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "v1",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:31:23.730186+00:00",
+        "file": "vulns/transform.grype.json"
+      }
+    }
+  ]
+}
