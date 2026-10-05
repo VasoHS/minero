@@ -25,7 +25,13 @@ import math
 from collections import Counter
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
-from analysis.loader import SEVERITIES, MinerReport
+from analysis.loader import (
+    FAILED_STATUSES,
+    SBOM_OK_STATUSES,
+    SEVERITIES,
+    VULN_OK_STATUSES,
+    MinerReport,
+)
 
 __all__ = [
     "compute_coverage",
@@ -41,9 +47,9 @@ __all__ = [
     "build_limitations",
 ]
 
-# Estados que indican que el análisis correspondiente terminó con éxito.
-VULN_OK_STATUSES = frozenset({"scanned", "no_vulnerabilities"})
-SBOM_OK_STATUSES = frozenset({"generated", "no_components"})
+# ``VULN_OK_STATUSES``, ``SBOM_OK_STATUSES`` y ``FAILED_STATUSES`` se
+# re-exportan desde ``analysis.loader`` para mantener una única fuente de
+# verdad; se conservan como nombres de este módulo por compatibilidad.
 
 # Índice canónico de severidad (menor = más grave).
 _SEVERITY_INDEX = {severity: index for index, severity in enumerate(SEVERITIES)}
@@ -116,9 +122,13 @@ def compute_coverage(report: MinerReport) -> Dict[str, Any]:
     Pregunta que responde: *¿qué proporción de la organización tiene al menos
     un análisis exitoso y qué modos de fallo aparecen?*
 
-    Un repositorio cuenta como "cubierto" si su estado es ``analyzed`` o si
-    ``vuln_status`` ∈ {scanned, no_vulnerabilities} o ``sbom_status`` ∈
-    {generated, no_components}. El denominador es el total de repositorios.
+    ``coverage_ratio`` cuenta un repositorio como cubierto si su estado es
+    ``analyzed`` o si ``vuln_status`` ∈ :data:`VULN_OK_STATUSES` o
+    ``sbom_status`` ∈ :data:`SBOM_OK_STATUSES` (es decir, **al menos** una de
+    las tres dimensiones tuvo éxito). Para desambiguar esa lectura se exponen
+    además ``code_coverage_ratio``, ``sbom_coverage_ratio`` y
+    ``vuln_coverage_ratio``, cada uno con su propia dimensión como numerador.
+    El denominador de todos los ratios es el total de repositorios.
     """
     repositories = report.repositories
     total = len(repositories)
@@ -130,6 +140,7 @@ def compute_coverage(report: MinerReport) -> Dict[str, Any]:
     unsupported = by_repo_status.get("unsupported", 0)
     vuln_failed = by_vuln_status.get("failed", 0)
     sbom_failed = by_sbom_status.get("failed", 0)
+    repo_failed = sum(1 for repo in repositories if repo.status in FAILED_STATUSES)
 
     covered = sum(
         1
@@ -138,12 +149,32 @@ def compute_coverage(report: MinerReport) -> Dict[str, Any]:
         or repo.vuln_status in VULN_OK_STATUSES
         or repo.sbom_status in SBOM_OK_STATUSES
     )
-    coverage_ratio = _round4(covered / total) if total else 0.0
+    code_covered = by_repo_status.get("analyzed", 0)
+    sbom_covered = sum(1 for repo in repositories if repo.sbom_status in SBOM_OK_STATUSES)
+    vuln_covered = sum(1 for repo in repositories if repo.vuln_status in VULN_OK_STATUSES)
+
+    def _ratio(count: int) -> float:
+        return _round4(count / total) if total else 0.0
+
+    coverage_ratio = _ratio(covered)
+    code_coverage_ratio = _ratio(code_covered)
+    sbom_coverage_ratio = _ratio(sbom_covered)
+    vuln_coverage_ratio = _ratio(vuln_covered)
 
     warnings: List[str] = list(report.warnings)
     if unsupported:
         warnings.append(
             f"{unsupported} repositorio(s) no soportado(s): sin análisis de código ni SBOM."
+        )
+    if repo_failed:
+        failed_detail = ", ".join(
+            f"{status}={by_repo_status[status]}"
+            for status in sorted(FAILED_STATUSES)
+            if by_repo_status.get(status)
+        )
+        warnings.append(
+            f"{repo_failed} repositorio(s) fallaron en fases previas "
+            f"({failed_detail}); no tienen análisis de código."
         )
     if vuln_failed:
         warnings.append(f"{vuln_failed} repositorio(s) fallaron en el escaneo de Grype.")
@@ -156,9 +187,13 @@ def compute_coverage(report: MinerReport) -> Dict[str, Any]:
         "by_vuln_status": _sorted_counter(by_vuln_status),
         "by_sbom_status": _sorted_counter(by_sbom_status),
         "unsupported": unsupported,
+        "repo_failed": repo_failed,
         "vuln_failed": vuln_failed,
         "sbom_failed": sbom_failed,
         "coverage_ratio": coverage_ratio,
+        "code_coverage_ratio": code_coverage_ratio,
+        "sbom_coverage_ratio": sbom_coverage_ratio,
+        "vuln_coverage_ratio": vuln_coverage_ratio,
         "warnings": warnings,
     }
 
@@ -296,7 +331,9 @@ def compute_concentration(
     """Concentración de vulnerabilidades entre repositorios.
 
     - ``top_n_share``: fracción de vulnerabilidades en los ``top_n`` repos con
-      más hallazgos.
+      más hallazgos. ``top_n`` se acota a ``min(top_n, repositories_with_vulns)``
+      para no contar repositorios inexistentes; la respuesta devuelve ese valor
+      efectivo.
     - ``top_10pct_share``: fracción en el decil superior de repositorios con
       vulnerabilidades; el número de repos es ``max(1, ceil(n * 0.10))``.
     - ``hhi``: índice Herfindahl-Hirschman (suma de cuadrados de cuotas).
@@ -311,17 +348,17 @@ def compute_concentration(
     counts = sorted(counter.values(), reverse=True)
     total = sum(counts)
     repositories_with_vulns = len(counts)
+    effective_top_n = min(max(0, top_n), repositories_with_vulns)
 
     if total == 0:
         return {
             "repositories_with_vulns": 0,
-            "top_n": top_n,
+            "top_n": 0,
             "top_n_share": 0.0,
             "top_10pct_share": 0.0,
             "hhi": 0.0,
         }
 
-    effective_top_n = max(0, top_n)
     top_n_share = _round4(sum(counts[:effective_top_n]) / total)
 
     decile_size = max(1, math.ceil(repositories_with_vulns * 0.10))
@@ -331,7 +368,7 @@ def compute_concentration(
 
     return {
         "repositories_with_vulns": repositories_with_vulns,
-        "top_n": top_n,
+        "top_n": effective_top_n,
         "top_n_share": top_n_share,
         "top_10pct_share": top_10pct_share,
         "hhi": hhi,
@@ -355,7 +392,10 @@ def compute_relations(
       ``fixed_version`` no vacío.
     - ``severity_by_package_type``: conteo por (tipo de paquete, severidad).
     - ``findings_by_language``: conteo por (lenguaje, regla); cada lenguaje del
-      repositorio cuenta una vez por hallazgo.
+      repositorio cuenta una vez por hallazgo. Se ordena por lenguaje, luego
+      por ``count`` descendente y luego por regla; **no** está agregado por
+      lenguaje, así que para elegir el lenguaje con más hallazgos hay que sumar
+      los ``count`` de cada lenguaje (lo hace :func:`build_observations`).
     """
     # Correlación componentes <-> vulnerabilidades.
     components = [repo.sbom_components for repo in report.repositories]
@@ -480,24 +520,37 @@ def build_observations(
             "Cobertura del análisis",
             (
                 f"{coverage['repositories_total']} repositorios en el reporte; "
-                f"la cobertura de análisis exitoso es {_pct(coverage['coverage_ratio'])}."
+                f"al menos un análisis exitoso en "
+                f"{_pct(coverage['coverage_ratio'])} de ellos "
+                f"(código {_pct(coverage['code_coverage_ratio'])}, "
+                f"SBOM {_pct(coverage['sbom_coverage_ratio'])}, "
+                f"Grype {_pct(coverage['vuln_coverage_ratio'])})."
             ),
             "coverage.coverage_ratio",
             {
                 "repositories_total": coverage["repositories_total"],
                 "coverage_ratio": coverage["coverage_ratio"],
+                "code_coverage_ratio": coverage["code_coverage_ratio"],
+                "sbom_coverage_ratio": coverage["sbom_coverage_ratio"],
+                "vuln_coverage_ratio": coverage["vuln_coverage_ratio"],
                 "by_vuln_status": coverage["by_vuln_status"],
                 "by_sbom_status": coverage["by_sbom_status"],
             },
         )
 
     # 2. Sesgo por estados fallidos / no soportados.
-    if coverage["unsupported"] or coverage["vuln_failed"] or coverage["sbom_failed"]:
+    if (
+        coverage["unsupported"]
+        or coverage["repo_failed"]
+        or coverage["vuln_failed"]
+        or coverage["sbom_failed"]
+    ):
         add(
             "Sesgo por estados fallidos",
             (
                 "Existen repositorios sin análisis completo "
                 f"(unsupported={coverage['unsupported']}, "
+                f"repo_failed={coverage['repo_failed']}, "
                 f"vuln_failed={coverage['vuln_failed']}, "
                 f"sbom_failed={coverage['sbom_failed']}); "
                 "las métricas subestiman su superficie real."
@@ -505,6 +558,7 @@ def build_observations(
             "coverage.by_repo_status",
             {
                 "unsupported": coverage["unsupported"],
+                "repo_failed": coverage["repo_failed"],
                 "vuln_failed": coverage["vuln_failed"],
                 "sbom_failed": coverage["sbom_failed"],
                 "by_repo_status": coverage["by_repo_status"],
@@ -576,53 +630,64 @@ def build_observations(
     top_packages = datasets.get("top_packages", [])
     if top_packages:
         leader = top_packages[0]
+        packages_distinct = len({vuln.get("package") for vuln in vulnerabilities})
         add(
             "Paquetes más afectados",
             (
                 f"El paquete más afectado es '{leader['package']}' con "
                 f"{leader['count']} vulnerabilidades (peor severidad "
                 f"{leader['worst_severity']}) en {leader['repos_affected']} repositorio(s); "
-                f"se identificaron {len(top_packages)} paquetes en el top."
+                f"el top {len(top_packages)} de {packages_distinct} paquetes distintos."
             ),
             "datasets.top_packages",
-            {"top_packages": top_packages},
+            {
+                "top_packages": top_packages,
+                "packages_distinct": packages_distinct,
+            },
         )
 
     # 7. CVEs/GHSA más frecuentes.
     top_cves = datasets.get("top_cves", [])
     if top_cves:
         leader = top_cves[0]
+        cves_distinct = len({vuln.get("id") for vuln in vulnerabilities})
         add(
             "Identificadores de vulnerabilidad más frecuentes",
             (
                 f"El identificador más repetido es {leader['id']} "
                 f"(severidad {leader['severity']}) con {leader['count']} aparición(es) "
                 f"en {leader['repos_affected']} repositorio(s); "
-                f"hay {len(top_cves)} identificadores distintos en el top."
+                f"el top {len(top_cves)} de {cves_distinct} identificadores distintos."
             ),
             "datasets.top_cves",
-            {"top_cves": top_cves},
+            {"top_cves": top_cves, "cves_distinct": cves_distinct},
         )
 
     # 8. Reglas de CodeQL más frecuentes.
     top_rules = datasets.get("top_rules", [])
     if top_rules:
         leader = top_rules[0]
+        rules_distinct = len({finding.get("rule_id") for finding in findings})
         add(
             "Reglas de CodeQL más frecuentes",
             (
                 f"La regla más frecuente es {leader['rule_id']} con "
                 f"{leader['count']} hallazgo(s) en {leader['repos_affected']} "
-                f"repositorio(s); hay {len(findings)} hallazgos en total."
+                f"repositorio(s); el top {len(top_rules)} de {rules_distinct} "
+                f"reglas distintas sobre {len(findings)} hallazgos en total."
             ),
             "datasets.top_rules",
-            {"top_rules": top_rules, "findings_total": len(findings)},
+            {
+                "top_rules": top_rules,
+                "rules_distinct": rules_distinct,
+                "findings_total": len(findings),
+            },
         )
 
     # 9. Disponibilidad de corrección.
     if vulnerabilities:
         share = relations.get("fixed_version_available_share", 0.0)
-        available = round(share * len(vulnerabilities))
+        available = sum(1 for vuln in vulnerabilities if vuln.get("fixed_version"))
         add(
             "Disponibilidad de versión corregida",
             (
@@ -658,17 +723,39 @@ def build_observations(
     # 11. Hallazgos por lenguaje.
     findings_by_language = relations.get("findings_by_language", [])
     if findings_by_language:
-        leader = findings_by_language[0]
-        languages = sorted({row["language"] for row in findings_by_language})
+        # El dataset está desagregado por (lenguaje, regla); el líder se elige
+        # por la suma de hallazgos por lenguaje, con desempate alfabético.
+        language_totals: Dict[str, int] = {}
+        for row in findings_by_language:
+            language_totals[row["language"]] = (
+                language_totals.get(row["language"], 0) + row["count"]
+            )
+        leader_language = min(
+            language_totals, key=lambda language: (-language_totals[language], language)
+        )
+        leader_rows = [
+            row for row in findings_by_language if row["language"] == leader_language
+        ]
+        leader_rule = min(
+            leader_rows, key=lambda row: (-row["count"], row["rule_id"])
+        )
+        languages = sorted(language_totals)
         add(
             "Hallazgos por lenguaje",
             (
-                f"El lenguaje con más hallazgos atribuidos es '{leader['language']}' "
-                f"(regla {leader['rule_id']}, {leader['count']}); "
+                f"El lenguaje con más hallazgos atribuidos es '{leader_language}' "
+                f"({language_totals[leader_language]} hallazgos; regla más frecuente "
+                f"{leader_rule['rule_id']} con {leader_rule['count']}); "
                 f"se cubren {len(languages)} lenguaje(s)."
             ),
             "relations.findings_by_language",
-            {"findings_by_language": findings_by_language},
+            {
+                "findings_by_language": findings_by_language,
+                "language_totals": language_totals,
+                "leader_language": leader_language,
+                "leader_total": language_totals[leader_language],
+                "leader_rule": leader_rule["rule_id"],
+            },
         )
 
     # 12. Severidad por tipo de paquete.
@@ -730,6 +817,17 @@ def build_limitations(report: MinerReport, coverage: Dict[str, Any]) -> List[str
             f"{coverage['unsupported']} repositorio(s) no soportado(s) quedan fuera "
             "del análisis y sesgan a la baja los totales."
         )
+    if coverage["repo_failed"]:
+        failed_detail = ", ".join(
+            f"{status}={coverage['by_repo_status'][status]}"
+            for status in sorted(FAILED_STATUSES)
+            if coverage["by_repo_status"].get(status)
+        )
+        limitations.append(
+            f"{coverage['repo_failed']} repositorio(s) fallaron en fases previas "
+            f"({failed_detail}): sin análisis de código, sus hallazgos no están "
+            "representados."
+        )
     if coverage["vuln_failed"]:
         limitations.append(
             f"{coverage['vuln_failed']} repositorio(s) fallaron en Grype: sus "
@@ -742,8 +840,9 @@ def build_limitations(report: MinerReport, coverage: Dict[str, Any]) -> List[str
         )
     if coverage["coverage_ratio"] < 1.0 and coverage["repositories_total"]:
         limitations.append(
-            f"La cobertura de análisis exitoso es {_pct(coverage['coverage_ratio'])}: "
-            "las conclusiones no describen a toda la organización."
+            f"La cobertura de análisis exitoso (al menos una de las tres "
+            f"dimensiones) es {_pct(coverage['coverage_ratio'])}: las conclusiones "
+            "no describen a toda la organización."
         )
 
     # Consistencia de conteos.
@@ -755,6 +854,15 @@ def build_limitations(report: MinerReport, coverage: Dict[str, Any]) -> List[str
             f"detalle frente a {reported_vulns} en 'vuln_total'; los totales por "
             "repositorio pueden no coincidir con el resumen."
         )
+    by_severity_total = sum(
+        sum(repo.by_severity.values()) for repo in repositories
+    )
+    if by_severity_total != flat_vulns:
+        limitations.append(
+            f"Los conteos de 'by_severity' ({by_severity_total}) no cuadran con las "
+            f"filas de detalle de vulnerabilidades ({flat_vulns}): la distribución "
+            "por repositorio y severidad puede estar incompleta."
+        )
     summary_vulns = report.summary.get("vulnerabilities")
     if isinstance(summary_vulns, int) and summary_vulns != flat_vulns:
         limitations.append(
@@ -764,6 +872,17 @@ def build_limitations(report: MinerReport, coverage: Dict[str, Any]) -> List[str
 
     # Advertencias del cargador.
     limitations.extend(report.warnings)
+
+    # Concentración degenerada: con pocos repos afectados el top-N y el decil
+    # no son informativos.
+    repositories_with_vulns = sum(1 for repo in repositories if repo.vulnerabilities)
+    if 0 < repositories_with_vulns < 5:
+        limitations.append(
+            f"Solo {repositories_with_vulns} repositorio(s) tienen vulnerabilidades: "
+            "el top-N y el decil superior son poco informativos y las medidas de "
+            "concentración (top_n_share, top_10pct_share, HHI) deben interpretarse "
+            "con cautela."
+        )
 
     # Advertencias metodológicas siempre presentes.
     limitations.append(
