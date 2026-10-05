@@ -14,7 +14,10 @@ miner = "miner.cli:app"
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0.0"
+    "pytest>=7.0.0",
+    # Solo para tests: valida el documento/ejemplo contra el JSON Schema del
+    # contrato y evita divergencias entre validate_document y el schema.
+    "jsonschema>=4.0"
 ]
 analyzer = [
     "pandas>=2.0",

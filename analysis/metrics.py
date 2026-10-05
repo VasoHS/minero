@@ -23,7 +23,8 @@ from __future__ import annotations
 
 import math
 from collections import Counter
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from types import MappingProxyType
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 from analysis.loader import (
     FAILED_STATUSES,
@@ -59,15 +60,18 @@ _SEVERITY_INDEX = {severity: index for index, severity in enumerate(SEVERITIES)}
 
 #: Peso de gravedad (0..10) por severidad canónica. Se usa para la nota 1-10,
 #: la media ponderada de severidad y la mediana de severidad. Los pesos son una
-#: decisión metodológica explícita, no una medida oficial de explotabilidad.
-SEVERITY_WEIGHTS: Dict[str, float] = {
-    "Critical": 10.0,
-    "High": 7.0,
-    "Medium": 4.0,
-    "Low": 2.0,
-    "Negligible": 1.0,
-    "Unknown": 0.0,
-}
+#: decisión metodológica explícita, no una medida oficial de explotabilidad. Se
+#: expone inmutable para que ningún consumidor altere las métricas por accidente.
+SEVERITY_WEIGHTS: Mapping[str, float] = MappingProxyType(
+    {
+        "Critical": 10.0,
+        "High": 7.0,
+        "Medium": 4.0,
+        "Low": 2.0,
+        "Negligible": 1.0,
+        "Unknown": 0.0,
+    }
+)
 
 
 # ---------------------------------------------------------------------------
@@ -961,7 +965,7 @@ def build_observations(
     risk_summary = datasets.get("risk_summary", {})
     if risk_summary.get("total_vulnerabilities"):
         add(
-            "Nota global de vulnerabilidad",
+            "Nota global de vulnerabilidad (gravedad media)",
             (
                 f"La organización obtiene una nota de {risk_summary['score']}/10 "
                 f"(media ponderada de severidad "
@@ -990,9 +994,10 @@ def build_observations(
     if ranked:
         leader = ranked[0]
         add(
-            "Repositorios con vulnerabilidades más graves",
+            "Repositorios con mayor gravedad media",
             (
-                f"'{leader['repo']}' encabeza el ranking con nota {leader['score']}/10 "
+                f"'{leader['repo']}' encabeza el ranking por gravedad media "
+                f"(no por volumen) con nota {leader['score']}/10 "
                 f"(media ponderada {leader['severity_weighted_average']}/10, peor "
                 f"severidad {leader['worst_severity']}, "
                 f"{leader['vulnerabilities']} vulnerabilidad(es)); "
@@ -1009,9 +1014,11 @@ def build_observations(
             },
         )
 
-    # 15. Densidad de vulnerabilidades por componente.
+    # 15. Densidad de vulnerabilidades por componente (solo repos afectados).
     density_rows = [
-        row for row in repository_risk if row["vulns_per_component"] is not None
+        row
+        for row in repository_risk
+        if row["vulnerabilities"] > 0 and row["vulns_per_component"] is not None
     ]
     if density_rows:
         density_leader = min(
@@ -1209,6 +1216,15 @@ def build_limitations(report: MinerReport, coverage: Dict[str, Any]) -> List[str
             f"{multi_language} repositorio(s) con vulnerabilidades declaran varios "
             "lenguajes: la severidad por lenguaje atribuye cada vulnerabilidad a cada "
             "lenguaje, por lo que los conteos por lenguaje no suman el total global."
+        )
+
+    # Sin lenguajes declarados no puede atribuirse la severidad por lenguaje.
+    if any(repo.vulnerabilities for repo in repositories) and not any(
+        repo.languages for repo in repositories
+    ):
+        limitations.append(
+            "Ningún repositorio declara lenguajes: no puede calcularse la severidad "
+            "de vulnerabilidades por lenguaje."
         )
 
     # Advertencias metodológicas siempre presentes.

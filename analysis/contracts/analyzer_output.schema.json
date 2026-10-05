@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:github-codeql-miner:analyzer-output:1.1",
   "title": "Documento de salida del Analyzer",
-  "description": "Contrato versionado (schema_version 1.0) del documento JSON que el Analyzer entrega al Visualizer. Es autocontenido: incluye metadatos de la ejecución, el resumen original del Miner, la cobertura del análisis, datasets tabulares, observaciones respaldadas por métricas y limitaciones. Las filas de cada dataset deben tener orden determinista.",
+  "description": "Contrato versionado (schema_version 1.1) del documento JSON que el Analyzer entrega al Visualizer. Es autocontenido: incluye metadatos de la ejecución, el resumen original del Miner, la cobertura del análisis, datasets tabulares, observaciones respaldadas por métricas y limitaciones. Las filas de cada dataset deben tener orden determinista.",
   "type": "object",
   "required": [
     "schema_version",
@@ -224,7 +224,36 @@
         "risk_summary": {
           "type": "object",
           "description": "Resumen global de metrics.compute_risk_summary: score 1-10 de la organización, agregados de severidad, hotspots Critical y ranking resumido.",
-          "additionalProperties": true
+          "required": [
+            "score",
+            "severity_weighted_average",
+            "severity_median",
+            "total_vulnerabilities",
+            "repositories_scored",
+            "repositories_with_critical",
+            "repositories_with_high_or_critical",
+            "mean_repository_score",
+            "max_repository_score",
+            "critical_hotspots",
+            "worst_severity"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "severity_weighted_average": { "type": "number", "minimum": 0, "maximum": 10 },
+            "severity_median": { "type": "number", "minimum": 0, "maximum": 10 },
+            "total_vulnerabilities": { "type": "integer", "minimum": 0 },
+            "repositories_scored": { "type": "integer", "minimum": 0 },
+            "repositories_with_critical": { "type": "integer", "minimum": 0 },
+            "repositories_with_high_or_critical": { "type": "integer", "minimum": 0 },
+            "mean_repository_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "max_repository_score": { "type": "number", "minimum": 0, "maximum": 10 },
+            "critical_hotspots": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "worst_severity": { "$ref": "#/$defs/severity" }
+          }
         },
         "relations": {
           "type": "object",
@@ -416,7 +445,7 @@
         "worst_severity": { "$ref": "#/$defs/severity" },
         "severity_weighted_average": { "type": "number", "minimum": 0, "maximum": 10 },
         "severity_median": { "type": "number", "minimum": 0, "maximum": 10 },
-        "score": { "type": "number", "minimum": 0, "maximum": 10 },
+        "score": { "type": "number", "minimum": 1, "maximum": 10 },
         "vulns_per_component": { "type": ["number", "null"], "minimum": 0 },
         "findings_per_component": { "type": ["number", "null"], "minimum": 0 },
         "fixed_version_share": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }

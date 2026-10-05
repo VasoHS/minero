@@ -21,12 +21,9 @@ from analysis.contract import (
 )
 from analysis.loader import load_report, to_records
 
-EXAMPLE_PATH = (
-    Path(__file__).resolve().parents[1]
-    / "analysis"
-    / "contracts"
-    / "example_analyzer_output.json"
-)
+CONTRACTS_DIR = Path(__file__).resolve().parents[1] / "analysis" / "contracts"
+EXAMPLE_PATH = CONTRACTS_DIR / "example_analyzer_output.json"
+SCHEMA_PATH = CONTRACTS_DIR / "analyzer_output.schema.json"
 
 
 def load_example():
@@ -178,6 +175,30 @@ def test_validate_document_accepts_example():
     assert validate_document(load_example()) == []
 
 
+def test_validate_document_matches_json_schema(tmp_path):
+    """El ejemplo y el documento del pipeline cumplen también el JSON Schema.
+
+    Evita que ``validate_document`` y ``analyzer_output.schema.json`` diverjan:
+    si ``jsonschema`` no está instalado (extra ``[dev]``), el test se omite.
+    """
+    jsonschema = pytest.importorskip("jsonschema")
+
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    jsonschema.Draft202012Validator.check_schema(schema)
+    validator = jsonschema.Draft202012Validator(schema)
+
+    from analysis.pipeline import run_analysis
+
+    document = run_analysis(
+        write_json(tmp_path, valid_report_data()),
+        generated_at="2026-01-01T00:00:00+00:00",
+    )
+
+    for candidate in (load_example(), document):
+        assert validate_document(candidate) == []
+        assert list(validator.iter_errors(candidate)) == []
+
+
 def test_validate_document_constants():
     assert SCHEMA_VERSION == "1.1"
     assert DATASET_KEYS == (
@@ -272,6 +293,138 @@ def test_validate_document_accepts_build_from_pipeline(tmp_path):
     )
 
     assert validate_document(document) == []
+
+
+# ---------------------------------------------------------------------------
+# validate_document: datasets.repository_risk y datasets.risk_summary (1.1)
+# ---------------------------------------------------------------------------
+
+
+def test_validate_document_rejects_repository_risk_score_out_of_range():
+    document = load_example()
+    document["datasets"]["repository_risk"][0]["score"] = 11.0
+
+    errors = validate_document(document)
+
+    assert any(
+        "repository_risk[0].score" in error and "[1, 10]" in error for error in errors
+    )
+
+
+def test_validate_document_rejects_repository_risk_score_below_one():
+    document = load_example()
+    document["datasets"]["repository_risk"][0]["score"] = 0.5
+
+    errors = validate_document(document)
+
+    assert any(
+        "repository_risk[0].score" in error and "[1, 10]" in error for error in errors
+    )
+
+
+def test_validate_document_rejects_repository_risk_missing_score():
+    document = load_example()
+    del document["datasets"]["repository_risk"][0]["score"]
+
+    errors = validate_document(document)
+
+    assert any("Falta 'score' en datasets.repository_risk[0]" in error for error in errors)
+
+
+def test_validate_document_rejects_repository_risk_fixed_version_share_above_one():
+    document = load_example()
+    document["datasets"]["repository_risk"][0]["fixed_version_share"] = 1.5
+
+    errors = validate_document(document)
+
+    assert any(
+        "fixed_version_share" in error and "[0, 1]" in error for error in errors
+    )
+
+
+def test_validate_document_rejects_repository_risk_negative_density():
+    document = load_example()
+    document["datasets"]["repository_risk"][0]["vulns_per_component"] = -0.1
+
+    errors = validate_document(document)
+
+    assert any(
+        "vulns_per_component" in error and ">= 0" in error for error in errors
+    )
+
+
+def test_validate_document_rejects_repository_risk_bad_worst_severity():
+    document = load_example()
+    document["datasets"]["repository_risk"][0]["worst_severity"] = "Severe"
+
+    errors = validate_document(document)
+
+    assert any(
+        "repository_risk[0].worst_severity" in error and "no pertenece" in error
+        for error in errors
+    )
+
+
+def test_validate_document_rejects_risk_summary_score_out_of_range():
+    document = load_example()
+    document["datasets"]["risk_summary"]["score"] = 10.5
+
+    errors = validate_document(document)
+
+    assert any(
+        "risk_summary.score" in error and "[0, 10]" in error for error in errors
+    )
+
+
+def test_validate_document_rejects_risk_summary_bad_worst_severity():
+    document = load_example()
+    document["datasets"]["risk_summary"]["worst_severity"] = "Severe"
+
+    errors = validate_document(document)
+
+    assert any(
+        "risk_summary.worst_severity" in error and "no pertenece" in error
+        for error in errors
+    )
+
+
+def test_validate_document_rejects_risk_summary_negative_count():
+    document = load_example()
+    document["datasets"]["risk_summary"]["total_vulnerabilities"] = -1
+
+    errors = validate_document(document)
+
+    assert any(
+        "risk_summary.total_vulnerabilities" in error and "entero >= 0" in error
+        for error in errors
+    )
+
+
+def test_validate_document_rejects_critical_hotspots_with_non_string():
+    document = load_example()
+    document["datasets"]["risk_summary"]["critical_hotspots"] = ["alpha", 3]
+
+    errors = validate_document(document)
+
+    assert any("critical_hotspots" in error for error in errors)
+
+
+def test_validate_document_rejects_critical_hotspots_with_empty_string():
+    document = load_example()
+    document["datasets"]["risk_summary"]["critical_hotspots"] = [""]
+
+    errors = validate_document(document)
+
+    assert any("critical_hotspots" in error for error in errors)
+
+
+def test_validate_document_rejects_critical_hotspots_not_a_list():
+    document = load_example()
+    document["datasets"]["risk_summary"]["critical_hotspots"] = "alpha"
+
+    errors = validate_document(document)
+
+    assert any("critical_hotspots" in error for error in errors)
 
 
 # ---------------------------------------------------------------------------

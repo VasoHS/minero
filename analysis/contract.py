@@ -12,7 +12,7 @@ Estructura del documento (``schema_version`` = ``"1.1"``)::
       "meta": {
         "organization": str,
         "source": str,
-        "source_kind": str,        # scan | vuln | sbom | unknown
+        "source_kind": str,        # scan | vuln | sbom | merged | unknown
         "generated_at": str,       # ISO-8601 UTC
         "repositories": int,
         "warnings": [str]
@@ -379,8 +379,8 @@ def _validate_repository_distribution(rows: List[Any], errors: List[str]) -> Non
 
 
 def _is_number(value: Any) -> bool:
-    """``True`` si ``value`` es un número (int/float, sin contar ``bool``)."""
-    return isinstance(value, (int, float)) and not isinstance(value, bool)
+    """``True`` si ``value`` es un número real (sin contar ``bool``)."""
+    return isinstance(value, numbers.Real) and not isinstance(value, bool)
 
 
 def _validate_repository_risk(rows: List[Any], errors: List[str]) -> None:
@@ -391,6 +391,17 @@ def _validate_repository_risk(rows: List[Any], errors: List[str]) -> None:
             continue
         if not _is_non_empty_str(row.get("repo")):
             errors.append(f"{where}.repo debe ser una cadena no vacía.")
+        # El schema declara 'score' como obligatorio; la nota siempre es >= 1.
+        score = row.get("score")
+        if score is None:
+            errors.append(f"Falta 'score' en {where}.")
+        elif not (_is_number(score) and 1 <= score <= 10):
+            errors.append(f"{where}.score debe ser un número en [1, 10].")
+        if "languages" in row and (
+            not isinstance(row["languages"], list)
+            or any(not isinstance(language, str) for language in row["languages"])
+        ):
+            errors.append(f"{where}.languages debe ser una lista de cadenas.")
         for field in ("vulnerabilities", "findings", "components", "critical", "high"):
             if field in row and not _is_non_negative_int(row[field]):
                 errors.append(f"{where}.{field} debe ser un entero >= 0.")
@@ -399,7 +410,7 @@ def _validate_repository_risk(rows: List[Any], errors: List[str]) -> None:
                 f"{where}.worst_severity={row['worst_severity']!r} no pertenece a "
                 f"{list(SEVERITIES)}."
             )
-        for field in ("score", "severity_weighted_average", "severity_median"):
+        for field in ("severity_weighted_average", "severity_median"):
             value = row.get(field)
             if value is not None and not (_is_number(value) and 0 <= value <= 10):
                 errors.append(f"{where}.{field} debe ser un número en [0, 10].")
@@ -446,7 +457,7 @@ def validate_document(document: Any) -> List[str]:
     """Valida el documento de salida en Python puro (sin ``jsonschema``).
 
     Devuelve una lista de errores legibles. Una lista vacía significa que el
-    documento cumple el contrato ``1.0``.
+    documento cumple el contrato ``1.1``.
     """
     errors: List[str] = []
 

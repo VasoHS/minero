@@ -10,6 +10,7 @@ import pytest
 
 from analysis.loader import SEVERITIES, load_report, to_records
 from analysis.metrics import (
+    SEVERITY_WEIGHTS,
     build_limitations,
     build_observations,
     compute_concentration,
@@ -17,6 +18,8 @@ from analysis.metrics import (
     compute_datasets,
     compute_relations,
     compute_repository_distribution,
+    compute_repository_risk,
+    compute_risk_summary,
     compute_severity_distribution,
     compute_top_cves,
     compute_top_packages,
@@ -1215,3 +1218,306 @@ def test_build_limitations_concentration_not_flagged_for_five(tmp_path):
     limitations = build_limitations(report, coverage)
 
     assert not any("tienen vulnerabilidades" in item for item in limitations)
+
+
+# ---------------------------------------------------------------------------
+# Riesgo por repositorio y resumen global (contrato 1.1)
+# ---------------------------------------------------------------------------
+
+
+def synthetic_repo(
+    name,
+    severities=(),
+    components=0,
+    languages=(),
+    fixed_versions=None,
+    findings=0,
+):
+    """Repositorio sintético con las severidades, lenguajes y hallazgos dados.
+
+    ``fixed_versions`` permite marcar qué vulnerabilidades tienen corrección
+    publicada; si se omite, ninguna la tiene.
+    """
+    if fixed_versions is None:
+        fixed_versions = [None] * len(severities)
+    vulnerabilities = [
+        {
+            "id": f"CVE-{name}-{index}",
+            "severity": severity,
+            "package": f"pkg-{index}",
+            "version": "1.0",
+            "type": "npm",
+            "fixed_version": fixed_versions[index],
+        }
+        for index, severity in enumerate(severities)
+    ]
+    return {
+        "name": name,
+        "status": "analyzed",
+        "languages": list(languages),
+        "sbom": {"status": "generated", "components": components},
+        "vulnerabilities": {
+            "status": "scanned",
+            "total": len(vulnerabilities),
+            "vulnerabilities": vulnerabilities,
+        },
+        "findings": [
+            finding(f"rule-{index}", f"file{index}.py", index)
+            for index in range(findings)
+        ],
+    }
+
+
+def test_compute_repository_risk_score_mixed_severities(tmp_path):
+    report = load_report(
+        write_json(
+            tmp_path,
+            {
+                "repositories": [
+                    synthetic_repo("alpha", ["Critical", "Medium"], components=10)
+                ]
+            },
+        )
+    )
+
+    rows = compute_repository_risk(report)
+
+    assert len(rows) == 1
+    row = rows[0]
+    # Pesos Critical=10 y Medium=4 -> media 7.0 -> nota 1 + 9*0.7 = 7.3.
+    assert row["severity_weighted_average"] == 7.0
+    assert row["severity_median"] == 7.0
+    assert row["score"] == 7.3
+    assert row["worst_severity"] == "Critical"
+    assert row["critical"] == 1
+    assert row["high"] == 0
+    assert row["vulnerabilities"] == 2
+    assert SEVERITY_WEIGHTS["Critical"] == 10.0
+    assert SEVERITY_WEIGHTS["Medium"] == 4.0
+
+
+def test_compute_repository_risk_without_vulnerabilities(tmp_path):
+    report = load_report(
+        write_json(
+            tmp_path,
+            {
+                "repositories": [
+                    synthetic_repo("limpio", [], components=5, languages=["python"])
+                ]
+            },
+        )
+    )
+
+    row = compute_repository_risk(report)[0]
+
+    assert row["vulnerabilities"] == 0
+    assert row["score"] == 1.0
+    assert row["severity_weighted_average"] == 0.0
+    assert row["severity_median"] == 0.0
+    assert row["worst_severity"] == "Unknown"
+    assert row["critical"] == 0
+    assert row["high"] == 0
+    assert row["fixed_version_share"] is None
+    assert row["vulns_per_component"] == 0.0
+
+
+def test_compute_repository_risk_ranking_is_deterministic(tmp_path):
+    repositories = [
+        synthetic_repo("delta", ["Critical"]),
+        synthetic_repo("bravo", ["Critical", "Medium"]),
+        synthetic_repo("alpha", ["Critical", "Medium"]),
+        synthetic_repo("charlie", ["Medium"]),
+    ]
+    report = load_report(write_json(tmp_path, {"repositories": repositories}))
+
+    first = compute_repository_risk(report)
+    second = compute_repository_risk(report)
+
+    assert first == second
+    # Orden por nota desc; el empate alpha/bravo se resuelve por nombre asc.
+    assert [row["repo"] for row in first] == ["delta", "alpha", "bravo", "charlie"]
+    assert [row["score"] for row in first] == [10.0, 7.3, 7.3, 4.6]
+
+
+def test_compute_repository_risk_tiebreak_by_weighted_average(tmp_path):
+    # Misma nota 7.3, distinta media ponderada: 7.0 frente a 6.95.
+    mayor = synthetic_repo("mayor", ["Critical", "Medium"])
+    menor = synthetic_repo(
+        "menor",
+        ["Critical"] * 10 + ["High"] * 5 + ["Medium"] + ["Unknown"] * 4,
+    )
+    report = load_report(write_json(tmp_path, {"repositories": [menor, mayor]}))
+
+    rows = compute_repository_risk(report)
+
+    assert rows[0]["repo"] == "mayor"
+    assert rows[1]["repo"] == "menor"
+    assert rows[0]["score"] == rows[1]["score"] == 7.3
+    assert rows[0]["severity_weighted_average"] == 7.0
+    assert rows[1]["severity_weighted_average"] == 6.95
+
+
+def test_compute_repository_risk_density_none_and_value(tmp_path):
+    repositories = [
+        synthetic_repo("sin_sbom", ["Critical"], components=0),
+        synthetic_repo("con_sbom", ["High", "High", "High"], components=6, findings=1),
+    ]
+    report = load_report(write_json(tmp_path, {"repositories": repositories}))
+
+    rows = {row["repo"]: row for row in compute_repository_risk(report)}
+
+    # Sin componentes de SBOM la densidad no es calculable.
+    assert rows["sin_sbom"]["vulns_per_component"] is None
+    assert rows["sin_sbom"]["findings_per_component"] is None
+    assert rows["con_sbom"]["vulns_per_component"] == 0.5
+    assert rows["con_sbom"]["findings_per_component"] == 0.1667
+
+
+def test_compute_risk_summary_aggregates(tmp_path):
+    repositories = [
+        synthetic_repo("alpha", ["Critical", "Medium"], components=10),
+        synthetic_repo("beta", ["Critical", "High"], components=5),
+        synthetic_repo("delta", ["High"], components=5),
+        synthetic_repo("gamma", [], components=0),
+    ]
+    report = load_report(write_json(tmp_path, {"repositories": repositories}))
+    repository_risk = compute_repository_risk(report)
+
+    summary = compute_risk_summary(report, repository_risk)
+
+    # Pesos globales 10,4,10,7,7 -> media 7.6 -> nota 1 + 9*0.76 = 7.84 -> 7.8.
+    assert summary["score"] == 7.8
+    assert summary["severity_weighted_average"] == 7.6
+    assert summary["severity_median"] == 7.0
+    assert summary["total_vulnerabilities"] == 5
+    assert summary["repositories_scored"] == 3
+    assert summary["repositories_with_critical"] == 2
+    assert summary["repositories_with_high_or_critical"] == 3
+    # Notas: alpha 7.3, beta 8.6, delta 7.3 -> media 7.7333 -> 7.7.
+    assert summary["mean_repository_score"] == 7.7
+    assert summary["max_repository_score"] == 8.6
+    assert summary["critical_hotspots"] == ["alpha", "beta"]
+    assert summary["worst_severity"] == "Critical"
+
+
+def test_compute_risk_summary_without_vulnerabilities(tmp_path):
+    report = load_report(
+        write_json(
+            tmp_path,
+            {"repositories": [synthetic_repo("solo", [], components=3)]},
+        )
+    )
+    repository_risk = compute_repository_risk(report)
+
+    summary = compute_risk_summary(report, repository_risk)
+
+    assert summary["score"] == 1.0
+    assert summary["severity_weighted_average"] == 0.0
+    assert summary["severity_median"] == 0.0
+    assert summary["total_vulnerabilities"] == 0
+    assert summary["repositories_scored"] == 0
+    assert summary["repositories_with_critical"] == 0
+    assert summary["repositories_with_high_or_critical"] == 0
+    assert summary["mean_repository_score"] == 0.0
+    assert summary["max_repository_score"] == 0.0
+    assert summary["critical_hotspots"] == []
+    assert summary["worst_severity"] == "Unknown"
+
+
+def test_compute_relations_severity_by_language_duplicates_and_order(tmp_path):
+    repositories = [
+        synthetic_repo(
+            "a", ["Critical", "Medium"], languages=["python", "javascript"]
+        ),
+        synthetic_repo("b", ["High"], languages=["python"]),
+    ]
+    report = load_report(write_json(tmp_path, {"repositories": repositories}))
+    records = to_records(report)
+
+    relations = compute_relations(report, records)
+
+    # Orden: lenguaje asc y, dentro de cada lenguaje, severidad canónica
+    # (Critical primero).
+    assert relations["severity_by_language"] == [
+        {"language": "javascript", "severity": "Critical", "count": 1},
+        {"language": "javascript", "severity": "Medium", "count": 1},
+        {"language": "python", "severity": "Critical", "count": 1},
+        {"language": "python", "severity": "High", "count": 1},
+        {"language": "python", "severity": "Medium", "count": 1},
+    ]
+    # La vulnerabilidad de "a" se atribuye a sus dos lenguajes: los conteos no
+    # suman el total global (3 vulnerabilidades -> 5 atribuciones).
+    assert sum(row["count"] for row in relations["severity_by_language"]) == 5
+
+
+def test_compute_datasets_includes_repository_risk_and_risk_summary(tmp_path):
+    report, records = load_rich(tmp_path)
+
+    datasets = compute_datasets(report, records)
+
+    assert isinstance(datasets["repository_risk"], list)
+    assert [row["repo"] for row in datasets["repository_risk"]] == [
+        "alpha",
+        "beta",
+        "gamma",
+    ]
+    assert datasets["risk_summary"]["total_vulnerabilities"] == 4
+    assert datasets["risk_summary"]["critical_hotspots"] == ["alpha"]
+
+
+def test_build_observations_emits_new_risk_dimensions(tmp_path):
+    report, records = load_rich(tmp_path)
+    coverage = compute_coverage(report)
+    datasets = compute_datasets(report, records)
+
+    observations = build_observations(report, coverage, datasets)
+    metrics_used = {obs["metric"] for obs in observations}
+
+    assert "datasets.risk_summary" in metrics_used
+    assert "datasets.repository_risk" in metrics_used
+    assert "datasets.repository_risk.vulns_per_component" in metrics_used
+    assert "datasets.risk_summary.critical_hotspots" in metrics_used
+    assert "relations.severity_by_language" in metrics_used
+
+    # La observación de hotspots cita el repositorio con severidad Critical.
+    hotspots = next(
+        obs
+        for obs in observations
+        if obs["metric"] == "datasets.risk_summary.critical_hotspots"
+    )
+    assert hotspots["evidence"]["critical_hotspots"] == ["alpha"]
+    assert "alpha" in hotspots["statement"]
+
+
+def test_build_observations_omits_new_risk_dimensions_without_data(tmp_path):
+    report = load_report(
+        write_json(
+            tmp_path,
+            {
+                "repositories": [
+                    {
+                        "name": "vacio",
+                        "status": "analyzed",
+                        "sbom": {"status": "no_components", "components": 0},
+                        "vulnerabilities": {
+                            "status": "no_vulnerabilities",
+                            "total": 0,
+                        },
+                    }
+                ]
+            },
+        )
+    )
+    records = to_records(report)
+    coverage = compute_coverage(report)
+    datasets = compute_datasets(report, records)
+
+    observations = build_observations(report, coverage, datasets)
+    metrics_used = {obs["metric"] for obs in observations}
+
+    assert metrics_used == {"coverage.coverage_ratio"}
+    assert "datasets.risk_summary" not in metrics_used
+    assert "datasets.repository_risk" not in metrics_used
+    assert "datasets.repository_risk.vulns_per_component" not in metrics_used
+    assert "datasets.risk_summary.critical_hotspots" not in metrics_used
+    assert "relations.severity_by_language" not in metrics_used

@@ -433,7 +433,7 @@
     },
     {
       "id": "OBS-10",
-      "title": "Nota global de vulnerabilidad",
+      "title": "Nota global de vulnerabilidad (gravedad media)",
       "statement": "La organización obtiene una nota de 6.0/10 (media ponderada de severidad 5.5/10, peor severidad High); la media de las notas por repositorio es 6.0/10 sobre 1 repositorio(s) con vulnerabilidades.",
       "metric": "datasets.risk_summary",
       "evidence": {
@@ -449,8 +449,8 @@
     },
     {
       "id": "OBS-11",
-      "title": "Repositorios con vulnerabilidades más graves",
-      "statement": "'alpha' encabeza el ranking con nota 6.0/10 (media ponderada 5.5/10, peor severidad High, 2 vulnerabilidad(es)); 1 de 2 repositorio(s) tienen vulnerabilidades.",
+      "title": "Repositorios con mayor gravedad media",
+      "statement": "'alpha' encabeza el ranking por gravedad media (no por volumen) con nota 6.0/10 (media ponderada 5.5/10, peor severidad High, 2 vulnerabilidad(es)); 1 de 2 repositorio(s) tienen vulnerabilidades.",
       "metric": "datasets.repository_risk",
       "evidence": {
         "repository_risk": [
@@ -488,7 +488,7 @@
       "evidence": {
         "leader": "alpha",
         "vulns_per_component": 0.5,
-        "repositories_with_density": 2
+        "repositories_with_density": 1
       }
     },
     {
