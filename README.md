@@ -442,6 +442,60 @@ Las severidades se normalizan a `Critical`, `High`, `Medium`, `Low`, `Negligible
 
 Consulta [`docs/Vulnerabilidades.md`](docs/Vulnerabilidades.md) para la referencia detallada de Grype.
 
+## Analyzer
+
+El **Analyzer** convierte los reportes JSON del Miner en información lista para
+el **Visualizer**. No vuelve a ejecutar CodeQL, Syft ni Grype: carga la evidencia
+ya generada (`results.json`, `results-vuln.json` o `results-sbom.json`), calcula
+métricas, genera observaciones respaldadas por cifras y escribe un documento
+estructurado y versionado (`schema_version` `1.0`).
+
+El núcleo del Analyzer solo usa la librería estándar y funciona con la
+instalación base. Para ejecutar los notebooks y exportar CSV y figuras instala el
+extra `[analyzer]`:
+
+```bash
+pip install -e .[analyzer]
+```
+
+Los notebooks del Analyzer se ejecutan en orden con:
+
+```bash
+source .venv/bin/activate
+python notebooks/execute.py
+```
+
+| Notebook | Qué hace | Escribe en disco |
+| --- | --- | --- |
+| `01_carga_y_calidad.ipynb` | Carga el reporte, mide la cobertura y audita la calidad de los datos. | No |
+| `02_analisis_vulnerabilidades.ipynb` | Analiza severidad, CVE/GHSA, paquetes, concentración y relaciones. | No |
+| `03_sintesis_visualizer.ipynb` | Ejecuta el pipeline, valida el contrato y exporta las salidas. | Sí |
+
+Las salidas quedan en `analysis/outputs/` (ignorado por git):
+
+```
+analysis/outputs/
+├── analyzer_output.json      # contrato validado para el Visualizer
+├── csv/                      # un CSV por dataset tabular
+└── figures/                  # figuras PNG (severidad, paquetes, CVE, repos)
+```
+
+También puedes ejecutar el pipeline desde Python:
+
+```python
+from analysis.pipeline import run_analysis
+
+document = run_analysis(
+    "results-vuln.json",
+    "analysis/outputs/analyzer_output.json",
+)
+```
+
+Consulta [`analysis/README.md`](analysis/README.md) para la guía completa del
+Analyzer; el contrato de salida está en
+[`analysis/contracts/README.md`](analysis/contracts/README.md) y las métricas en
+[`analysis/METRICAS.md`](analysis/METRICAS.md).
+
 ## Ejemplo de uso completo
 
 ```bash
