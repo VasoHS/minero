@@ -1,0 +1,20 @@
+# Ejecución del GitHub CodeQL Miner con Docker Compose.
+#
+# El token se lee de .env (ignorado por git). El directorio del proyecto se
+# monta en /data para que los clones y los reportes queden en el anfitrión.
+#
+# Uso:
+#   cp .env.example .env      # y define GITHUB_TOKEN
+#   docker compose build
+#   docker compose run --rm miner scan --organization <org> --output results.json
+
+services:
+  miner:
+    build: .
+    image: github-codeql-miner:latest
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./:/data
+    working_dir: /data
