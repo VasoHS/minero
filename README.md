@@ -237,6 +237,85 @@ docker compose run --rm miner scan --organization nombre-organizacion --output r
 - La creación de bases CodeQL para lenguajes compilados (C/C++, Go, Java, C#, Swift) requiere sus compiladores, que **no** se incluyen para mantener la imagen ligera; esos repositorios pueden quedar como `db_failed` (ver **Solución de problemas**). Los lenguajes interpretados (Python, JavaScript, Ruby, etc.) funcionan sin herramientas adicionales.
 - La primera ejecución necesita red para clonar repositorios, descargar los query packs de CodeQL (`ghcr.io`) y la base de vulnerabilidades de Grype.
 
+## Reproducibilidad con Dev Containers
+
+El repositorio ofrece **dos vías Docker** distintas, pensadas para usos diferentes:
+
+| Vía | Archivos | Para qué sirve | Qué incluye |
+| --- | --- | --- | --- |
+| Imagen de runtime | `Dockerfile`, `docker-compose.yml` | Ejecutar **solo la CLI `miner`** (`scan`, `sbom`, `vuln`) | Python, `git`, CodeQL, Syft y Grype |
+| Dev Container | `.devcontainer/` | **Entorno de desarrollo completo**: CLI, notebooks, tests y Analyzer/Visualizer | Lo anterior + Node.js/npm, los extras `[dev,analyzer]` y el puerto de Jupyter |
+
+La sección **Ejecución con Docker** describe la imagen de runtime. Esta sección describe el **Dev Container**, que replica el entorno de desarrollo de forma reproducible.
+
+### Requisitos
+
+- **Docker** en el anfitrión.
+- **VS Code** con la extensión [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers), **o** la CLI `devcontainer` (`npm install -g @devcontainers/cli`).
+
+### Abrir o reconstruir el contenedor
+
+Con VS Code, abre la carpeta del proyecto y ejecuta **Dev Containers: Reopen in Container** desde la paleta de comandos (la primera vez construye la imagen; usa **Dev Containers: Rebuild Container** para reconstruirla).
+
+Con la CLI:
+
+```bash
+devcontainer up --workspace-folder .
+```
+
+El detalle del entorno vive en [`.devcontainer/README.md`](.devcontainer/README.md).
+
+### Qué incluye el entorno
+
+- Python 3.12, Node.js/npm y `git`.
+- Versiones fijadas de **CodeQL `2.27.1`**, **Syft `1.51.0`** y **Grype `0.120.0`**, disponibles en el `PATH`.
+- Usuario `vscode` con `sudo` y, en la creación del contenedor (`postCreateCommand`), `pip install -e ".[dev,analyzer]"`: añade `pytest`, `pandas`, `matplotlib`, `nbformat`, `nbclient` e `ipykernel`.
+- Puerto **8888** para Jupyter.
+
+### Proporcionar `GITHUB_TOKEN`
+
+El token **nunca** se guarda en el repositorio. El Dev Container admite dos vías:
+
+1. **Variable de entorno del anfitrión:** se reenvía al contenedor con `remoteEnv` (`${localEnv:GITHUB_TOKEN}`). Expórtala antes de abrir/reconstruir el contenedor:
+   ```bash
+   export GITHUB_TOKEN=ghp_tu_token_aqui
+   ```
+2. **Archivo `.env` local:** créalo a partir de `.env.example` y define el token. `.env` está en `.gitignore`, así que no se versiona (`.env.example` solo contiene `GITHUB_TOKEN=`):
+   ```bash
+   cp .env.example .env
+   # Edita .env y define GITHUB_TOKEN=ghp_tu_token_aqui
+   ```
+
+Si usas `.env` (no se carga automáticamente), expórtalo en la shell del contenedor antes de ejecutar el Miner:
+
+```bash
+export $(grep GITHUB_TOKEN .env)
+```
+
+### Flujo completo
+
+Dentro del contenedor, desde la raíz del proyecto:
+
+```bash
+# 1. Extracción (CodeQL + SBOM + vulnerabilidades)
+miner scan --organization nombre-organizacion --output results.json
+
+# 2. Análisis + visualización + reporte (notebook maestro)
+python notebooks/execute.py
+
+# 3. Alternativa: generar solo el tablero desde el documento del Analyzer
+miner visualize --input analysis/outputs/analyzer_output.json \
+  --output analysis/outputs/visualizer.html
+```
+
+`python notebooks/execute.py` ejecuta `00_pipeline_completo.ipynb` y genera `analysis/outputs/analyzer_output.json` y `analysis/outputs/visualizer.html`. Para ejecutar las pruebas:
+
+```bash
+pytest
+```
+
+Consulta [`docs/Reproducibilidad.md`](docs/Reproducibilidad.md) para el detalle (versiones fijadas y su motivo, gestión de secretos, reejecución de `post-create.sh` y limitaciones).
+
 ## Configuración del Token de GitHub
 
 Copia el archivo de ejemplo `.env.example` a `.env` y configura tu token personal de GitHub con permisos para leer repositorios:
