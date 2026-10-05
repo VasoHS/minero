@@ -315,6 +315,7 @@ def test_compute_concentration_single_repo(tmp_path):
     concentration = compute_concentration(records)
 
     assert concentration["repositories_with_vulns"] == 1
+    assert concentration["top_n"] == 1
     assert concentration["top_n_share"] == 1.0
     assert concentration["top_10pct_share"] == 1.0
     assert concentration["hhi"] == 1.0
@@ -337,6 +338,7 @@ def test_compute_concentration_without_vulnerabilities(tmp_path):
     concentration = compute_concentration(records)
 
     assert concentration["repositories_with_vulns"] == 0
+    assert concentration["top_n"] == 0
     assert concentration["top_n_share"] == 0.0
     assert concentration["top_10pct_share"] == 0.0
     assert concentration["hhi"] == 0.0
@@ -348,6 +350,7 @@ def test_compute_concentration_multiple_repos_hhi_below_one(tmp_path):
     concentration = compute_concentration(records)
 
     assert concentration["repositories_with_vulns"] == 2
+    assert concentration["top_n"] == 2
     assert concentration["top_n_share"] == 1.0
     assert concentration["top_10pct_share"] == 0.75
     assert concentration["hhi"] == 0.625
@@ -519,6 +522,128 @@ def test_compute_coverage_counts_sbom_only_repo(tmp_path):
     coverage = compute_coverage(report)
 
     assert coverage["coverage_ratio"] == 1.0
+
+
+def test_compute_coverage_repo_failed_and_ratios(tmp_path):
+    report = load_report(
+        write_json(
+            tmp_path,
+            {
+                "repositories": [
+                    {
+                        "name": "a",
+                        "status": "analyzed",
+                        "sbom": {"status": "generated", "components": 1},
+                        "vulnerabilities": {"status": "scanned", "total": 0},
+                    },
+                    {
+                        "name": "b",
+                        "status": "clone_failed",
+                        "sbom": {"status": "skipped"},
+                        "vulnerabilities": {"status": "skipped"},
+                    },
+                    {
+                        "name": "c",
+                        "status": "unsupported",
+                        "sbom": {"status": "generated", "components": 1},
+                        "vulnerabilities": {"status": "scanned", "total": 0},
+                    },
+                    {
+                        "name": "d",
+                        "status": "db_failed",
+                        "sbom": {"status": "failed"},
+                        "vulnerabilities": {"status": "failed", "total": 0},
+                    },
+                ]
+            },
+        )
+    )
+
+    coverage = compute_coverage(report)
+
+    assert coverage["repositories_total"] == 4
+    assert coverage["repo_failed"] == 2
+    assert coverage["unsupported"] == 1
+    assert coverage["vuln_failed"] == 1
+    assert coverage["sbom_failed"] == 1
+    assert coverage["coverage_ratio"] == 0.5
+    assert coverage["code_coverage_ratio"] == 0.25
+    assert coverage["sbom_coverage_ratio"] == 0.5
+    assert coverage["vuln_coverage_ratio"] == 0.5
+    for key in (
+        "coverage_ratio",
+        "code_coverage_ratio",
+        "sbom_coverage_ratio",
+        "vuln_coverage_ratio",
+    ):
+        assert 0 <= coverage[key] <= 1
+    assert any("fases previas" in warning for warning in coverage["warnings"])
+
+
+@pytest.mark.parametrize(
+    "status",
+    ["clone_failed", "db_failed", "analyze_failed", "invalid_name"],
+)
+def test_compute_coverage_counts_each_failed_status(tmp_path, status):
+    report = load_report(
+        write_json(tmp_path, {"repositories": [{"name": "a", "status": status}]})
+    )
+
+    coverage = compute_coverage(report)
+
+    assert coverage["repo_failed"] == 1
+
+
+def test_compute_concentration_top_n_is_capped(tmp_path):
+    # Con top_n por defecto (3) y 2 repositorios con vulnerabilidades, se acota a 2.
+    report = load_report(
+        write_json(
+            tmp_path,
+            {
+                "repositories": [
+                    {
+                        "name": "a",
+                        "vulnerabilities": {
+                            "status": "scanned",
+                            "total": 1,
+                            "by_severity": {"High": 1},
+                            "vulnerabilities": [
+                                {
+                                    "id": "C1",
+                                    "severity": "High",
+                                    "package": "p",
+                                    "type": "npm",
+                                }
+                            ],
+                        },
+                    },
+                    {
+                        "name": "b",
+                        "vulnerabilities": {
+                            "status": "scanned",
+                            "total": 1,
+                            "by_severity": {"High": 1},
+                            "vulnerabilities": [
+                                {
+                                    "id": "C2",
+                                    "severity": "High",
+                                    "package": "p",
+                                    "type": "npm",
+                                }
+                            ],
+                        },
+                    },
+                ]
+            },
+        )
+    )
+    records = to_records(report)
+
+    concentration = compute_concentration(records, top_n=10)
+
+    assert concentration["repositories_with_vulns"] == 2
+    assert concentration["top_n"] == 2
+    assert concentration["top_n_share"] == 1.0
 
 
 # ---------------------------------------------------------------------------
@@ -714,3 +839,377 @@ def test_build_limitations_includes_loader_warnings(tmp_path):
     limitations = build_limitations(report, coverage)
 
     assert any("sin 'name'" in item for item in limitations)
+
+
+# ---------------------------------------------------------------------------
+# Observaciones: líder por lenguaje, límites y correcciones exactas
+# ---------------------------------------------------------------------------
+
+
+def finding(rule_id, file, start_line):
+    return {
+        "rule_id": rule_id,
+        "severity": "error",
+        "file": file,
+        "start_line": start_line,
+    }
+
+
+def test_build_observations_language_leader_by_total(tmp_path):
+    # "javascript" ordena antes que "python", pero python acumula más hallazgos:
+    # el líder debe elegirse por total, no por el primero alfabéticamente.
+    report = load_report(
+        write_json(
+            tmp_path,
+            {
+                "repositories": [
+                    {
+                        "name": "a",
+                        "status": "analyzed",
+                        "languages": ["python"],
+                        "findings": [
+                            finding("py/a", "a.py", 1),
+                            finding("py/b", "b.py", 2),
+                        ],
+                    },
+                    {
+                        "name": "b",
+                        "status": "analyzed",
+                        "languages": ["javascript"],
+                        "findings": [finding("js/a", "c.js", 3)],
+                    },
+                ]
+            },
+        )
+    )
+    records = to_records(report)
+    coverage = compute_coverage(report)
+    datasets = compute_datasets(report, records)
+
+    observation = next(
+        obs
+        for obs in build_observations(report, coverage, datasets)
+        if obs["metric"] == "relations.findings_by_language"
+    )
+
+    assert datasets["relations"]["findings_by_language"][0]["language"] == "javascript"
+    assert observation["evidence"]["leader_language"] == "python"
+    assert observation["evidence"]["leader_total"] == 2
+    assert observation["evidence"]["language_totals"] == {
+        "javascript": 1,
+        "python": 2,
+    }
+    assert "python" in observation["statement"]
+    assert "2 hallazgos" in observation["statement"]
+
+
+def test_build_observations_language_leader_not_alphabetically_first(tmp_path):
+    # "python" es el primero alfabéticamente pero "typescript" tiene más hallazgos.
+    report = load_report(
+        write_json(
+            tmp_path,
+            {
+                "repositories": [
+                    {
+                        "name": "a",
+                        "status": "analyzed",
+                        "languages": ["python"],
+                        "findings": [finding("py/a", "a.py", 1)],
+                    },
+                    {
+                        "name": "b",
+                        "status": "analyzed",
+                        "languages": ["typescript"],
+                        "findings": [
+                            finding("ts/a", "a.ts", 1),
+                            finding("ts/b", "b.ts", 2),
+                            finding("ts/c", "c.ts", 3),
+                        ],
+                    },
+                ]
+            },
+        )
+    )
+    records = to_records(report)
+    coverage = compute_coverage(report)
+    datasets = compute_datasets(report, records)
+
+    observation = next(
+        obs
+        for obs in build_observations(report, coverage, datasets)
+        if obs["metric"] == "relations.findings_by_language"
+    )
+
+    assert datasets["relations"]["findings_by_language"][0]["language"] == "python"
+    assert observation["evidence"]["leader_language"] == "typescript"
+    assert observation["evidence"]["leader_total"] == 3
+
+
+def test_build_observations_fixed_version_exact_count(tmp_path):
+    report = load_report(
+        write_json(
+            tmp_path,
+            {
+                "repositories": [
+                    {
+                        "name": "a",
+                        "status": "analyzed",
+                        "languages": ["python"],
+                        "vulnerabilities": {
+                            "status": "scanned",
+                            "total": 3,
+                            "by_severity": {
+                                "Critical": 0,
+                                "High": 2,
+                                "Medium": 1,
+                                "Low": 0,
+                                "Negligible": 0,
+                                "Unknown": 0,
+                            },
+                            "vulnerabilities": [
+                                {
+                                    "id": "C1",
+                                    "severity": "High",
+                                    "package": "p",
+                                    "version": "1",
+                                    "type": "npm",
+                                    "fixed_version": "2",
+                                },
+                                {
+                                    "id": "C2",
+                                    "severity": "High",
+                                    "package": "p",
+                                    "version": "1",
+                                    "type": "npm",
+                                    "fixed_version": None,
+                                },
+                                {
+                                    "id": "C3",
+                                    "severity": "Medium",
+                                    "package": "p",
+                                    "version": "1",
+                                    "type": "npm",
+                                    "fixed_version": "3",
+                                },
+                            ],
+                        },
+                    }
+                ]
+            },
+        )
+    )
+    records = to_records(report)
+    coverage = compute_coverage(report)
+    datasets = compute_datasets(report, records)
+
+    observation = next(
+        obs
+        for obs in build_observations(report, coverage, datasets)
+        if obs["metric"] == "relations.fixed_version_available_share"
+    )
+
+    assert observation["evidence"]["with_fixed_version"] == 2
+    assert observation["evidence"]["total"] == 3
+    assert observation["evidence"]["fixed_version_available_share"] == 0.6667
+    assert "(2 de 3)" in observation["statement"]
+
+
+def test_build_observations_top_limits_and_distinct_totals(tmp_path):
+    vulnerabilities = [
+        {
+            "id": f"CVE-{index}",
+            "severity": "High",
+            "package": f"pkg-{index}",
+            "version": "1",
+            "type": "npm",
+            "fixed_version": None,
+            "namespace": "nvd",
+        }
+        for index in range(25)
+    ]
+    findings = [finding(f"r/{index}", f"f{index}.py", index) for index in range(25)]
+    report = load_report(
+        write_json(
+            tmp_path,
+            {
+                "repositories": [
+                    {
+                        "name": "a",
+                        "status": "analyzed",
+                        "languages": ["python"],
+                        "vulnerabilities": {
+                            "status": "scanned",
+                            "total": 25,
+                            "by_severity": {
+                                "Critical": 0,
+                                "High": 25,
+                                "Medium": 0,
+                                "Low": 0,
+                                "Negligible": 0,
+                                "Unknown": 0,
+                            },
+                            "vulnerabilities": vulnerabilities,
+                        },
+                        "findings": findings,
+                    }
+                ]
+            },
+        )
+    )
+    records = to_records(report)
+    coverage = compute_coverage(report)
+    datasets = compute_datasets(report, records)
+    observations = {
+        obs["metric"]: obs for obs in build_observations(report, coverage, datasets)
+    }
+
+    packages = observations["datasets.top_packages"]
+    assert packages["evidence"]["packages_distinct"] == 25
+    assert len(packages["evidence"]["top_packages"]) == 20
+    assert "el top 20 de 25 paquetes distintos" in packages["statement"]
+
+    cves = observations["datasets.top_cves"]
+    assert cves["evidence"]["cves_distinct"] == 25
+    assert len(cves["evidence"]["top_cves"]) == 20
+    assert "el top 20 de 25 identificadores distintos" in cves["statement"]
+
+    rules = observations["datasets.top_rules"]
+    assert rules["evidence"]["rules_distinct"] == 25
+    assert rules["evidence"]["findings_total"] == 25
+    assert len(rules["evidence"]["top_rules"]) == 20
+    assert "el top 20 de 25 reglas distintas sobre 25 hallazgos en total" in rules["statement"]
+
+
+# ---------------------------------------------------------------------------
+# Limitaciones: by_severity y concentración degenerada
+# ---------------------------------------------------------------------------
+
+
+def test_build_limitations_by_severity_mismatch(tmp_path):
+    report = load_report(
+        write_json(
+            tmp_path,
+            {
+                "summary": {"vulnerabilities": 1},
+                "repositories": [
+                    {
+                        "name": "a",
+                        "status": "analyzed",
+                        "vulnerabilities": {
+                            "status": "scanned",
+                            "total": 1,
+                            # by_severity declara 5 pero solo hay 1 fila de detalle.
+                            "by_severity": {
+                                "Critical": 5,
+                                "High": 0,
+                                "Medium": 0,
+                                "Low": 0,
+                                "Negligible": 0,
+                                "Unknown": 0,
+                            },
+                            "vulnerabilities": [
+                                {
+                                    "id": "C1",
+                                    "severity": "Critical",
+                                    "package": "p",
+                                    "type": "npm",
+                                    "fixed_version": "1",
+                                }
+                            ],
+                        },
+                    }
+                ],
+            },
+        )
+    )
+    coverage = compute_coverage(report)
+
+    limitations = build_limitations(report, coverage)
+
+    assert any(
+        "by_severity' (5) no cuadran con las filas de detalle" in item
+        for item in limitations
+    )
+
+
+def test_build_limitations_concentration_small(tmp_path):
+    def repo(index):
+        return {
+            "name": f"r{index}",
+            "status": "analyzed",
+            "vulnerabilities": {
+                "status": "scanned",
+                "total": 1,
+                "by_severity": {
+                    "Critical": 0,
+                    "High": 1,
+                    "Medium": 0,
+                    "Low": 0,
+                    "Negligible": 0,
+                    "Unknown": 0,
+                },
+                "vulnerabilities": [
+                    {
+                        "id": f"C{index}",
+                        "severity": "High",
+                        "package": "p",
+                        "type": "npm",
+                        "fixed_version": "1",
+                    }
+                ],
+            },
+        }
+
+    report = load_report(
+        write_json(tmp_path, {"repositories": [repo(0), repo(1)]}, name="small.json")
+    )
+    coverage = compute_coverage(report)
+
+    limitations = build_limitations(report, coverage)
+
+    assert any(
+        "Solo 2 repositorio(s) tienen vulnerabilidades" in item
+        for item in limitations
+    )
+
+
+def test_build_limitations_concentration_not_flagged_for_five(tmp_path):
+    def repo(index):
+        return {
+            "name": f"r{index}",
+            "status": "analyzed",
+            "vulnerabilities": {
+                "status": "scanned",
+                "total": 1,
+                "by_severity": {
+                    "Critical": 0,
+                    "High": 1,
+                    "Medium": 0,
+                    "Low": 0,
+                    "Negligible": 0,
+                    "Unknown": 0,
+                },
+                "vulnerabilities": [
+                    {
+                        "id": f"C{index}",
+                        "severity": "High",
+                        "package": "p",
+                        "type": "npm",
+                        "fixed_version": "1",
+                    }
+                ],
+            },
+        }
+
+    report = load_report(
+        write_json(
+            tmp_path,
+            {"repositories": [repo(index) for index in range(5)]},
+            name="five.json",
+        )
+    )
+    coverage = compute_coverage(report)
+
+    limitations = build_limitations(report, coverage)
+
+    assert not any("tienen vulnerabilidades" in item for item in limitations)

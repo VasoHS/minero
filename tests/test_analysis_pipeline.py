@@ -171,3 +171,107 @@ def test_run_analysis_missing_input_raises(tmp_path):
 
     with pytest.raises(FileNotFoundError):
         run_analysis(tmp_path / "missing.json", generated_at=FIXED_TS)
+
+
+# ---------------------------------------------------------------------------
+# Varios reportes fusionados
+# ---------------------------------------------------------------------------
+
+
+def sbom_only_data():
+    return {
+        "organization": "acme",
+        "summary": {"repositories": 1, "components": 5, "sboms_generated": 1},
+        "repositories": [
+            {
+                "name": "alpha",
+                "status": "cloned",
+                "languages": ["python"],
+                "sbom": {"status": "generated", "components": 5},
+                "vulnerabilities": {"status": "skipped"},
+            }
+        ],
+    }
+
+
+def vuln_only_data():
+    return {
+        "organization": "acme",
+        "summary": {"repositories": 1, "vulnerabilities": 1},
+        "repositories": [
+            {
+                "name": "alpha",
+                "status": "scanned",
+                "languages": ["javascript"],
+                "vulnerabilities": {
+                    "status": "scanned",
+                    "total": 1,
+                    "by_severity": {
+                        "Critical": 0,
+                        "High": 1,
+                        "Medium": 0,
+                        "Low": 0,
+                        "Negligible": 0,
+                        "Unknown": 0,
+                    },
+                    "vulnerabilities": [
+                        {
+                            "id": "CVE-1",
+                            "severity": "High",
+                            "package": "requests",
+                            "version": "1.0",
+                            "type": "python",
+                            "fixed_version": "1.1",
+                            "namespace": "nvd",
+                        }
+                    ],
+                },
+                "findings": [
+                    {
+                        "rule_id": "js/xss",
+                        "severity": "error",
+                        "file": "a.js",
+                        "start_line": 1,
+                    }
+                ],
+            }
+        ],
+    }
+
+
+def test_run_analysis_accepts_list_of_reports(tmp_path):
+    sbom = write_json(tmp_path, sbom_only_data(), name="results-sbom.json")
+    vuln = write_json(tmp_path, vuln_only_data(), name="results-vuln.json")
+
+    document = run_analysis([sbom, vuln], generated_at=FIXED_TS)
+
+    assert validate_document(document) == []
+    assert document["meta"]["source_kind"] == "merged"
+    assert document["meta"]["source"] == "results-sbom.json + results-vuln.json"
+    assert document["meta"]["repositories"] == 1
+    # Los componentes del SBOM y las vulnerabilidades se suman en el resumen.
+    assert document["summary"]["components"] == 5
+    assert document["summary"]["vulnerabilities"] == 1
+    assert document["summary"]["sboms_generated"] == 1
+    assert document["summary"]["vulns_scanned"] == 1
+    repo = document["datasets"]["repositories"][0]
+    assert repo["languages"] == ["python", "javascript"]
+    assert repo["sbom_status"] == "generated"
+    assert repo["vuln_status"] == "scanned"
+
+
+def test_run_analysis_merged_list_is_deterministic(tmp_path):
+    sbom = write_json(tmp_path, sbom_only_data(), name="results-sbom.json")
+    vuln = write_json(tmp_path, vuln_only_data(), name="results-vuln.json")
+
+    first = run_analysis([sbom, vuln], generated_at=FIXED_TS)
+    second = run_analysis([sbom, vuln], generated_at=FIXED_TS)
+
+    assert first == second
+
+
+def test_run_analysis_empty_list_raises_value_error(tmp_path):
+    import pytest
+
+    with pytest.raises(ValueError):
+        run_analysis([], generated_at=FIXED_TS)
