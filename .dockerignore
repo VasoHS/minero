@@ -1,0 +1,43 @@
+# Control de versiones y configuración local
+.git/
+.gitignore
+.env
+.env.example
+.opencode/
+link
+
+# Entornos virtuales y cachés de Python
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+
+# Pruebas y documentación (no se necesitan dentro de la imagen)
+tests/
+docs/
+notebooks/
+*.md
+
+# Artefactos generados por la CLI (repos, SBOM, vulnerabilidades y reportes)
+workdir/
+repos_clonados/
+codeql_dbs/
+sboms/
+vulns/
+analysis/outputs/
+*.sarif
+*.cdx.json
+*.grype.json
+errores.log
+results*.json
+resultados*.json
+sboms*.zip
+
+# Archivos de Docker (no se copian dentro de la imagen)
+Dockerfile
+docker-compose.yml
+.dockerignore
