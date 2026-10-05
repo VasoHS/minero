@@ -1,0 +1,4826 @@
+{
+  "organization": "tensorflow",
+  "summary": {
+    "repositories": 23,
+    "analyzed": 22,
+    "failed": 1,
+    "unsupported": 0,
+    "findings": 166,
+    "sboms_generated": 23,
+    "sboms_failed": 0,
+    "components": 1614,
+    "vulns_scanned": 23,
+    "vulns_failed": 0,
+    "vulnerabilities": 313,
+    "vulns_critical": 14,
+    "vulns_high": 150,
+    "vulns_medium": 122,
+    "vulns_low": 27
+  },
+  "repositories": [
+    {
+      "name": "playground",
+      "full_name": "tensorflow/playground",
+      "url": "https://github.com/tensorflow/playground.git",
+      "commit": "02469bd3751764b20486015d4202b792af5362a6",
+      "status": "db_failed",
+      "error": "creación de base (intento 1): código de salida 2: Initializing database at /data/workdir/playground_db. Running build command: [] Running command in /data/workdir/playground: [/opt/codeql/javascript/tools/autobuild.sh] A fatal error occurred: Exit status 1 from command: [/opt/codeql/javascript/tools/autobuild.sh]; creación de base (intento 2): código de salida 2: Initializing database at /data/workdir/playground_db. Running build command: [] Running command in /data/workdir/playground: [/opt/codeql/javascript/tools/autobuild.sh] A fatal error occurred: Exit status 1 from command: [/opt/codeql/javascript/tools/autobuild.sh]",
+      "languages": [
+        "javascript"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 5,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:10:09.260958+00:00",
+        "file": "sboms/playground.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:10:10.444742+00:00",
+        "file": "vulns/playground.grype.json"
+      }
+    },
+    {
+      "name": "tensorflow",
+      "full_name": "tensorflow/tensorflow",
+      "url": "https://github.com/tensorflow/tensorflow.git",
+      "commit": "f27cff93ab3ed3d24e428050acd9b7d88f980fb7",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "cpp"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 803,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:11:34.065438+00:00",
+        "file": "sboms/tensorflow.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 38,
+        "by_severity": {
+          "Critical": 0,
+          "High": 21,
+          "Medium": 17,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8988-9cw3-xx77",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxq7-64xx-v4gw",
+            "severity": "High",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8rrh-rw8j-w5fx",
+            "severity": "High",
+            "package": "wheel",
+            "version": "0.41.3",
+            "type": "python",
+            "fixed_version": "0.46.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8rrh-rw8j-w5fx",
+            "severity": "High",
+            "package": "wheel",
+            "version": "0.41.3",
+            "type": "python",
+            "fixed_version": "0.46.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8rrh-rw8j-w5fx",
+            "severity": "High",
+            "package": "wheel",
+            "version": "0.41.3",
+            "type": "python",
+            "fixed_version": "0.46.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5wmx-573v-2qwq",
+            "severity": "Medium",
+            "package": "markdown",
+            "version": "3.8",
+            "type": "python",
+            "fixed_version": "3.8.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5wmx-573v-2qwq",
+            "severity": "Medium",
+            "package": "markdown",
+            "version": "3.8",
+            "type": "python",
+            "fixed_version": "3.8.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5wmx-573v-2qwq",
+            "severity": "Medium",
+            "package": "markdown",
+            "version": "3.8",
+            "type": "python",
+            "fixed_version": "3.8.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5wmx-573v-2qwq",
+            "severity": "Medium",
+            "package": "markdown",
+            "version": "3.8",
+            "type": "python",
+            "fixed_version": "3.8.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gc5v-m9x4-r6x2",
+            "severity": "Medium",
+            "package": "requests",
+            "version": "2.32.4",
+            "type": "python",
+            "fixed_version": "2.33.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gc5v-m9x4-r6x2",
+            "severity": "Medium",
+            "package": "requests",
+            "version": "2.32.4",
+            "type": "python",
+            "fixed_version": "2.33.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gc5v-m9x4-r6x2",
+            "severity": "Medium",
+            "package": "requests",
+            "version": "2.32.4",
+            "type": "python",
+            "fixed_version": "2.33.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gc5v-m9x4-r6x2",
+            "severity": "Medium",
+            "package": "requests",
+            "version": "2.32.4",
+            "type": "python",
+            "fixed_version": "2.33.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh4c-6fx4-qh6g",
+            "severity": "Medium",
+            "package": "urllib3",
+            "version": "2.7.0",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:11:35.962652+00:00",
+        "file": "vulns/tensorflow.grype.json"
+      }
+    },
+    {
+      "name": "examples",
+      "full_name": "tensorflow/examples",
+      "url": "https://github.com/tensorflow/examples.git",
+      "commit": "bda6a8741864b7bc934345c47c25f8e17fd67bdc",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "lite/examples/speech_commands/ml/download.py",
+          "start_line": 37
+        }
+      ],
+      "sbom": {
+        "status": "generated",
+        "components": 159,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:14:06.910102+00:00",
+        "file": "sboms/examples.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 128,
+        "by_severity": {
+          "Critical": 5,
+          "High": 61,
+          "Medium": 56,
+          "Low": 6,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "CVE-2021-40531",
+            "severity": "Critical",
+            "package": "Sketch",
+            "version": "2.0",
+            "type": "pod",
+            "fixed_version": "75",
+            "namespace": "nvd:cpe"
+          },
+          {
+            "id": "GHSA-x4wf-678h-2pmq",
+            "severity": "Critical",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "2.13.1rc0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-3f63-hfp8-52jq",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "10.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gw97-ff7c-9v96",
+            "severity": "Critical",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gw97-ff7c-9v96",
+            "severity": "Critical",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-36fq-jgmw-4r9c",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.11.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4f3f-g24h-fr8m",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.13.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5gwj-m78q-7pq3",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hjqc-jx6g-rwp9",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hqp4-2352-xf5r",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.14.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-v2w2-w228-c444",
+            "severity": "High",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-44wm-f244-xhp3",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "10.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-45hq-cxwh-f6vc",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5x94-69rx-g8h2",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-62p4-gmf7-7g93",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6r8x-57c9-28j4",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8v84-f9pq-wr9x",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9hw9-ch79-4vh6",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jjj6-mw9f-p565",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-phj9-mv4w-65pm",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vjc4-5qp5-m44j",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xj96-63gp-2gmr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-49rq-hwc3-x77w",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-49rq-hwc3-x77w",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-558h-mq8x-7q9g",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-558h-mq8x-7q9g",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5w96-866f-6rm8",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5w96-866f-6rm8",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-647v-r7qq-24fh",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-647v-r7qq-24fh",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-64jg-wjww-7c5w",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-64jg-wjww-7c5w",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-68v3-g9cm-rmm6",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-68v3-g9cm-rmm6",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6hg6-5c2q-7rcr",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6hg6-5c2q-7rcr",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6wfh-89q8-44jq",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6wfh-89q8-44jq",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7jvm-xxmr-v5cw",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7jvm-xxmr-v5cw",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7x4v-9gxg-9hwj",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7x4v-9gxg-9hwj",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-93vr-9q9m-pj8p",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-93vr-9q9m-pj8p",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-94mm-g2mv-8p7r",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-94mm-g2mv-8p7r",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cg88-rpvp-cjv5",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cg88-rpvp-cjv5",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f49c-87jh-g47q",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f49c-87jh-g47q",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f637-vh3r-vfh2",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f637-vh3r-vfh2",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gf97-q72m-7579",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gf97-q72m-7579",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gjh7-xx4r-x345",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.12.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gjh7-xx4r-x345",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.12.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-h6q3-vv32-2cq5",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-h6q3-vv32-2cq5",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-j5w9-hmfh-4cr6",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-j5w9-hmfh-4cr6",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qjqc-vqcf-5qvj",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qjqc-vqcf-5qvj",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rcf8-g8jv-vg6p",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rcf8-g8jv-vg6p",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xvwp-h6jv-7472",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xvwp-h6jv-7472",
+            "severity": "High",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-w69q-w4h4-2fx8",
+            "severity": "Medium",
+            "package": "dm-reverb",
+            "version": "0.5.0",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-26c4-7vv6-867j",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-74m6-m3xx-3vmj",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.15.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cjgq-5qmw-rcj6",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gh82-f9x8-5frx",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-m8wh-29wm-52mv",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mq84-hjqx-cwf2",
+            "severity": "Medium",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4x4j-2g7c-83w6",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fj7v-r99m-22gq",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-r73j-pqj5-w3x7",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-wjx4-4jcj-g98j",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "10.0.1",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-27rc-728f-x5w2",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-27rc-728f-x5w2",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-368v-7v32-52fx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-368v-7v32-52fx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-54pp-c6pp-7fpx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-54pp-c6pp-7fpx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-66vq-54fq-6jvv",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-66vq-54fq-6jvv",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-67pf-62xr-q35m",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-67pf-62xr-q35m",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6x99-gv2v-q76v",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6x99-gv2v-q76v",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-762h-vpvw-3rcx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.7.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8fvv-46hw-vpg3",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8fvv-46hw-vpg3",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8w5g-3wcv-9g2j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8w5g-3wcv-9g2j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f2w8-jw48-fr7j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f2w8-jw48-fr7j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fqm2-gh8w-gr68",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fqm2-gh8w-gr68",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-frqp-wp83-qggv",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-frqp-wp83-qggv",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fxgc-95xx-grvq",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fxgc-95xx-grvq",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.11.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g9fm-r5mm-rf9f",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g9fm-r5mm-rf9f",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gq2j-cr96-gvqx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gq2j-cr96-gvqx",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-h246-cgh4-7475",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-h246-cgh4-7475",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hq7g-wwwp-q46h",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hq7g-wwwp-q46h",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jq6x-99hj-q636",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jq6x-99hj-q636",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mv77-9g28-cwg3",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mv77-9g28-cwg3",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-pf36-r9c6-h97j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-pf36-r9c6-h97j",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rjx6-v474-2ch9",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rjx6-v474-2ch9",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rmg2-f698-wq35",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rmg2-f698-wq35",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xxcj-rhqg-m46g",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xxcj-rhqg-m46g",
+            "severity": "Medium",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-58hv-7753-xmfq",
+            "severity": "Low",
+            "package": "keras",
+            "version": "2.2.0",
+            "type": "python",
+            "fixed_version": "3.12.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cqvq-fvhr-v6hc",
+            "severity": "Low",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cqvq-fvhr-v6hc",
+            "severity": "Low",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xf83-q765-xm6m",
+            "severity": "Low",
+            "package": "tensorflow",
+            "version": "2.7.2",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xf83-q765-xm6m",
+            "severity": "Low",
+            "package": "tensorflow",
+            "version": "2.9.1",
+            "type": "python",
+            "fixed_version": "2.9.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g7vv-2v7x-gj9p",
+            "severity": "Low",
+            "package": "tqdm",
+            "version": "4.64.0",
+            "type": "python",
+            "fixed_version": "4.66.3",
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:14:08.197155+00:00",
+        "file": "vulns/examples.grype.json"
+      }
+    },
+    {
+      "name": "tensor2tensor",
+      "full_name": "tensorflow/tensor2tensor",
+      "url": "https://github.com/tensorflow/tensor2tensor.git",
+      "commit": "bafdc1b67730430d38d6ab802cbd51f9d053ba2e",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/algorithmic_math_deepmind.py",
+          "start_line": 81
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/algorithmic_math_two_variables.py",
+          "start_line": 83
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/audio.py",
+          "start_line": 51
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/babi_qa.py",
+          "start_line": 120
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/bair_robot_pushing.py",
+          "start_line": 154
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/cifar.py",
+          "start_line": 60
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/cnn_dailymail.py",
+          "start_line": 86
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/cnn_dailymail.py",
+          "start_line": 91
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/common_voice.py",
+          "start_line": 133
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/dialog_abstract.py",
+          "start_line": 239
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/dialog_personachat.py",
+          "start_line": 78
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/generator_utils.py",
+          "start_line": 396
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/imdb.py",
+          "start_line": 85
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/lambada.py",
+          "start_line": 73
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/lambada.py",
+          "start_line": 76
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/librispeech.py",
+          "start_line": 135
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/lm1b.py",
+          "start_line": 103
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/style_transfer.py",
+          "start_line": 107
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/translate.py",
+          "start_line": 204
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/translate.py",
+          "start_line": 239
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/vqa.py",
+          "start_line": 52
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/vqa.py",
+          "start_line": 72
+        },
+        {
+          "rule_id": "py/overly-large-range",
+          "severity": "warning",
+          "message": "Suspicious character range that overlaps with a-z in the same character class, and is equivalent to \\[A-Z\\\\[\\\\\\\\]^_`a-z\\].",
+          "file": "tensor2tensor/data_generators/wiki_revision_utils.py",
+          "start_line": 384
+        },
+        {
+          "rule_id": "py/request-without-cert-validation",
+          "severity": "warning",
+          "message": "This request may run without certificate validation because [it is disabled](1).",
+          "file": "tensor2tensor/data_generators/wikisum/get_references_web_single_group.py",
+          "start_line": 155
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/yelp_full.py",
+          "start_line": 85
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "tensor2tensor/data_generators/yelp_polarity.py",
+          "start_line": 85
+        },
+        {
+          "rule_id": "py/shell-command-constructed-from-input",
+          "severity": "warning",
+          "message": "This formatted string which depends on [library input](1) is later used in a [shell command](2).",
+          "file": "tensor2tensor/utils/video2gif.py",
+          "start_line": 54
+        }
+      ],
+      "sbom": {
+        "status": "generated",
+        "components": 3,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:14:29.076788+00:00",
+        "file": "sboms/tensor2tensor.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 52,
+        "by_severity": {
+          "Critical": 8,
+          "High": 34,
+          "Medium": 9,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-3f63-hfp8-52jq",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "10.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-43fq-w8qq-v88h",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "7.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-57h3-9rgr-c24m",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7534-mm45-c74v",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8vj2-vxx3-667w",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.0.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-p49h-hjvm-jg3h",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-r7rm-8j6h-r933",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vcqg-3p29-xw73",
+            "severity": "Critical",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-3wvg-mj6g-m9cv",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-3xv8-3j54-hgrp",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "7.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-44wm-f244-xhp3",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "10.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-45hq-cxwh-f6vc",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5gm3-px64-rw72",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5x94-69rx-g8h2",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-62p4-gmf7-7g93",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6r8x-57c9-28j4",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-77gc-v2xv-rvvh",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-7r7m-5h27-29hp",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8843-m7mw-mxqm",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "7.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8ghj-p4vj-mr35",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "10.0.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8v84-f9pq-wr9x",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8xjq-8fcg-g5hw",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-95q3-8gr9-gm8w",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9hw9-ch79-4vh6",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9j59-75qj-795w",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.0.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cqhg-xjhh-p8hf",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "7.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f4w8-cv6p-x6r5",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f5g8-5qq7-938w",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g6rj-rv7j-xwp4",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hj69-c76v-86wr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-j7hp-h8jx-5ppr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "10.0.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-j7mj-748x-7p78",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "6.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jjj6-mw9f-p565",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-m2vv-5vj5-2hm7",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mvg9-xffr-p774",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-p43w-g3c5-g5mq",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-phj9-mv4w-65pm",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-q5hq-fp76-qmrc",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rwv7-3v45-hg29",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vj42-xq3r-hr3r",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "7.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vqcj-wrf2-7v73",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xj96-63gp-2gmr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4x4j-2g7c-83w6",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9hx2-hgq2-2g4f",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hf64-x4gq-p99h",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hjfx-8p6c-g7gx",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jgpv-4h4c-xhw3",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "8.1.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-pw3c-h7wp-cvhx",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.0.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-r73j-pqj5-w3x7",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-wjx4-4jcj-g98j",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xrcv-f9gm-v42c",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.0.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4fx9-vc88-q2xc",
+            "severity": "Low",
+            "package": "pillow",
+            "version": "5.1.0",
+            "type": "python",
+            "fixed_version": "9.0.0",
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:14:30.261828+00:00",
+        "file": "vulns/tensor2tensor.grype.json"
+      }
+    },
+    {
+      "name": "community",
+      "full_name": "tensorflow/community",
+      "url": "https://github.com/tensorflow/community.git",
+      "commit": "185530183d8f3734795beb520d02b8265c230a12",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "cpp"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "no_components",
+        "components": 0,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:14:58.737433+00:00",
+        "file": "sboms/community.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:14:59.937340+00:00",
+        "file": "vulns/community.grype.json"
+      }
+    },
+    {
+      "name": "docs",
+      "full_name": "tensorflow/docs",
+      "url": "https://github.com/tensorflow/docs.git",
+      "commit": "53f7db427b7766dfad0ef1fc1f46852dc7ab79af",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [
+        {
+          "rule_id": "py/jinja2/autoescape-false",
+          "severity": "warning",
+          "message": "Using jinja2 templates with autoescape=False can potentially allow XSS attacks.",
+          "file": "tools/tensorflow_docs/api_generator/pretty_docs/base_page.py",
+          "start_line": 46
+        }
+      ],
+      "sbom": {
+        "status": "generated",
+        "components": 7,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:15:14.087168+00:00",
+        "file": "sboms/docs.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:15:15.416039+00:00",
+        "file": "vulns/docs.grype.json"
+      }
+    },
+    {
+      "name": "models",
+      "full_name": "tensorflow/models",
+      "url": "https://github.com/tensorflow/models.git",
+      "commit": "930a6f98f7debcc32ca7afbca4a176dbf9211e03",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "official/legacy/transformer/data_download.py",
+          "start_line": 206
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "research/deep_speech/data/download.py",
+          "start_line": 82
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "research/slim/datasets/dataset_utils.py",
+          "start_line": 138
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "research/slim/datasets/download_and_convert_cifar10.py",
+          "start_line": 142
+        }
+      ],
+      "sbom": {
+        "status": "generated",
+        "components": 42,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:15:37.043591+00:00",
+        "file": "sboms/models.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 28,
+        "by_severity": {
+          "Critical": 0,
+          "High": 14,
+          "Medium": 9,
+          "Low": 5,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-qr4w-53vh-m672",
+            "severity": "High",
+            "package": "opencv-python",
+            "version": "4.2.0.32",
+            "type": "python",
+            "fixed_version": "4.8.1.78",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-45hq-cxwh-f6vc",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5x94-69rx-g8h2",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-62p4-gmf7-7g93",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6r8x-57c9-28j4",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8v84-f9pq-wr9x",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9hw9-ch79-4vh6",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cfh3-3jmp-rvhc",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.1.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jjj6-mw9f-p565",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-phj9-mv4w-65pm",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-pwv6-vv43-88gr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vjc4-5qp5-m44j",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-whj4-6x5x-4v2j",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xj96-63gp-2gmr",
+            "severity": "High",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4x4j-2g7c-83w6",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5xmw-vc9v-4wf2",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-fj7v-r99m-22gq",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-pg7v-jwj7-p798",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-r73j-pqj5-w3x7",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-wjx4-4jcj-g98j",
+            "severity": "Medium",
+            "package": "pillow",
+            "version": "12.0.0",
+            "type": "python",
+            "fixed_version": "12.2.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-887c-mr87-cxwp",
+            "severity": "Medium",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": "2.8.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-f4hp-rmr7-r7v8",
+            "severity": "Medium",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vgrw-7cvw-pwgx",
+            "severity": "Medium",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": "2.9.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-3749-ghw9-m3mg",
+            "severity": "Low",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": "2.7.1-rc1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-c678-jfcj-6jmf",
+            "severity": "Low",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qfhq-4f3w-5fph",
+            "severity": "Low",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": "2.10.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rrmf-rvhw-rf47",
+            "severity": "Low",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": "2.13.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-x3gm-94wq-g975",
+            "severity": "Low",
+            "package": "torch",
+            "version": "2.6.0+cu124",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:15:38.052938+00:00",
+        "file": "vulns/models.grype.json"
+      }
+    },
+    {
+      "name": "rust",
+      "full_name": "tensorflow/rust",
+      "url": "https://github.com/tensorflow/rust.git",
+      "commit": "1ddf5a348037402f87d67c076bf3019857eae05f",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "rust"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 7,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:16:55.430029+00:00",
+        "file": "sboms/rust.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:16:56.700863+00:00",
+        "file": "vulns/rust.grype.json"
+      }
+    },
+    {
+      "name": "neural-structured-learning",
+      "full_name": "tensorflow/neural-structured-learning",
+      "url": "https://github.com/tensorflow/neural-structured-learning.git",
+      "commit": "82eb5d4f16c138bc7eb04ea648997ebd97f0d2b4",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 4,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:17:27.657021+00:00",
+        "file": "sboms/neural-structured-learning.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 2,
+        "by_severity": {
+          "Critical": 0,
+          "High": 2,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-gjh7-xx4r-x345",
+            "severity": "High",
+            "package": "tensorflow-gpu",
+            "version": "2.12.0",
+            "type": "python",
+            "fixed_version": "2.12.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gjh7-xx4r-x345",
+            "severity": "High",
+            "package": "tensorflow-gpu",
+            "version": "2.12.0",
+            "type": "python",
+            "fixed_version": "2.12.1",
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:17:28.961328+00:00",
+        "file": "vulns/neural-structured-learning.grype.json"
+      }
+    },
+    {
+      "name": "tflite-micro",
+      "full_name": "tensorflow/tflite-micro",
+      "url": "https://github.com/tensorflow/tflite-micro.git",
+      "commit": "3f787dcff5c4693f3436a65aff1b268538a07bdb",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "cpp"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 148,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:17:46.582780+00:00",
+        "file": "sboms/tflite-micro.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:17:47.632505+00:00",
+        "file": "vulns/tflite-micro.grype.json"
+      }
+    },
+    {
+      "name": "recommenders-addons",
+      "full_name": "tensorflow/recommenders-addons",
+      "url": "https://github.com/tensorflow/recommenders-addons.git",
+      "commit": "b3bc3d4691a9421dbe837ee9708c504217fdc8f9",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 18,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:18:04.382756+00:00",
+        "file": "sboms/recommenders-addons.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "v1.1.0",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:18:05.624143+00:00",
+        "file": "vulns/recommenders-addons.grype.json"
+      }
+    },
+    {
+      "name": "addons",
+      "full_name": "tensorflow/addons",
+      "url": "https://github.com/tensorflow/addons.git",
+      "commit": "d208d752e98c310280938efa939117bf635a60a8",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 20,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:18:22.960250+00:00",
+        "file": "sboms/addons.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "v1.1.0",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:18:24.160971+00:00",
+        "file": "vulns/addons.grype.json"
+      }
+    },
+    {
+      "name": "serving",
+      "full_name": "tensorflow/serving",
+      "url": "https://github.com/tensorflow/serving.git",
+      "commit": "40f3fb1b022fa54c4d0ae29544532af65cc392de",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "cpp"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 2,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:18:44.015236+00:00",
+        "file": "sboms/serving.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:18:45.237208+00:00",
+        "file": "vulns/serving.grype.json"
+      }
+    },
+    {
+      "name": "probability",
+      "full_name": "tensorflow/probability",
+      "url": "https://github.com/tensorflow/probability.git",
+      "commit": "d135a50f176224d654c62149be8cccc0886c0ed7",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 12,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:19:05.206085+00:00",
+        "file": "sboms/probability.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-g7vv-2v7x-gj9p",
+            "severity": "Low",
+            "package": "tqdm",
+            "version": "4.66",
+            "type": "python",
+            "fixed_version": "4.66.3",
+            "namespace": "github:language:python"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:19:06.445330+00:00",
+        "file": "vulns/probability.grype.json"
+      }
+    },
+    {
+      "name": "java",
+      "full_name": "tensorflow/java",
+      "url": "https://github.com/tensorflow/java.git",
+      "commit": "58a19434ad41d6e62c944e2f7f2a974bf170bff4",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "java"
+      ],
+      "findings": [
+        {
+          "rule_id": "java/toctou-race-condition",
+          "severity": "warning",
+          "message": "This uses the state of [next](1) which [is checked at a previous call](2). But these are not jointly synchronized.",
+          "file": "tensorflow-core/tensorflow-core-api/src/main/java/org/tensorflow/NativeFunction.java",
+          "start_line": 136
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-core/tensorflow-core-api/src/main/java/org/tensorflow/internal/buffer/ByteSequenceTensorBuffer.java",
+          "start_line": 103
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-core/tensorflow-core-native/src/main/java/org/tensorflow/internal/c_api/AbstractTF_Tensor.java",
+          "start_line": 41
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-core/tensorflow-core-native/src/main/java/org/tensorflow/internal/c_api/AbstractTF_Tensor.java",
+          "start_line": 98
+        },
+        {
+          "rule_id": "java/local-temp-file-or-directory-information-disclosure",
+          "severity": "warning",
+          "message": "Local information disclosure vulnerability from [system temp directory](1) due to use of file or directory readable by other local users.",
+          "file": "tensorflow-core/tensorflow-core-native/src/main/java/org/tensorflow/internal/c_api/TFJ_RuntimeLibrary.java",
+          "start_line": 253
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-framework/src/main/java/org/tensorflow/framework/op/math/ReduceLogSumExp.java",
+          "start_line": 158
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/ArrayDataBuffer.java",
+          "start_line": 64
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BitSetDataBuffer.java",
+          "start_line": 78
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BitSetDataBuffer.java",
+          "start_line": 86
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BitSetDataBuffer.java",
+          "start_line": 96
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BitSetDataBuffer.java",
+          "start_line": 100
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BitSetDataBuffer.java",
+          "start_line": 137
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BitSetDataBuffer.java",
+          "start_line": 150
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BitSetDataBuffer.java",
+          "start_line": 160
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BooleanArrayDataBuffer.java",
+          "start_line": 78
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BooleanArrayDataBuffer.java",
+          "start_line": 88
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BooleanArrayDataBuffer.java",
+          "start_line": 92
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BooleanArrayDataBuffer.java",
+          "start_line": 135
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BooleanArrayDataBuffer.java",
+          "start_line": 145
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/misc/BooleanArrayDataBuffer.java",
+          "start_line": 155
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/nio/ByteNioDataBuffer.java",
+          "start_line": 164
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/nio/DoubleNioDataBuffer.java",
+          "start_line": 126
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/nio/FloatNioDataBuffer.java",
+          "start_line": 126
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/nio/IntNioDataBuffer.java",
+          "start_line": 126
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/nio/LongNioDataBuffer.java",
+          "start_line": 126
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/buffer/nio/ShortNioDataBuffer.java",
+          "start_line": 126
+        },
+        {
+          "rule_id": "java/implicit-cast-in-compound-assignment",
+          "severity": "warning",
+          "message": "Implicit cast of source type long to narrower destination type [int](1).",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/dimension/DimensionalSpace.java",
+          "start_line": 32
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/sparse/AbstractSparseNdArray.java",
+          "start_line": 201
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type short and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/main/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArray.java",
+          "start_line": 334
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/benchmark/NdArrayBenchmark.java",
+          "start_line": 101
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/benchmark/NdArrayBenchmark.java",
+          "start_line": 102
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 98
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 99
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 111
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 112
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 129
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 130
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 142
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 144
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 229
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 230
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 257
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/BooleanSparseNdArrayTest.java",
+          "start_line": 258
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 95
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 96
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 108
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 109
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 121
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 122
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 134
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 136
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 220
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 221
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 248
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ByteSparseNdArrayTest.java",
+          "start_line": 249
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 96
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 97
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 109
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 110
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 122
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 123
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 135
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 137
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 222
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 223
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 250
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/DoubleSparseNdArrayTest.java",
+          "start_line": 251
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 96
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 97
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 110
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 111
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 123
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 124
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 137
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 139
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 227
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 228
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 256
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/FloatSparseNdArrayTest.java",
+          "start_line": 257
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 95
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 96
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 109
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 110
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 122
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 123
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 136
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 138
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 225
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 226
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 254
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/IntSparseNdArrayTest.java",
+          "start_line": 255
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 94
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 95
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 108
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 109
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 121
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 122
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 135
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 137
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 224
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 225
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 253
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/LongSparseNdArrayTest.java",
+          "start_line": 254
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 97
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 98
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 111
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 112
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 124
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 125
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 138
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 140
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 228
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 229
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 257
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/ShortSparseNdArrayTest.java",
+          "start_line": 258
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/StringSparseNdArrayTest.java",
+          "start_line": 119
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/StringSparseNdArrayTest.java",
+          "start_line": 120
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/StringSparseNdArrayTest.java",
+          "start_line": 135
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/StringSparseNdArrayTest.java",
+          "start_line": 136
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/StringSparseNdArrayTest.java",
+          "start_line": 148
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/StringSparseNdArrayTest.java",
+          "start_line": 150
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/StringSparseNdArrayTest.java",
+          "start_line": 235
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/StringSparseNdArrayTest.java",
+          "start_line": 236
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/StringSparseNdArrayTest.java",
+          "start_line": 263
+        },
+        {
+          "rule_id": "java/comparison-with-wider-type",
+          "severity": "warning",
+          "message": "Comparison between [expression](1) of type int and [expression](2) of wider type long.",
+          "file": "tensorflow-ndarray/src/test/java/org/tensorflow/ndarray/impl/sparse/StringSparseNdArrayTest.java",
+          "start_line": 264
+        }
+      ],
+      "sbom": {
+        "status": "generated",
+        "components": 33,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:20:27.940888+00:00",
+        "file": "sboms/java.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 2,
+        "by_severity": {
+          "Critical": 0,
+          "High": 1,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-jmp9-x22r-554x",
+            "severity": "High",
+            "package": "spring-core",
+            "version": "5.3.32",
+            "type": "java-archive",
+            "fixed_version": null,
+            "namespace": "github:language:java"
+          },
+          {
+            "id": "GHSA-659m-px2c-25wj",
+            "severity": "Low",
+            "package": "spring-core",
+            "version": "5.3.32",
+            "type": "java-archive",
+            "fixed_version": null,
+            "namespace": "github:language:java"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:20:29.047829+00:00",
+        "file": "vulns/java.grype.json"
+      }
+    },
+    {
+      "name": "gnn",
+      "full_name": "tensorflow/gnn",
+      "url": "https://github.com/tensorflow/gnn.git",
+      "commit": "7fd24610dd904d8041cbc1cfb14eab21b5757f08",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 5,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:22:36.550692+00:00",
+        "file": "sboms/gnn.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:22:37.518439+00:00",
+        "file": "vulns/gnn.grype.json"
+      }
+    },
+    {
+      "name": "mlir-hlo",
+      "full_name": "tensorflow/mlir-hlo",
+      "url": "https://github.com/tensorflow/mlir-hlo.git",
+      "commit": "74b9d25f5cb824269cabfd2d4640a050c3fe6728",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "cpp"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "no_components",
+        "components": 0,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:22:58.796825+00:00",
+        "file": "sboms/mlir-hlo.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:23:00.183487+00:00",
+        "file": "vulns/mlir-hlo.grype.json"
+      }
+    },
+    {
+      "name": "recommenders",
+      "full_name": "tensorflow/recommenders",
+      "url": "https://github.com/tensorflow/recommenders.git",
+      "commit": "7f3e76f277494ae2dfe5d0c6f7a26aea35d6cfc1",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 9,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:23:15.264071+00:00",
+        "file": "sboms/recommenders.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:23:16.631002+00:00",
+        "file": "vulns/recommenders.grype.json"
+      }
+    },
+    {
+      "name": "fairness-indicators",
+      "full_name": "tensorflow/fairness-indicators",
+      "url": "https://github.com/tensorflow/fairness-indicators.git",
+      "commit": "b747546137ccd3c26b29f25f280da45a13b644a6",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 19,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:23:30.303295+00:00",
+        "file": "sboms/fairness-indicators.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "release/v1.12",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:23:31.255919+00:00",
+        "file": "vulns/fairness-indicators.grype.json"
+      }
+    },
+    {
+      "name": "tfx",
+      "full_name": "tensorflow/tfx",
+      "url": "https://github.com/tensorflow/tfx.git",
+      "commit": "19225645c7907ef052ca8d5d893bba27fefe7a56",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [
+        {
+          "rule_id": "py/jinja2/autoescape-false",
+          "severity": "warning",
+          "message": "Using jinja2 templates with autoescape=False can potentially allow XSS attacks.",
+          "file": "tfx/orchestration/experimental/interactive/interactive_context.py",
+          "start_line": 209
+        },
+        {
+          "rule_id": "py/jinja2/autoescape-false",
+          "severity": "warning",
+          "message": "Using jinja2 templates with autoescape=False can potentially allow XSS attacks.",
+          "file": "tfx/orchestration/experimental/interactive/interactive_context_test.py",
+          "start_line": 149
+        },
+        {
+          "rule_id": "py/jinja2/autoescape-false",
+          "severity": "warning",
+          "message": "Using jinja2 templates with autoescape=False can potentially allow XSS attacks.",
+          "file": "tfx/orchestration/launcher/container_common.py",
+          "start_line": 74
+        },
+        {
+          "rule_id": "py/incomplete-url-substring-sanitization",
+          "severity": "warning",
+          "message": "The string [googleusercontent.com](1) may be at an arbitrary position in the sanitized URL.",
+          "file": "tfx/tools/cli/e2e/cli_kubeflow_e2e_test.py",
+          "start_line": 45
+        },
+        {
+          "rule_id": "py/overly-permissive-file",
+          "severity": "warning",
+          "message": "Overly permissive mask in chmod sets file to group writable.",
+          "file": "tfx/utils/dependency_utils.py",
+          "start_line": 112
+        }
+      ],
+      "sbom": {
+        "status": "generated",
+        "components": 281,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:23:51.028434+00:00",
+        "file": "sboms/tfx.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 57,
+        "by_severity": {
+          "Critical": 1,
+          "High": 17,
+          "Medium": 31,
+          "Low": 8,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-82r6-8w77-94w6",
+            "severity": "Critical",
+            "package": "anyio",
+            "version": "4.13.0",
+            "type": "python",
+            "fixed_version": "4.14.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-cq5v-8q36-5273",
+            "severity": "High",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-h95x-26f3-88hr",
+            "severity": "High",
+            "package": "js2py",
+            "version": "0.74",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vfmq-68hx-4jfw",
+            "severity": "High",
+            "package": "lxml",
+            "version": "5.3.0",
+            "type": "python",
+            "fixed_version": "6.1.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-2h4p-vjrc-8xpq",
+            "severity": "High",
+            "package": "mako",
+            "version": "1.3.5",
+            "type": "python",
+            "fixed_version": "1.3.12",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-v92g-xgxw-vvmm",
+            "severity": "High",
+            "package": "mako",
+            "version": "1.3.5",
+            "type": "python",
+            "fixed_version": "1.3.11",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4j32-57v6-6g45",
+            "severity": "High",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8mp2-v27r-99xp",
+            "severity": "High",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.2.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-c8j7-8cv4-2xmq",
+            "severity": "High",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-ffq3-xpv3-j92q",
+            "severity": "High",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qcq2-496w-v96p",
+            "severity": "High",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6v7p-g79w-8964",
+            "severity": "High",
+            "package": "msgpack",
+            "version": "1.1.0",
+            "type": "python",
+            "fixed_version": "1.2.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-rgxp-2hwp-jwgg",
+            "severity": "High",
+            "package": "pyarrow",
+            "version": "18.1.0",
+            "type": "python",
+            "fixed_version": "23.0.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-2wc2-fm75-p42x",
+            "severity": "High",
+            "package": "soupsieve",
+            "version": "2.6",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-836r-79rf-4m37",
+            "severity": "High",
+            "package": "soupsieve",
+            "version": "2.6",
+            "type": "python",
+            "fixed_version": "2.8.4",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-94p9-xgh2-xp45",
+            "severity": "High",
+            "package": "virtualenv",
+            "version": "20.26.6",
+            "type": "python",
+            "fixed_version": "21.7.12",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-p58f-9548-mpm2",
+            "severity": "High",
+            "package": "virtualenv",
+            "version": "20.26.6",
+            "type": "python",
+            "fixed_version": "21.7.13",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-x78j-v8h9-3j2q",
+            "severity": "High",
+            "package": "virtualenv",
+            "version": "20.26.6",
+            "type": "python",
+            "fixed_version": "21.7.12",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4fvr-rgm6-gqmc",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-63hw-fmq6-xxg2",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g3cq-j2xw-wf74",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hg6j-4rv6-33pg",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hpj7-wq8m-9hgp",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-jg22-mg44-37j8",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mfx4-hv73-q22v",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-mq44-7p77-q5h7",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xcgm-r5h9-7989",
+            "severity": "Medium",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5p39-cfhj-2xmp",
+            "severity": "Medium",
+            "package": "anyio",
+            "version": "4.13.0",
+            "type": "python",
+            "fixed_version": "4.14.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gj48-438w-jh9v",
+            "severity": "Medium",
+            "package": "bleach",
+            "version": "6.1.0",
+            "type": "python",
+            "fixed_version": "6.4.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qmgc-5h2g-mvrw",
+            "severity": "Medium",
+            "package": "filelock",
+            "version": "3.16.1",
+            "type": "python",
+            "fixed_version": "3.20.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-w853-jp5j-5j7f",
+            "severity": "Medium",
+            "package": "filelock",
+            "version": "3.16.1",
+            "type": "python",
+            "fixed_version": "3.20.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-65pc-fj4g-8rjx",
+            "severity": "Medium",
+            "package": "idna",
+            "version": "3.7",
+            "type": "python",
+            "fixed_version": "3.15",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-428g-f7cq-pgp5",
+            "severity": "Medium",
+            "package": "marshmallow",
+            "version": "3.22.0",
+            "type": "python",
+            "fixed_version": "3.26.2",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-2hm2-hc3v-44h9",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-58cw-g322-p94v",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.2.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8c25-4j27-2rv3",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8g87-j6q8-g93x",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": null,
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8mpj-m6qm-5qr8",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-g97x-gvcm-x72h",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-qfrw-5rxm-mhh2",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-r4rv-85jg-w4mf",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.3.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-v87v-83h2-53w7",
+            "severity": "Medium",
+            "package": "mistune",
+            "version": "3.0.2",
+            "type": "python",
+            "fixed_version": "3.2.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-hj66-6f7g-4r5v",
+            "severity": "Medium",
+            "package": "oauthlib",
+            "version": "3.2.2",
+            "type": "python",
+            "fixed_version": "4.0.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-xpv3-w29h-x7cv",
+            "severity": "Medium",
+            "package": "oauthlib",
+            "version": "3.2.2",
+            "type": "python",
+            "fixed_version": "4.0.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-6w46-j5rx-g56g",
+            "severity": "Medium",
+            "package": "pytest",
+            "version": "8.0.0",
+            "type": "python",
+            "fixed_version": "9.0.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-gjv8-xp57-g29c",
+            "severity": "Medium",
+            "package": "soupsieve",
+            "version": "2.6",
+            "type": "python",
+            "fixed_version": "2.9.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-j934-xhv5-fg8f",
+            "severity": "Medium",
+            "package": "soupsieve",
+            "version": "2.6",
+            "type": "python",
+            "fixed_version": "2.9.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-597g-3phw-6986",
+            "severity": "Medium",
+            "package": "virtualenv",
+            "version": "20.26.6",
+            "type": "python",
+            "fixed_version": "20.36.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9h9j-4vrj-gf7g",
+            "severity": "Medium",
+            "package": "virtualenv",
+            "version": "20.26.6",
+            "type": "python",
+            "fixed_version": "21.7.11",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-2fqr-mr3j-6wp8",
+            "severity": "Low",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-4m7w-qmgq-4wj5",
+            "severity": "Low",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-9x8q-7h8h-wcw9",
+            "severity": "Low",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.1",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-m6qw-4cw2-hm4m",
+            "severity": "Low",
+            "package": "aiohttp",
+            "version": "3.13.5",
+            "type": "python",
+            "fixed_version": "3.14.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-8rfp-98v4-mmr6",
+            "severity": "Low",
+            "package": "bleach",
+            "version": "6.1.0",
+            "type": "python",
+            "fixed_version": "6.4.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-68rp-wp8r-4726",
+            "severity": "Low",
+            "package": "flask",
+            "version": "2.2.5",
+            "type": "python",
+            "fixed_version": "3.1.3",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-5239-wwwm-4pmq",
+            "severity": "Low",
+            "package": "pygments",
+            "version": "2.19.1",
+            "type": "python",
+            "fixed_version": "2.20.0",
+            "namespace": "github:language:python"
+          },
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "v1",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:23:52.308948+00:00",
+        "file": "vulns/tfx.grype.json"
+      }
+    },
+    {
+      "name": "privacy",
+      "full_name": "tensorflow/privacy",
+      "url": "https://github.com/tensorflow/privacy.git",
+      "commit": "c5a3633e84f1a296c7e362e7c1926aead4063359",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "research/dp_newton/src/dataset_loader.py",
+          "start_line": 198
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "research/pate_2017/input.py",
+          "start_line": 192
+        },
+        {
+          "rule_id": "py/tarslip",
+          "severity": "warning",
+          "message": "This file extraction depends on a [potentially untrusted source](1).",
+          "file": "research/pate_2018/ICLR2018/download.py",
+          "start_line": 35
+        }
+      ],
+      "sbom": {
+        "status": "generated",
+        "components": 4,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:24:18.744607+00:00",
+        "file": "sboms/privacy.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "no_vulnerabilities",
+        "total": 0,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 0,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:24:19.985581+00:00",
+        "file": "vulns/privacy.grype.json"
+      }
+    },
+    {
+      "name": "transform",
+      "full_name": "tensorflow/transform",
+      "url": "https://github.com/tensorflow/transform.git",
+      "commit": "deefef17a96947c9703ff82e3b58abc0052c61b3",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 16,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:24:37.778867+00:00",
+        "file": "sboms/transform.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "v1",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:24:38.751416+00:00",
+        "file": "vulns/transform.grype.json"
+      }
+    },
+    {
+      "name": "model-analysis",
+      "full_name": "tensorflow/model-analysis",
+      "url": "https://github.com/tensorflow/model-analysis.git",
+      "commit": "5df83b6cbb6712e6b48a41af2a72559745d7f6c9",
+      "status": "analyzed",
+      "error": null,
+      "languages": [
+        "python"
+      ],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 17,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:24:57.937219+00:00",
+        "file": "sboms/model-analysis.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "scanned",
+        "total": 1,
+        "by_severity": {
+          "Critical": 0,
+          "High": 0,
+          "Medium": 0,
+          "Low": 1,
+          "Negligible": 0,
+          "Unknown": 0
+        },
+        "vulnerabilities": [
+          {
+            "id": "GHSA-vxmw-7h4f-hqxh",
+            "severity": "Low",
+            "package": "pypa/gh-action-pypi-publish",
+            "version": "v1",
+            "type": "github-action",
+            "fixed_version": "1.13.0",
+            "namespace": "github:language:github-action"
+          }
+        ],
+        "grype_version": "0.120.0",
+        "generated_at": "2026-10-05T22:24:59.123796+00:00",
+        "file": "vulns/model-analysis.grype.json"
+      }
+    }
+  ]
+}
