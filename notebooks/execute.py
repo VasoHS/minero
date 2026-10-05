@@ -4,7 +4,7 @@
 Uso:
     .venv/bin/python notebooks/execute.py
 
-- Ejecuta todos los ``notebooks/*.ipynb`` en orden alfabético (01, 02, 03).
+- Ejecuta todos los ``notebooks/*.ipynb`` en orden alfabético (01, 02, 03, 04).
 - Usa el kernel ``python3`` y fija el directorio de trabajo en la raíz del repo.
 - Devuelve un código de salida distinto de 0 si algún notebook falla.
 """
