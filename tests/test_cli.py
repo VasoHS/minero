@@ -59,6 +59,8 @@ def run_scan(
     findings=None,
     output=None,
     clone_side_effect=None,
+    create_side_effect=None,
+    analyze_side_effect=None,
     sbom=True,
     sbom_result=None,
     sbom_side_effect=None,
@@ -67,6 +69,7 @@ def run_scan(
     vuln_result=None,
     vuln_side_effect=None,
     grype_version="0.87.0",
+    codeql_version="2.20.0",
     extra_args=None,
 ):
     """Ejecuta `scan` con todas las dependencias externas monkeypatcheadas."""
@@ -79,9 +82,18 @@ def run_scan(
     else:
         clone_mock = Mock(return_value=clone)
 
-    create_mock = Mock(return_value=create)
-    analyze_mock = Mock(return_value=analyze)
+    if create_side_effect is not None:
+        create_mock = Mock(side_effect=create_side_effect)
+    else:
+        create_mock = Mock(return_value=create)
+
+    if analyze_side_effect is not None:
+        analyze_mock = Mock(side_effect=analyze_side_effect)
+    else:
+        analyze_mock = Mock(return_value=analyze)
+
     parse_mock = Mock(return_value=list(findings) if findings else [])
+    codeql_mock = Mock(return_value=codeql_version)
 
     syft_mock = Mock(return_value=syft_version)
     if sbom_side_effect is not None:
@@ -111,6 +123,7 @@ def run_scan(
     monkeypatch.setattr("miner.cli.generate_sbom", generate_mock)
     monkeypatch.setattr("miner.cli.get_grype_version", grype_mock)
     monkeypatch.setattr("miner.cli.scan_vulnerabilities", vuln_mock)
+    monkeypatch.setattr("miner.cli.get_codeql_version", codeql_mock)
 
     out_path = Path(output) if output is not None else tmp_path / "out.json"
     args = ["scan", "--organization", "test-org", "--output", str(out_path)]
@@ -134,6 +147,7 @@ def run_scan(
         generate_sbom=generate_mock,
         get_grype_version=grype_mock,
         scan_vulnerabilities=vuln_mock,
+        get_codeql_version=codeql_mock,
         get_organization_repos=org_repos_mock,
     )
 
@@ -232,6 +246,155 @@ def test_scan_analyzed_success(tmp_path, monkeypatch):
         Path(run.parse.call_args.args[0]).resolve()
         == (tmp_path / "workdir" / "repo-a.sarif").resolve()
     )
+
+
+def test_scan_maps_cpp_language(tmp_path, monkeypatch):
+    # GitHub reporta "C++"; antes se marcaba como unsupported por el mapeo.
+    run = run_scan(
+        tmp_path, [make_repo("repo-a", language="C++")], monkeypatch
+    )
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    repo = data["repositories"][0]
+    assert repo["status"] == "analyzed"
+    assert repo["languages"] == ["cpp"]
+    assert data["summary"]["unsupported"] == 0
+    assert run.create.call_args.args[2] == "cpp"
+
+
+def test_scan_detects_language_from_files_when_github_missing(tmp_path, monkeypatch):
+    def fake_clone(url, dest):
+        Path(dest).mkdir(parents=True, exist_ok=True)
+        (Path(dest) / "main.py").write_text("print('hola')")
+        return True
+
+    run = run_scan(
+        tmp_path,
+        [make_repo("repo-a", language=None)],
+        monkeypatch,
+        clone_side_effect=fake_clone,
+    )
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    repo = data["repositories"][0]
+    assert repo["status"] == "analyzed"
+    assert repo["languages"] == ["python"]
+    assert data["summary"]["unsupported"] == 0
+
+
+def test_scan_passes_query_suite_to_analyze(tmp_path, monkeypatch):
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch,
+        extra_args=["--query-suite", "security-and-quality"],
+    )
+
+    assert run.result.exit_code == 0
+    assert run.analyze.call_args.kwargs["query_suite"] == "security-and-quality"
+    assert run.analyze.call_args.args[2] == "python"
+
+
+def test_scan_default_query_suite(tmp_path, monkeypatch):
+    run = run_scan(tmp_path, [make_repo("repo-a")], monkeypatch)
+
+    assert run.result.exit_code == 0
+    assert run.analyze.call_args.kwargs["query_suite"] == "security-extended"
+
+
+def test_scan_invalid_query_suite_rejected(tmp_path, monkeypatch):
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch,
+        extra_args=["--query-suite", "no-existe"],
+    )
+
+    assert run.result.exit_code == 1
+    assert "Suite de consultas CodeQL no válida" in run.result.output
+    run.get_organization_repos.assert_not_called()
+    run.clone.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "suite", ["security-extended", "security-and-quality", "code-scanning"]
+)
+def test_scan_accepts_all_valid_query_suites(tmp_path, monkeypatch, suite):
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch,
+        extra_args=["--query-suite", suite],
+    )
+
+    assert run.result.exit_code == 0
+    assert run.analyze.call_args.kwargs["query_suite"] == suite
+
+
+def test_scan_invalid_query_suite_lists_options(tmp_path, monkeypatch):
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch,
+        extra_args=["--query-suite", "bogus"],
+    )
+
+    assert run.result.exit_code == 1
+    for suite in ("security-extended", "security-and-quality", "code-scanning"):
+        assert suite in run.result.output
+
+
+def test_scan_success_has_no_codeql_error(tmp_path, monkeypatch):
+    run = run_scan(tmp_path, [make_repo("repo-a")], monkeypatch)
+
+    assert run.result.exit_code == 0
+    repo = json.loads(run.out.read_text())["repositories"][0]
+    assert repo["status"] == "analyzed"
+    # Sin fallos de CodeQL, el campo error se serializa como null.
+    assert repo["error"] is None
+
+
+def test_scan_records_db_error_detail(tmp_path, monkeypatch):
+    def failing_create(source_dir, db_dir, language, errors=None):
+        if errors is not None:
+            errors.append("creación de base: no se encontró 'codeql'")
+        return False
+
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch,
+        create_side_effect=failing_create,
+    )
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    repo = data["repositories"][0]
+    assert repo["status"] == "db_failed"
+    assert "codeql" in repo["error"]
+    assert data["summary"]["failed"] == 1
+
+
+def test_scan_records_analyze_error_detail(tmp_path, monkeypatch):
+    def failing_analyze(db_dir, sarif_file, language, query_suite=None, errors=None):
+        if errors is not None:
+            errors.append("análisis: suite no encontrada")
+        return False
+
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch,
+        analyze_side_effect=failing_analyze,
+    )
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    repo = data["repositories"][0]
+    assert repo["status"] == "analyze_failed"
+    assert repo["error"] == "análisis: suite no encontrada"
+    assert data["summary"]["failed"] == 1
+
+
+def test_scan_missing_codeql_warns_but_continues(tmp_path, monkeypatch):
+    run = run_scan(
+        tmp_path, [make_repo("repo-a")], monkeypatch, codeql_version=None
+    )
+
+    assert run.result.exit_code == 0
+    assert "CodeQL" in run.result.output
+    # El flujo continúa: el repositorio se analiza igualmente.
+    assert json.loads(run.out.read_text())["summary"]["analyzed"] == 1
 
 
 def test_scan_sbom_failed_still_analyzed(tmp_path, monkeypatch):

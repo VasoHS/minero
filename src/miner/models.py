@@ -47,6 +47,8 @@ class RepositoryResult(BaseModel):
     # "analyzed", "clone_failed", "unsupported", "db_failed", "analyze_failed",
     # "invalid_name", "cloned", "scanned"
     status: str
+    # Motivo del fallo de CodeQL (creación de base o análisis), si lo hubo.
+    error: Optional[str] = None
     languages: List[str] = Field(default_factory=list)
     findings: List[Finding] = Field(default_factory=list)
     sbom: SbomResult = Field(default_factory=SbomResult)

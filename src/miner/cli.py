@@ -1,7 +1,7 @@
 import shutil
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 import typer
 
@@ -12,7 +12,14 @@ from .git_utils import (
     get_remote_url,
     parse_full_name,
 )
-from .codeql_runner import create_database, analyze_database
+from .codeql_runner import (
+    DEFAULT_QUERY_SUITE,
+    QUERY_SUITES,
+    analyze_database,
+    create_database,
+    get_codeql_version,
+)
+from .languages import detect_language
 from .sarif_parser import parse_sarif
 from .sbom_runner import generate_sbom, get_syft_version
 from .grype_runner import get_grype_version, scan_vulnerabilities
@@ -30,20 +37,6 @@ app = typer.Typer()
 @app.callback()
 def main() -> None:
     """Miner automatizado para análisis de vulnerabilidades con CodeQL, SBOM y Grype."""
-
-# Mapeo de lenguajes de GitHub a CodeQL
-LANGUAGE_MAPPING = {
-    "python": "python",
-    "javascript": "javascript",
-    "typescript": "javascript",
-    "java": "java",
-    "cpp": "cpp",
-    "c": "cpp",
-    "c#": "csharp",
-    "go": "go",
-    "ruby": "ruby",
-    "swift": "swift"
-}
 
 DEFAULT_REPOS_DIR = Path("./workdir")
 DEFAULT_SBOM_DIR = Path("./sboms")
@@ -118,6 +111,15 @@ def _warn_if_grype_missing(grype_version: Optional[str]) -> None:
             fg=typer.colors.YELLOW
         )
 
+def _warn_if_codeql_missing(codeql_version: Optional[str]) -> None:
+    if codeql_version is None:
+        typer.secho(
+            "Advertencia: no se pudo determinar la versión de CodeQL. "
+            "Verifique que 'codeql' esté instalado y disponible en el PATH; "
+            "los repositorios soportados quedarán como 'db_failed'.",
+            fg=typer.colors.YELLOW
+        )
+
 def _resolve_progress(progress: Optional[bool]) -> bool:
     """Decide si se muestra el avance en vivo (auto = solo si hay terminal)."""
     if progress is None:
@@ -167,6 +169,10 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
              help="Mostrar el avance de Grype en tiempo real (por defecto: solo si la salida es una terminal)"),
          error_log: Optional[Path] = typer.Option(
              None, help="Archivo de log de errores de Grype (por defecto: <vuln-dir>/errores.log)"),
+         query_suite: str = typer.Option(
+             DEFAULT_QUERY_SUITE, "--query-suite",
+             help="Suite de consultas CodeQL: security-extended (por defecto), "
+                  "security-and-quality o code-scanning"),
          keep_repos: bool = typer.Option(True, "--keep-repos/--cleanup-repos",
                                          help="Conservar los repositorios clonados al finalizar")):
     """Analiza los repositorios de una organización y genera un SBOM y un reporte de vulnerabilidades por repositorio."""
@@ -174,6 +180,14 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
     if limit is not None and limit < 0:
         typer.secho(
             "El límite de repositorios (--limit) no puede ser negativo.",
+            fg=typer.colors.RED
+        )
+        raise typer.Exit(code=1)
+    
+    if query_suite not in QUERY_SUITES:
+        typer.secho(
+            f"Suite de consultas CodeQL no válida: {query_suite}. "
+            f"Opciones: {', '.join(QUERY_SUITES)}.",
             fg=typer.colors.RED
         )
         raise typer.Exit(code=1)
@@ -217,6 +231,9 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
     grype_version = get_grype_version() if vuln else None
     if vuln:
         _warn_if_grype_missing(grype_version)
+    
+    codeql_version = get_codeql_version()
+    _warn_if_codeql_missing(codeql_version)
     
     vuln_progress = (
         _make_vuln_progress(_resolve_progress(progress), error_log, vuln_dir)
@@ -287,24 +304,32 @@ def scan(organization: str = typer.Option(..., help="Nombre de la organización 
                 )
                 _record_vuln(report.summary, repo_result.vulnerabilities)
             
-            # 6. Detección y validación de lenguaje
-            if not gh_lang or gh_lang.lower() not in LANGUAGE_MAPPING:
+            # 6. Detección y validación de lenguaje (GitHub o, si falta,
+            #    inspección de los archivos clonados).
+            detected_language = detect_language(repo_dir, gh_lang)
+            if detected_language is None:
                 repo_result.status = "unsupported"
                 report.summary.unsupported += 1
                 continue
-            
-            detected_language = LANGUAGE_MAPPING[gh_lang.lower()]
             repo_result.languages.append(detected_language)
             
+            # Motivos de fallo de CodeQL para este repositorio.
+            codeql_errors: List[str] = []
+            
             # 7. Crear Base de Datos CodeQL
-            if not create_database(repo_dir, db_dir, detected_language):
+            if not create_database(repo_dir, db_dir, detected_language,
+                                   errors=codeql_errors):
                 repo_result.status = "db_failed"
+                repo_result.error = "; ".join(codeql_errors) or None
                 report.summary.failed += 1
                 continue
             
-            # 8. Analizar Base de Datos
-            if not analyze_database(db_dir, sarif_file):
+            # 8. Analizar Base de Datos con la suite de consultas seleccionada
+            if not analyze_database(db_dir, sarif_file, detected_language,
+                                    query_suite=query_suite,
+                                    errors=codeql_errors):
                 repo_result.status = "analyze_failed"
+                repo_result.error = "; ".join(codeql_errors) or None
                 report.summary.failed += 1
                 continue
             

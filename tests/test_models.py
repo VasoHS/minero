@@ -58,6 +58,7 @@ def test_repository_result_defaults():
     )
     assert repo.full_name is None
     assert repo.commit is None
+    assert repo.error is None
     assert isinstance(repo.sbom, SbomResult)
     assert repo.sbom.status == "skipped"
     assert isinstance(repo.vulnerabilities, VulnResult)
@@ -109,6 +110,35 @@ def test_repository_result_serializes_vulnerabilities():
         "fixed_version": "4.17.21",
         "namespace": "nvd:cpe",
     }]
+
+
+def test_finding_defaults():
+    finding = Finding(rule_id="py/test-rule", message="mensaje", file="src/main.py")
+    assert finding.severity is None
+    assert finding.start_line is None
+
+
+def test_repository_result_without_error_serializes_null():
+    repo = RepositoryResult(
+        name="test-repo",
+        url="https://github.com/org/test-repo",
+        status="analyzed",
+    )
+    data = json.loads(repo.model_dump_json())
+    assert data["error"] is None
+
+
+def test_repository_result_serializes_codeql_error():
+    repo = RepositoryResult(
+        name="test-repo",
+        url="https://github.com/org/test-repo",
+        status="db_failed",
+        error="creación de base (intento 1): código de salida 1",
+    )
+
+    data = json.loads(repo.model_dump_json())
+    assert data["status"] == "db_failed"
+    assert data["error"] == "creación de base (intento 1): código de salida 1"
 
 
 def test_repository_result_serializes_new_fields():

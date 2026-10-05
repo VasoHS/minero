@@ -151,6 +151,19 @@ grype version
 
 > Grype reutiliza una base de datos de vulnerabilidades; la primera ejecución puede descargarla, por lo que necesita conexión a Internet. Si Grype no está instalado, el escaneo no se detiene: se muestra una advertencia y cada repositorio queda con `vulnerabilities.status = "failed"`. Para omitir el escaneo por completo usa `--no-vuln`.
 
+### Instalación de CodeQL
+
+La herramienta usa el **CodeQL CLI** (no la extensión de VS Code) para crear y analizar las bases de datos. Descarga el *bundle* oficial —incluye la CLI y los query packs estándar— desde [github/codeql-cli-binaries](https://github.com/github/codeql-cli-binaries/releases), descomprímelo y añade su directorio al `PATH`:
+
+```bash
+# Ejemplo (ajusta la versión y la ruta a tu sistema)
+unzip codeql-linux64.zip -d ~/codeql
+export PATH="$HOME/codeql:$PATH"
+codeql version
+```
+
+El análisis descarga los query packs (`codeql/<lenguaje>-queries`) desde `ghcr.io` si no están en la caché local, por lo que necesita conexión a Internet. Si `codeql` no está en el `PATH`, el escaneo no se detiene: se muestra una advertencia y cada repositorio soportado queda como `db_failed`, con el motivo en el campo `error`.
+
 ## Instalación
 
 1. Clonar el repositorio y acceder a la carpeta del proyecto.
@@ -197,6 +210,7 @@ Analiza los repositorios de una organización, genera un SBOM por repositorio y 
 | `--vuln-dir PATH` | No | `./vulns` | Directorio de salida de los reportes de Grype (JSON). |
 | `--progress / --no-progress` | No | auto (solo si la salida es una terminal) | Mostrar el avance de Grype en tiempo real. `--no-progress` lo silencia, pero los errores se siguen guardando en el log. |
 | `--error-log PATH` | No | `<vuln-dir>/errores.log` | Archivo de log de errores de Grype. Cada ejecución lo trunca al empezar. |
+| `--query-suite TEXT` | No | `security-extended` | Suite de consultas CodeQL a ejecutar: `security-extended`, `security-and-quality` o `code-scanning`. Un valor no válido termina con código `1`. |
 | `--keep-repos / --cleanup-repos` | No | `--keep-repos` | Conservar los repositorios clonados al finalizar. |
 
 ```bash
@@ -216,6 +230,22 @@ El límite se aplica sobre el **orden en que GitHub muestra los repositorios** d
 El orden de operaciones por repositorio es: validación del nombre → limpieza de restos → clonado → **SBOM** → **Grype** → detección de lenguaje → base de datos CodeQL → análisis → parseo. Por eso un repositorio no soportado (`unsupported`) aún puede tener SBOM y vulnerabilidades si el clonado fue correcto.
 
 Si hay un SBOM válido, Grype escanea `sbom:<ruta.cdx.json>`; si no (sin SBOM o SBOM fallido), escanea `dir:<repositorio>`. Como el escaneo se ejecuta antes de validar el lenguaje, un repositorio `unsupported` también tiene vulnerabilidades.
+
+#### Análisis CodeQL
+
+La detección de lenguaje usa primero el lenguaje primario que reporta GitHub y, si falta o no está soportado, inspecciona los archivos clonados para elegir el lenguaje soportado con más archivos (desempate alfabético). Esto cubre casos como `C++` (GitHub lo escribe así, no `cpp`) o repositorios cuyo lenguaje primario es una plantilla (`Smarty`) pero contienen código analizable.
+
+La base de datos se crea con `codeql database create`; en los lenguajes que lo admiten se intenta primero sin compilar (`--build-mode none`) y, si falla, se reintenta con el modo por defecto (autobuild). Para el análisis se ejecuta explícitamente el paquete estándar de GitHub `codeql/<lenguaje>-queries` con la suite seleccionada (por defecto `security-extended`) y `--download`, de modo que los query packs se descargan si no están en la caché local:
+
+```bash
+codeql database analyze <db> \
+  codeql/<lenguaje>-queries:codeql-suites/<lenguaje>-security-extended.qls \
+  --download --format=sarif-latest --output=<repo>.sarif --threads=8
+```
+
+Si la suite seleccionada no se puede resolver, se reintenta con la suite por defecto del paquete (`codeql/<lenguaje>-queries`). Los motivos de fallo de CodeQL se guardan en el campo `error` de cada repositorio para facilitar el diagnóstico.
+
+Todas las operaciones de CodeQL (la fase más pesada del Miner) se ejecutan con un tope de **8 hilos** para no saturar la máquina anfitriona: tanto al crear la base como al analizarla se pasa `--threads=8`. El valor se define en un único lugar (`miner/codeql_runner.py`, constante `MAX_THREADS`).
 
 ### `miner sbom`
 
@@ -339,6 +369,7 @@ Cada entrada de `repositories` incluye, además de los campos ya existentes, `fu
 | `url` | URL de clonado. |
 | `commit` | SHA del commit analizado (HEAD del clon). |
 | `status` | Estado del análisis CodeQL. |
+| `error` | Motivo del fallo de CodeQL (`db_failed` o `analyze_failed`); `null` si no hubo error. |
 | `languages` | Lenguajes CodeQL detectados. |
 | `findings` | Hallazgos del análisis. |
 | `sbom` | Resultado del SBOM (ver abajo). |
@@ -355,7 +386,7 @@ Estados posibles de `status`:
 - `cloned`: solo aparece en el reporte de `miner sbom` (no se ejecutó CodeQL).
 - `scanned`: solo aparece en el reporte de `miner vuln` (no se ejecutó CodeQL).
 
-Lenguajes soportados: Python, JavaScript, TypeScript (se tratan como JavaScript), Java, C, C++ (se tratan como C++), C#, Go, Ruby y Swift.
+Lenguajes soportados: Python, JavaScript, TypeScript (se tratan como JavaScript), Java, Kotlin (se trata como Java), C, C++ (se tratan como C++), C#, Go, Ruby, Swift y Rust. Un repositorio sin lenguaje de GitHub pero con archivos de estos lenguajes se detecta igualmente por extensión.
 
 ### SBOM individuales (`--sbom-dir`)
 
@@ -626,9 +657,10 @@ pytest
 ## Solución de problemas
 
 - **Token ausente:** si `GITHUB_TOKEN` no está configurado, `get_organization_repos` lanza `La variable de entorno GITHUB_TOKEN no está configurada.` y `miner scan` termina con código `1`. Exporta la variable (por ejemplo `export $(grep GITHUB_TOKEN .env)`) o revisa tu `.env`.
-- **`codeql` no encontrado:** si el binario no está en el `PATH`, la creación de la base de datos falla y el repositorio queda como `db_failed`. Verifica con `codeql version` e instala/añade CodeQL CLI al `PATH`.
-- **Repositorios no soportados:** si GitHub no informa lenguaje o este no está en el mapeo, el repositorio queda como `unsupported` (igual se intenta generar su SBOM si el clonado tuvo éxito).
-- **Bases de datos que fallan:** un `db_failed` suele deberse a dependencias de compilación ausentes para el lenguaje; `analyze_failed` indica un fallo al analizar una base ya creada.
+- **`codeql` no encontrado:** si el binario no está en el `PATH`, se muestra `Advertencia: no se pudo determinar la versión de CodeQL...` y cada repositorio soportado queda como `db_failed` con `error = "no se encontró el ejecutable 'codeql' en el PATH"`. Verifica con `codeql version` e instala/añade CodeQL CLI al `PATH`.
+- **Repositorios no soportados:** si GitHub no informa lenguaje y tampoco se detecta ninguno por extensión, el repositorio queda como `unsupported` (igual se intenta generar su SBOM si el clonado tuvo éxito).
+- **Bases de datos que fallan (`db_failed`):** revisa el campo `error` de la entrada. Si menciona dependencias de compilación, instálalas o usa un lenguaje interpretado; el runner ya reintenta sin compilar (`--build-mode none`) antes de recurrir a autobuild.
+- **Análisis que fallan (`analyze_failed`):** revisa el campo `error`. Suele deberse a que no se pudieron descargar los query packs (falta de red o de acceso a `ghcr.io`) o a un `--query-suite` no disponible en la versión de CodeQL instalada. Prueba `--query-suite code-scanning` o descarga los packs con `codeql pack download codeql/<lenguaje>-queries`.
 - **`--limit` negativo o inesperado:** un valor negativo termina con código `1` y el mensaje `El límite de repositorios (--limit) no puede ser negativo.`; `--limit 0` es válido y produce un informe con `summary.repositories = 0` y la lista `repositories` vacía. El límite se aplica sobre el orden en que GitHub muestra los repositorios (actualizados más recientemente primero), por lo que se analizan los primeros N de esa lista, no los N más relevantes por otro criterio.
 - **`syft` no encontrado:** se muestra `Advertencia: no se pudo determinar la versión de Syft...` y los SBOM quedan como `failed`. Instala Syft y comprueba con `syft version`, o usa `--no-sbom` para omitirlos.
 - **SBOM sin componentes (`no_components`):** no es un error; significa que Syft no identificó dependencias. Revisa que el repositorio tenga archivos de dependencias que Syft sepa interpretar (por ejemplo, en npm hace falta un archivo de bloqueo como `package-lock.json`, ya que `package.json` por sí solo da 0 componentes; en Python basta `requirements.txt`).
