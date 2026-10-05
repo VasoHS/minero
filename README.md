@@ -189,7 +189,7 @@ Analiza los repositorios de una organización, genera un SBOM por repositorio y 
 | --- | --- | --- | --- |
 | `--organization TEXT` | Sí | — | Nombre de la organización de GitHub. |
 | `--output PATH` | Sí | — | Archivo JSON de salida. |
-| `--limit INTEGER` | No | sin límite | Máximo de repositorios a analizar: toma los primeros N tras ordenar alfabéticamente. |
+| `--limit INTEGER` | No | sin límite | Máximo de repositorios a analizar: toma los primeros N en el orden en que GitHub los muestra (actualizados más recientemente primero). |
 | `--repos-dir PATH` | No | `./workdir` | Directorio donde se clonan los repositorios. |
 | `--sbom-dir PATH` | No | `./sboms` | Directorio de salida de los SBOM (CycloneDX JSON). |
 | `--sbom / --no-sbom` | No | `--sbom` | Generar un SBOM con Syft por cada repositorio. |
@@ -211,7 +211,7 @@ export $(grep GITHUB_TOKEN .env)
 miner scan --organization nombre-organizacion --output results.json --limit 5
 ```
 
-El límite se aplica **después** de ordenar los repositorios alfabéticamente, así que se analizan los **primeros N** en ese orden determinista. Si `N` es mayor o igual al total de repositorios, se analizan todos. `--limit 0` es válido y no analiza ninguno (el informe queda con `summary.repositories = 0` y la lista `repositories` vacía), mientras que un valor negativo se rechaza con código de salida `1`. Cuando el límite recorta la lista, se imprime `Límite aplicado: se procesarán N de TOTAL repositorios.`
+El límite se aplica sobre el **orden en que GitHub muestra los repositorios** de la organización, que por defecto son los **actualizados más recientemente primero** (la API se consulta con `sort=updated&direction=desc`, igual que la página *Repositories* de la organización). Así, `--limit N` analiza los **primeros N** de esa lista, es decir, los N repositorios con actividad más reciente, sin reordenarlos alfabéticamente. Si `N` es mayor o igual al total de repositorios, se analizan todos. `--limit 0` es válido y no analiza ninguno (el informe queda con `summary.repositories = 0` y la lista `repositories` vacía), mientras que un valor negativo se rechaza con código de salida `1`. Cuando el límite recorta la lista, se imprime `Límite aplicado: se procesarán N de TOTAL repositorios.`
 
 El orden de operaciones por repositorio es: validación del nombre → limpieza de restos → clonado → **SBOM** → **Grype** → detección de lenguaje → base de datos CodeQL → análisis → parseo. Por eso un repositorio no soportado (`unsupported`) aún puede tener SBOM y vulnerabilidades si el clonado fue correcto.
 
@@ -629,7 +629,7 @@ pytest
 - **`codeql` no encontrado:** si el binario no está en el `PATH`, la creación de la base de datos falla y el repositorio queda como `db_failed`. Verifica con `codeql version` e instala/añade CodeQL CLI al `PATH`.
 - **Repositorios no soportados:** si GitHub no informa lenguaje o este no está en el mapeo, el repositorio queda como `unsupported` (igual se intenta generar su SBOM si el clonado tuvo éxito).
 - **Bases de datos que fallan:** un `db_failed` suele deberse a dependencias de compilación ausentes para el lenguaje; `analyze_failed` indica un fallo al analizar una base ya creada.
-- **`--limit` negativo o inesperado:** un valor negativo termina con código `1` y el mensaje `El límite de repositorios (--limit) no puede ser negativo.`; `--limit 0` es válido y produce un informe con `summary.repositories = 0` y la lista `repositories` vacía. El límite se aplica tras ordenar alfabéticamente, por lo que se analizan los primeros N nombres, no los N más relevantes.
+- **`--limit` negativo o inesperado:** un valor negativo termina con código `1` y el mensaje `El límite de repositorios (--limit) no puede ser negativo.`; `--limit 0` es válido y produce un informe con `summary.repositories = 0` y la lista `repositories` vacía. El límite se aplica sobre el orden en que GitHub muestra los repositorios (actualizados más recientemente primero), por lo que se analizan los primeros N de esa lista, no los N más relevantes por otro criterio.
 - **`syft` no encontrado:** se muestra `Advertencia: no se pudo determinar la versión de Syft...` y los SBOM quedan como `failed`. Instala Syft y comprueba con `syft version`, o usa `--no-sbom` para omitirlos.
 - **SBOM sin componentes (`no_components`):** no es un error; significa que Syft no identificó dependencias. Revisa que el repositorio tenga archivos de dependencias que Syft sepa interpretar (por ejemplo, en npm hace falta un archivo de bloqueo como `package-lock.json`, ya que `package.json` por sí solo da 0 componentes; en Python basta `requirements.txt`).
 - **`grype` no encontrado:** se muestra `Advertencia: no se pudo determinar la versión de Grype...` y los escaneos quedan como `failed`. Instala Grype (consulta la sección **Instalación de Grype**) y comprueba con `grype version`, o usa `--no-vuln` para omitirlos.
