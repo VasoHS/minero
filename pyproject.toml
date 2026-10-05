@@ -16,3 +16,10 @@ miner = "miner.cli:app"
 dev = [
     "pytest>=7.0.0"
 ]
+analyzer = [
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+    "nbformat>=5.9",
+    "nbclient>=0.9",
+    "ipykernel>=6.0"
+]
