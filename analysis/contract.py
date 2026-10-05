@@ -77,7 +77,7 @@ __all__ = [
 SCHEMA_VERSION = "1.0"
 
 #: Orígenes posibles de un reporte del Miner (mismo conjunto que ``loader``).
-SOURCE_KINDS = ("scan", "vuln", "sbom", "unknown")
+SOURCE_KINDS = ("scan", "vuln", "sbom", "merged", "unknown")
 
 #: Datasets que debe contener todo documento, en orden canónico.
 DATASET_KEYS = (
@@ -133,8 +133,10 @@ META_REQUIRED = (
 
 #: Claves obligatorias de ``coverage``. La salida real de
 #: ``metrics.compute_coverage`` es: ``repositories_total``, ``by_repo_status``,
-#: ``by_vuln_status``, ``by_sbom_status``, ``unsupported``, ``vuln_failed``,
-#: ``sbom_failed``, ``coverage_ratio`` y ``warnings``.
+#: ``by_vuln_status``, ``by_sbom_status``, ``unsupported``, ``repo_failed``,
+#: ``vuln_failed``, ``sbom_failed``, ``coverage_ratio``,
+#: ``code_coverage_ratio``, ``sbom_coverage_ratio``, ``vuln_coverage_ratio`` y
+#: ``warnings``.
 COVERAGE_REQUIRED = ("repositories_total",)
 
 #: Claves obligatorias de cada observación.
@@ -441,19 +443,25 @@ def validate_document(document: Any) -> List[str]:
             errors.append("coverage.repositories_total debe ser un entero >= 0.")
         else:
             coverage_total = int(coverage["repositories_total"])
-        for key in ("unsupported", "vuln_failed", "sbom_failed"):
+        for key in ("unsupported", "repo_failed", "vuln_failed", "sbom_failed"):
             if key in coverage and not _is_non_negative_int(coverage[key]):
                 errors.append(f"coverage.{key} debe ser un entero >= 0.")
         for key in ("by_repo_status", "by_vuln_status", "by_sbom_status"):
             if key in coverage and not isinstance(coverage[key], dict):
                 errors.append(f"coverage.{key} debe ser un objeto.")
-        ratio = coverage.get("coverage_ratio")
-        if ratio is not None and not (
-            isinstance(ratio, (int, float))
-            and not isinstance(ratio, bool)
-            and 0 <= ratio <= 1
+        for key in (
+            "coverage_ratio",
+            "code_coverage_ratio",
+            "sbom_coverage_ratio",
+            "vuln_coverage_ratio",
         ):
-            errors.append("coverage.coverage_ratio debe ser un número en [0, 1].")
+            ratio = coverage.get(key)
+            if ratio is not None and not (
+                isinstance(ratio, (int, float))
+                and not isinstance(ratio, bool)
+                and 0 <= ratio <= 1
+            ):
+                errors.append(f"coverage.{key} debe ser un número en [0, 1].")
 
     # --- datasets ----------------------------------------------------------
     datasets = document.get("datasets")

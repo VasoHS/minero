@@ -44,7 +44,7 @@
         },
         "source_kind": {
           "type": "string",
-          "enum": ["scan", "vuln", "sbom", "unknown"],
+          "enum": ["scan", "vuln", "sbom", "merged", "unknown"],
           "description": "Comando del Miner que originó la evidencia."
         },
         "generated_at": {
@@ -71,7 +71,7 @@
     },
     "coverage": {
       "type": "object",
-      "description": "Cobertura del análisis. repositories_total es obligatoria y debe coincidir con meta.repositories. El resto de claves provienen de metrics.compute_coverage: by_repo_status, by_vuln_status, by_sbom_status, unsupported, vuln_failed, sbom_failed, coverage_ratio y warnings.",
+      "description": "Cobertura del análisis. repositories_total es obligatoria y debe coincidir con meta.repositories. El resto de claves provienen de metrics.compute_coverage: by_repo_status, by_vuln_status, by_sbom_status, unsupported, repo_failed, vuln_failed, sbom_failed, coverage_ratio, code_coverage_ratio, sbom_coverage_ratio, vuln_coverage_ratio y warnings.",
       "required": ["repositories_total"],
       "additionalProperties": true,
       "properties": {
@@ -100,6 +100,11 @@
           "minimum": 0,
           "description": "Repositorios no soportados por el análisis."
         },
+        "repo_failed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Repositorios que fallaron en fases previas (clone_failed, db_failed, analyze_failed, invalid_name)."
+        },
         "vuln_failed": {
           "type": "integer",
           "minimum": 0,
@@ -114,7 +119,25 @@
           "type": "number",
           "minimum": 0,
           "maximum": 1,
-          "description": "Proporción de repositorios con al menos un análisis exitoso."
+          "description": "Proporción de repositorios con al menos una de las tres dimensiones exitosa."
+        },
+        "code_coverage_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Proporción de repositorios con análisis de código completado (status == analyzed)."
+        },
+        "sbom_coverage_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Proporción de repositorios con SBOM exitoso (generated o no_components)."
+        },
+        "vuln_coverage_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Proporción de repositorios con escaneo de Grype exitoso (scanned o no_vulnerabilities)."
         },
         "warnings": {
           "type": "array",

@@ -2,33 +2,33 @@
   "schema_version": "1.0",
   "meta": {
     "organization": "acme",
-    "source": "results.json",
-    "source_kind": "scan",
+    "source": "results-sbom.json + results-vuln.json",
+    "source_kind": "merged",
     "generated_at": "2026-10-05T12:00:00+00:00",
     "repositories": 2,
     "warnings": []
   },
   "summary": {
     "repositories": 2,
-    "analyzed": 2,
+    "analyzed": 0,
     "failed": 0,
     "unsupported": 0,
-    "findings": 1,
+    "findings": 0,
     "sboms_generated": 2,
     "sboms_failed": 0,
     "components": 6,
     "vulns_scanned": 2,
     "vulns_failed": 0,
-    "vulnerabilities": 1,
+    "vulnerabilities": 2,
     "vulns_critical": 0,
     "vulns_high": 1,
-    "vulns_medium": 0,
+    "vulns_medium": 1,
     "vulns_low": 0
   },
   "coverage": {
     "repositories_total": 2,
     "by_repo_status": {
-      "analyzed": 2
+      "scanned": 2
     },
     "by_vuln_status": {
       "no_vulnerabilities": 1,
@@ -38,9 +38,13 @@
       "generated": 2
     },
     "unsupported": 0,
+    "repo_failed": 0,
     "vuln_failed": 0,
     "sbom_failed": 0,
     "coverage_ratio": 1.0,
+    "code_coverage_ratio": 0.0,
+    "sbom_coverage_ratio": 1.0,
+    "vuln_coverage_ratio": 1.0,
     "warnings": []
   },
   "datasets": {
@@ -50,22 +54,22 @@
         "full_name": "acme/alpha",
         "url": "https://github.com/acme/alpha.git",
         "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "status": "analyzed",
+        "status": "scanned",
         "languages": [
           "python"
         ],
         "sbom_status": "generated",
         "sbom_components": 4,
         "vuln_status": "scanned",
-        "vuln_total": 1,
-        "findings_total": 1
+        "vuln_total": 2,
+        "findings_total": 0
       },
       {
         "repo": "beta",
         "full_name": "acme/beta",
         "url": "https://github.com/acme/beta.git",
         "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "status": "analyzed",
+        "status": "scanned",
         "languages": [
           "javascript"
         ],
@@ -76,15 +80,7 @@
         "findings_total": 0
       }
     ],
-    "findings": [
-      {
-        "repo": "alpha",
-        "rule_id": "py/sql-injection",
-        "severity": "error",
-        "file": "app/db.py",
-        "start_line": 42
-      }
-    ],
+    "findings": [],
     "vulnerabilities": [
       {
         "repo": "alpha",
@@ -94,6 +90,16 @@
         "version": "2.0.0",
         "type": "python",
         "fixed_version": "2.1.0",
+        "namespace": "nvd"
+      },
+      {
+        "repo": "alpha",
+        "id": "CVE-2024-0002",
+        "severity": "Medium",
+        "package": "urllib3",
+        "version": "1.0.0",
+        "type": "python",
+        "fixed_version": null,
         "namespace": "nvd"
       }
     ],
@@ -108,7 +114,7 @@
       },
       {
         "severity": "Medium",
-        "count": 0
+        "count": 1
       },
       {
         "severity": "Low",
@@ -128,19 +134,24 @@
         "repo": "alpha",
         "severity": "High",
         "count": 1
-      }
-    ],
-    "top_rules": [
+      },
       {
-        "rule_id": "py/sql-injection",
-        "count": 1,
-        "repos_affected": 1
+        "repo": "alpha",
+        "severity": "Medium",
+        "count": 1
       }
     ],
+    "top_rules": [],
     "top_cves": [
       {
         "id": "CVE-2024-0001",
         "severity": "High",
+        "count": 1,
+        "repos_affected": 1
+      },
+      {
+        "id": "CVE-2024-0002",
+        "severity": "Medium",
         "count": 1,
         "repos_affected": 1
       }
@@ -151,27 +162,33 @@
         "count": 1,
         "repos_affected": 1,
         "worst_severity": "High"
+      },
+      {
+        "package": "urllib3",
+        "count": 1,
+        "repos_affected": 1,
+        "worst_severity": "Medium"
       }
     ],
     "repository_distribution": [
       {
         "repo": "alpha",
-        "vulnerabilities": 1,
-        "findings": 1,
+        "vulnerabilities": 2,
+        "findings": 0,
         "components": 4,
-        "status": "analyzed"
+        "status": "scanned"
       },
       {
         "repo": "beta",
         "vulnerabilities": 0,
         "findings": 0,
         "components": 2,
-        "status": "analyzed"
+        "status": "scanned"
       }
     ],
     "concentration": {
       "repositories_with_vulns": 1,
-      "top_n": 3,
+      "top_n": 1,
       "top_n_share": 1.0,
       "top_10pct_share": 1.0,
       "hhi": 1.0
@@ -181,32 +198,34 @@
         "pearson": 1.0,
         "n": 2
       },
-      "fixed_version_available_share": 1.0,
+      "fixed_version_available_share": 0.5,
       "severity_by_package_type": [
         {
           "type": "python",
           "severity": "High",
           "count": 1
-        }
-      ],
-      "findings_by_language": [
+        },
         {
-          "language": "python",
-          "rule_id": "py/sql-injection",
+          "type": "python",
+          "severity": "Medium",
           "count": 1
         }
-      ]
+      ],
+      "findings_by_language": []
     }
   },
   "observations": [
     {
       "id": "OBS-01",
       "title": "Cobertura del análisis",
-      "statement": "2 repositorios en el reporte; la cobertura de análisis exitoso es 100.0%.",
+      "statement": "2 repositorios en el reporte; al menos un análisis exitoso en 100.0% de ellos (código 0.0%, SBOM 100.0%, Grype 100.0%).",
       "metric": "coverage.coverage_ratio",
       "evidence": {
         "repositories_total": 2,
         "coverage_ratio": 1.0,
+        "code_coverage_ratio": 0.0,
+        "sbom_coverage_ratio": 1.0,
+        "vuln_coverage_ratio": 1.0,
         "by_vuln_status": {
           "no_vulnerabilities": 1,
           "scanned": 1
@@ -219,16 +238,16 @@
     {
       "id": "OBS-02",
       "title": "Severidad de las vulnerabilidades",
-      "statement": "El 100.0% de las vulnerabilidades son High o Critical (1 de 1); Critical=0, High=1.",
+      "statement": "El 50.0% de las vulnerabilidades son High o Critical (1 de 2); Critical=0, High=1.",
       "metric": "datasets.severity_distribution",
       "evidence": {
-        "total": 1,
+        "total": 2,
         "high_or_critical": 1,
-        "high_or_critical_share": 1.0,
+        "high_or_critical_share": 0.5,
         "by_severity": {
           "Critical": 0,
           "High": 1,
-          "Medium": 0,
+          "Medium": 1,
           "Low": 0,
           "Negligible": 0,
           "Unknown": 0
@@ -238,23 +257,23 @@
     {
       "id": "OBS-03",
       "title": "Distribución de vulnerabilidades por repositorio",
-      "statement": "1 de 2 repositorios concentran las 1 vulnerabilidades; 1 no presentan ninguna.",
+      "statement": "1 de 2 repositorios concentran las 2 vulnerabilidades; 1 no presentan ninguna.",
       "metric": "datasets.repository_distribution",
       "evidence": {
         "repositories_total": 2,
         "repositories_with_vulns": 1,
         "repositories_without_vulns": 1,
-        "total_vulnerabilities": 1
+        "total_vulnerabilities": 2
       }
     },
     {
       "id": "OBS-04",
       "title": "Concentración entre repositorios",
-      "statement": "El top 3 de repositorios acumula el 100.0% de las vulnerabilidades y el decil superior el 100.0% (HHI=1.0).",
+      "statement": "El top 1 de repositorios acumula el 100.0% de las vulnerabilidades y el decil superior el 100.0% (HHI=1.0).",
       "metric": "datasets.concentration",
       "evidence": {
         "repositories_with_vulns": 1,
-        "top_n": 3,
+        "top_n": 1,
         "top_n_share": 1.0,
         "top_10pct_share": 1.0,
         "hhi": 1.0
@@ -263,7 +282,7 @@
     {
       "id": "OBS-05",
       "title": "Paquetes más afectados",
-      "statement": "El paquete más afectado es 'requests' con 1 vulnerabilidades (peor severidad High) en 1 repositorio(s); se identificaron 1 paquetes en el top.",
+      "statement": "El paquete más afectado es 'requests' con 1 vulnerabilidades (peor severidad High) en 1 repositorio(s); el top 2 de 2 paquetes distintos.",
       "metric": "datasets.top_packages",
       "evidence": {
         "top_packages": [
@@ -272,14 +291,21 @@
             "count": 1,
             "repos_affected": 1,
             "worst_severity": "High"
+          },
+          {
+            "package": "urllib3",
+            "count": 1,
+            "repos_affected": 1,
+            "worst_severity": "Medium"
           }
-        ]
+        ],
+        "packages_distinct": 2
       }
     },
     {
       "id": "OBS-06",
       "title": "Identificadores de vulnerabilidad más frecuentes",
-      "statement": "El identificador más repetido es CVE-2024-0001 (severidad High) con 1 aparición(es) en 1 repositorio(s); hay 1 identificadores distintos en el top.",
+      "statement": "El identificador más repetido es CVE-2024-0001 (severidad High) con 1 aparición(es) en 1 repositorio(s); el top 2 de 2 identificadores distintos.",
       "metric": "datasets.top_cves",
       "evidence": {
         "top_cves": [
@@ -288,39 +314,30 @@
             "severity": "High",
             "count": 1,
             "repos_affected": 1
-          }
-        ]
-      }
-    },
-    {
-      "id": "OBS-07",
-      "title": "Reglas de CodeQL más frecuentes",
-      "statement": "La regla más frecuente es py/sql-injection con 1 hallazgo(s) en 1 repositorio(s); hay 1 hallazgos en total.",
-      "metric": "datasets.top_rules",
-      "evidence": {
-        "top_rules": [
+          },
           {
-            "rule_id": "py/sql-injection",
+            "id": "CVE-2024-0002",
+            "severity": "Medium",
             "count": 1,
             "repos_affected": 1
           }
         ],
-        "findings_total": 1
+        "cves_distinct": 2
+      }
+    },
+    {
+      "id": "OBS-07",
+      "title": "Disponibilidad de versión corregida",
+      "statement": "El 50.0% de las vulnerabilidades (1 de 2) tiene versión corregida publicada; el resto carece de corrección conocida.",
+      "metric": "relations.fixed_version_available_share",
+      "evidence": {
+        "total": 2,
+        "with_fixed_version": 1,
+        "fixed_version_available_share": 0.5
       }
     },
     {
       "id": "OBS-08",
-      "title": "Disponibilidad de versión corregida",
-      "statement": "El 100.0% de las vulnerabilidades (1 de 1) tiene versión corregida publicada; el resto carece de corrección conocida.",
-      "metric": "relations.fixed_version_available_share",
-      "evidence": {
-        "total": 1,
-        "with_fixed_version": 1,
-        "fixed_version_available_share": 1.0
-      }
-    },
-    {
-      "id": "OBS-09",
       "title": "Componentes y vulnerabilidades",
       "statement": "Correlación de Pearson entre componentes del SBOM y vulnerabilidades por repositorio: 1.0 (n=2); no implica causalidad.",
       "metric": "relations.components_vs_vulnerabilities.pearson",
@@ -330,24 +347,9 @@
       }
     },
     {
-      "id": "OBS-10",
-      "title": "Hallazgos por lenguaje",
-      "statement": "El lenguaje con más hallazgos atribuidos es 'python' (regla py/sql-injection, 1); se cubren 1 lenguaje(s).",
-      "metric": "relations.findings_by_language",
-      "evidence": {
-        "findings_by_language": [
-          {
-            "language": "python",
-            "rule_id": "py/sql-injection",
-            "count": 1
-          }
-        ]
-      }
-    },
-    {
-      "id": "OBS-11",
+      "id": "OBS-09",
       "title": "Severidad por tipo de paquete",
-      "statement": "Se observan 1 combinación(es) (tipo, severidad) sobre 1 tipo(s) de paquete: python.",
+      "statement": "Se observan 2 combinación(es) (tipo, severidad) sobre 1 tipo(s) de paquete: python.",
       "metric": "relations.severity_by_package_type",
       "evidence": {
         "severity_by_package_type": [
@@ -355,12 +357,19 @@
             "type": "python",
             "severity": "High",
             "count": 1
+          },
+          {
+            "type": "python",
+            "severity": "Medium",
+            "count": 1
           }
         ]
       }
     }
   ],
   "limitations": [
+    "El reporte no incluye hallazgos de CodeQL (findings vacío o ausente): no pueden calcularse métricas por regla ni por lenguaje.",
+    "Solo 1 repositorio(s) tienen vulnerabilidades: el top-N y el decil superior son poco informativos y las medidas de concentración (top_n_share, top_10pct_share, HHI) deben interpretarse con cautela.",
     "La correlación entre variables (p. ej. componentes y vulnerabilidades) no implica causalidad; puede estar confundida por el tamaño o el ecosistema del repositorio.",
     "La muestra es pequeña (2 repositorios): las proporciones y correlaciones tienen alta incertidumbre y no deben generalizarse."
   ]

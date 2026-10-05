@@ -40,6 +40,31 @@ SOURCE_SCAN = "scan"
 SOURCE_VULN = "vuln"
 SOURCE_SBOM = "sbom"
 SOURCE_UNKNOWN = "unknown"
+# Origen combinado: varios reportes fusionados por repositorio.
+SOURCE_MERGED = "merged"
+
+# Estados que indican éxito de cada análisis.
+VULN_OK_STATUSES = frozenset({"scanned", "no_vulnerabilities"})
+SBOM_OK_STATUSES = frozenset({"generated", "no_components"})
+FAILED_STATUSES = frozenset(
+    {"clone_failed", "db_failed", "analyze_failed", "invalid_name"}
+)
+
+# Prioridad al fusionar el ``status`` de un repositorio presente en varios
+# reportes: primero un resultado real de CodeQL, luego los fallos, después los
+# estados exclusivos de ``sbom``/``vuln`` y por último ``pending``.
+_STATUS_PRIORITY = (
+    "analyzed",
+    "unsupported",
+    "db_failed",
+    "analyze_failed",
+    "clone_failed",
+    "invalid_name",
+    "scanned",
+    "cloned",
+    "pending",
+)
+_STATUS_RANK = {status: index for index, status in enumerate(_STATUS_PRIORITY)}
 
 
 @dataclass
@@ -200,14 +225,30 @@ def _parse_repo(raw: Dict[str, Any], index: int, warnings: List[str]) -> RepoDat
     )
 
 
+def _portable_path(source: Path) -> str:
+    """Devuelve una ruta portable: relativa al cwd si está contenida en él."""
+    try:
+        resolved = source.resolve()
+        cwd = Path.cwd().resolve()
+        if resolved != cwd and cwd in resolved.parents:
+            return str(resolved.relative_to(cwd))
+    except (OSError, ValueError):
+        pass
+    return str(source)
+
+
 def load_report(path: Union[str, Path]) -> MinerReport:
     """Carga un reporte del Miner de forma tolerante.
 
     Lanza ``FileNotFoundError`` si la ruta no existe y ``ValueError`` si el
-    contenido no es un objeto JSON válido.
+    archivo no es UTF-8, no es JSON válido o no contiene un objeto de reporte.
     """
     source = Path(path)
-    text = source.read_text(encoding="utf-8")
+    try:
+        text = source.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise ValueError(f"El archivo {source} no está codificado en UTF-8: {exc}") from exc
+
     try:
         data = json.loads(text)
     except json.JSONDecodeError as exc:
@@ -217,15 +258,18 @@ def load_report(path: Union[str, Path]) -> MinerReport:
         raise ValueError(f"El archivo {source} no contiene un objeto JSON de reporte.")
 
     warnings: List[str] = []
+    raw_repositories = data.get("repositories")
+    if raw_repositories is not None and not isinstance(raw_repositories, list):
+        warnings.append("El campo 'repositories' no es una lista; se ignoró su contenido.")
     organization = _as_str(data.get("organization"), "desconocida")
     repositories = [
         _parse_repo(raw, index, warnings)
-        for index, raw in enumerate(_as_list(data.get("repositories")))
+        for index, raw in enumerate(_as_list(raw_repositories))
     ]
 
     return MinerReport(
         organization=organization,
-        source_path=str(source),
+        source_path=_portable_path(source),
         source_kind=detect_source_kind(data),
         summary=_as_dict(data.get("summary")),
         repositories=repositories,
@@ -280,3 +324,196 @@ def to_records(report: MinerReport) -> Dict[str, List[Dict[str, Any]]]:
         "vulnerabilities": vulnerabilities,
         "severity_distribution": severity_distribution,
     }
+
+
+# ---------------------------------------------------------------------------
+# Fusión de reportes (SBOM + vulnerabilidades, scan + sbom, etc.)
+# ---------------------------------------------------------------------------
+
+
+def _copy_repo(repo: RepoData) -> RepoData:
+    """Copia profunda de un ``RepoData`` para no mutar el reporte original."""
+    return RepoData(
+        name=repo.name,
+        full_name=repo.full_name,
+        url=repo.url,
+        commit=repo.commit,
+        status=repo.status,
+        languages=list(repo.languages),
+        sbom_status=repo.sbom_status,
+        sbom_components=repo.sbom_components,
+        vuln_status=repo.vuln_status,
+        vuln_total=repo.vuln_total,
+        by_severity=dict(repo.by_severity),
+        findings=[dict(finding) for finding in repo.findings],
+        vulnerabilities=[dict(vuln) for vuln in repo.vulnerabilities],
+    )
+
+
+def _merge_sbom_status(current: str, other: str) -> str:
+    if current == "skipped":
+        return other
+    if other == "skipped" or current in SBOM_OK_STATUSES:
+        return current
+    return other if other in SBOM_OK_STATUSES else current
+
+
+def _merge_vuln_status(current: str, other: str) -> str:
+    if current == "skipped":
+        return other
+    if other == "skipped" or current in VULN_OK_STATUSES:
+        return current
+    return other if other in VULN_OK_STATUSES else current
+
+
+def _pick_status(current: str, other: str) -> str:
+    """Elige el estado más informativo según ``_STATUS_PRIORITY``."""
+    return min(
+        (current, other),
+        key=lambda status: _STATUS_RANK.get(status, len(_STATUS_PRIORITY)),
+    )
+
+
+def _merge_repo_into(target: RepoData, other: RepoData) -> None:
+    """Fusiona ``other`` dentro de ``target`` (mismo repositorio)."""
+    if not target.full_name:
+        target.full_name = other.full_name
+    if not target.url:
+        target.url = other.url
+    if not target.commit:
+        target.commit = other.commit
+
+    for language in other.languages:
+        if language not in target.languages:
+            target.languages.append(language)
+
+    seen_findings = {
+        (f.get("rule_id"), f.get("file"), f.get("start_line")) for f in target.findings
+    }
+    for finding in other.findings:
+        key = (finding.get("rule_id"), finding.get("file"), finding.get("start_line"))
+        if key not in seen_findings:
+            seen_findings.add(key)
+            target.findings.append(dict(finding))
+
+    seen_vulns = {
+        (
+            v.get("id"),
+            v.get("package"),
+            v.get("version"),
+            v.get("type"),
+            v.get("namespace"),
+        )
+        for v in target.vulnerabilities
+    }
+    for vuln in other.vulnerabilities:
+        key = (
+            vuln.get("id"),
+            vuln.get("package"),
+            vuln.get("version"),
+            vuln.get("type"),
+            vuln.get("namespace"),
+        )
+        if key not in seen_vulns:
+            seen_vulns.add(key)
+            target.vulnerabilities.append(dict(vuln))
+
+    target.sbom_status = _merge_sbom_status(target.sbom_status, other.sbom_status)
+    target.sbom_components = max(target.sbom_components, other.sbom_components)
+    target.vuln_status = _merge_vuln_status(target.vuln_status, other.vuln_status)
+    target.status = _pick_status(target.status, other.status)
+
+
+def _recompute_repo_derived(repo: RepoData) -> None:
+    """Recalcula ``by_severity`` y ``vuln_total`` desde las vulnerabilidades."""
+    repo.vuln_total = len(repo.vulnerabilities)
+    repo.by_severity = {severity: 0 for severity in SEVERITIES}
+    for vuln in repo.vulnerabilities:
+        repo.by_severity[normalize_severity(vuln.get("severity"))] += 1
+
+
+def _recompute_summary(repositories: List[RepoData]) -> Dict[str, Any]:
+    """Resume un conjunto de repositorios fusionados (mismo esquema del Miner)."""
+    by_severity = {severity: 0 for severity in SEVERITIES}
+    for repo in repositories:
+        for severity, count in repo.by_severity.items():
+            if severity in by_severity:
+                by_severity[severity] += count
+
+    return {
+        "repositories": len(repositories),
+        "analyzed": sum(1 for repo in repositories if repo.status == "analyzed"),
+        "failed": sum(1 for repo in repositories if repo.status in FAILED_STATUSES),
+        "unsupported": sum(1 for repo in repositories if repo.status == "unsupported"),
+        "findings": sum(len(repo.findings) for repo in repositories),
+        "sboms_generated": sum(
+            1 for repo in repositories if repo.sbom_status in SBOM_OK_STATUSES
+        ),
+        "sboms_failed": sum(
+            1 for repo in repositories if repo.sbom_status == "failed"
+        ),
+        "components": sum(repo.sbom_components for repo in repositories),
+        "vulns_scanned": sum(
+            1 for repo in repositories if repo.vuln_status in VULN_OK_STATUSES
+        ),
+        "vulns_failed": sum(
+            1 for repo in repositories if repo.vuln_status == "failed"
+        ),
+        "vulnerabilities": sum(len(repo.vulnerabilities) for repo in repositories),
+        "vulns_critical": by_severity["Critical"],
+        "vulns_high": by_severity["High"],
+        "vulns_medium": by_severity["Medium"],
+        "vulns_low": by_severity["Low"],
+    }
+
+
+def _pick_organization(reports: List[MinerReport]) -> str:
+    """Elige la organización más informativa entre varios reportes."""
+    placeholders = {"", "desconocida", "local"}
+    for report in reports:
+        if report.organization and report.organization not in placeholders:
+            return report.organization
+    return reports[0].organization if reports else "desconocida"
+
+
+def merge_reports(reports: List[MinerReport]) -> MinerReport:
+    """Fusiona varios reportes del Miner por nombre de repositorio.
+
+    Permite combinar la evidencia repartida entre comandos (por ejemplo
+    ``results-sbom.json`` + ``results-vuln.json``) sin volver a ejecutar el
+    Miner. Para cada repositorio se unen lenguajes, hallazgos y
+    vulnerabilidades (con deduplicación), se conserva el mejor estado de SBOM y
+    de Grype y se recalcula ``by_severity``, ``vuln_total`` y el resumen global.
+
+    Con un solo reporte se devuelve tal cual (sin recalcular nada), de modo que
+    el comportamiento de una única entrada no cambia.
+    """
+    if not reports:
+        raise ValueError("Se requiere al menos un reporte para fusionar.")
+    if len(reports) == 1:
+        return reports[0]
+
+    merged: Dict[str, RepoData] = {}
+    for report in reports:
+        for repo in report.repositories:
+            if repo.name in merged:
+                _merge_repo_into(merged[repo.name], repo)
+            else:
+                merged[repo.name] = _copy_repo(repo)
+
+    repositories = sorted(merged.values(), key=lambda repo: repo.name.lower())
+    for repo in repositories:
+        _recompute_repo_derived(repo)
+
+    warnings: List[str] = []
+    for report in reports:
+        warnings.extend(report.warnings)
+
+    return MinerReport(
+        organization=_pick_organization(reports),
+        source_path=" + ".join(Path(report.source_path).name for report in reports),
+        source_kind=SOURCE_MERGED,
+        summary=_recompute_summary(repositories),
+        repositories=repositories,
+        warnings=warnings,
+    )

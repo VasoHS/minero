@@ -20,7 +20,7 @@ notebooks ni de `metrics.py`.
   "meta": {
     "organization": "acme",
     "source": "results-vuln.json",
-    "source_kind": "vuln",          // scan | vuln | sbom | unknown
+    "source_kind": "vuln",          // scan | vuln | sbom | merged | unknown
     "generated_at": "2026-10-05T12:00:00+00:00",
     "repositories": 6,
     "warnings": []
