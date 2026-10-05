@@ -502,5 +502,36 @@ def vuln(sbom_dir: Path = typer.Option(DEFAULT_SBOM_DIR,
         fg=typer.colors.GREEN
     )
 
+@app.command()
+def visualize(input: Path = typer.Option(
+                  ..., "--input",
+                  help="Documento JSON del Analyzer (analyzer_output.json)"),
+              output: Path = typer.Option(
+                  ..., "--output",
+                  help="Archivo HTML de salida"),
+              title: Optional[str] = typer.Option(
+                  None, "--title",
+                  help="Título del tablero (por defecto: 'Visualizer · <organización>')")):
+    """Genera un tablero HTML autocontenido a partir del documento del Analyzer."""
+    if not input.is_file():
+        typer.secho(
+            f"No existe el documento de entrada: {input}",
+            fg=typer.colors.RED
+        )
+        raise typer.Exit(code=1)
+
+    from .visualizer import build_visualizer
+
+    try:
+        target = build_visualizer(input, output, title=title)
+    except (ValueError, OSError) as e:
+        typer.secho(f"Error al generar el Visualizer: {e}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+
+    typer.secho(
+        f"\nVisualizer generado en {target}",
+        fg=typer.colors.GREEN
+    )
+
 if __name__ == "__main__":
     app()

@@ -1,0 +1,2 @@
+# Assets del Visualizer: deben viajar también en el sdist.
+recursive-include src/miner/visualizer/assets *.css *.js
