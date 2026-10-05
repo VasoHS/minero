@@ -71,9 +71,8 @@ def run_scan(
 ):
     """Ejecuta `scan` con todas las dependencias externas monkeypatcheadas."""
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(
-        "miner.cli.get_organization_repos", Mock(return_value=list(repos))
-    )
+    org_repos_mock = Mock(return_value=list(repos))
+    monkeypatch.setattr("miner.cli.get_organization_repos", org_repos_mock)
 
     if clone_side_effect is not None:
         clone_mock = Mock(side_effect=clone_side_effect)
@@ -135,6 +134,7 @@ def run_scan(
         generate_sbom=generate_mock,
         get_grype_version=grype_mock,
         scan_vulnerabilities=vuln_mock,
+        get_organization_repos=org_repos_mock,
     )
 
 
@@ -645,6 +645,134 @@ def test_scan_summary_counts_all_repositories(tmp_path, monkeypatch):
         "repo-b",
         "repo-c",
     ]
+
+
+def test_scan_limit_processes_only_first_n_alphabetically(tmp_path, monkeypatch):
+    repos = [
+        make_repo("zeta"),
+        make_repo("alpha"),
+        make_repo("beta"),
+    ]
+    run = run_scan(tmp_path, repos, monkeypatch, extra_args=["--limit", "2"])
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    # Los repos se ordenan alfabéticamente y se toman los dos primeros.
+    assert [r["name"] for r in data["repositories"]] == ["alpha", "beta"]
+    assert data["summary"]["repositories"] == 2
+    assert len(data["repositories"]) == 2
+    assert (
+        "Límite aplicado: se procesarán 2 de 3 repositorios."
+        in run.result.output
+    )
+    # Solo se clonan los repos seleccionados.
+    cloned = [call.args[1].name for call in run.clone.call_args_list]
+    assert cloned == ["alpha", "beta"]
+
+
+def test_scan_limit_selects_alphabetically_even_with_mixed_case(tmp_path, monkeypatch):
+    repos = [
+        make_repo("Beta"),
+        make_repo("alpha"),
+        make_repo("gamma"),
+    ]
+    run = run_scan(tmp_path, repos, monkeypatch, extra_args=["--limit", "2"])
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    # La comparación es case-insensitive: "alpha" < "Beta" < "gamma".
+    assert [r["name"] for r in data["repositories"]] == ["alpha", "Beta"]
+    assert data["summary"]["repositories"] == 2
+
+
+def test_scan_limit_equal_to_total_processes_all(tmp_path, monkeypatch):
+    repos = [make_repo("repo-a"), make_repo("repo-b"), make_repo("repo-c")]
+    run = run_scan(tmp_path, repos, monkeypatch, extra_args=["--limit", "3"])
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    assert [r["name"] for r in data["repositories"]] == [
+        "repo-a",
+        "repo-b",
+        "repo-c",
+    ]
+    assert data["summary"]["repositories"] == 3
+    # Al no recortar nada, no se anuncia el límite.
+    assert "Límite aplicado" not in run.result.output
+
+
+def test_scan_limit_greater_than_total_processes_all(tmp_path, monkeypatch):
+    repos = [make_repo("repo-a"), make_repo("repo-b")]
+    run = run_scan(tmp_path, repos, monkeypatch, extra_args=["--limit", "10"])
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    assert [r["name"] for r in data["repositories"]] == ["repo-a", "repo-b"]
+    assert data["summary"]["repositories"] == 2
+    assert "Límite aplicado" not in run.result.output
+
+
+def test_scan_limit_zero_processes_no_repositories(tmp_path, monkeypatch):
+    repos = [make_repo("repo-a"), make_repo("repo-b"), make_repo("repo-c")]
+    run = run_scan(tmp_path, repos, monkeypatch, extra_args=["--limit", "0"])
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    assert data["repositories"] == []
+    assert data["summary"]["repositories"] == 0
+    assert data["summary"]["analyzed"] == 0
+    assert (
+        "Límite aplicado: se procesarán 0 de 3 repositorios."
+        in run.result.output
+    )
+    run.clone.assert_not_called()
+    run.create.assert_not_called()
+    # Sin repositorios no se genera SBOM ni se escanean vulnerabilidades.
+    run.generate_sbom.assert_not_called()
+    run.scan_vulnerabilities.assert_not_called()
+
+
+def test_scan_negative_limit_rejected_before_fetching_repos(tmp_path, monkeypatch):
+    repos = [make_repo("repo-a"), make_repo("repo-b")]
+    run = run_scan(tmp_path, repos, monkeypatch, extra_args=["--limit", "-1"])
+
+    assert run.result.exit_code == 1
+    assert (
+        "El límite de repositorios (--limit) no puede ser negativo."
+        in run.result.output
+    )
+    # La validación ocurre antes de consultar la organización.
+    run.get_organization_repos.assert_not_called()
+    run.clone.assert_not_called()
+    assert not run.out.exists()
+
+
+def test_scan_without_limit_processes_all_repositories(tmp_path, monkeypatch):
+    repos = [make_repo("zeta"), make_repo("alpha"), make_repo("beta")]
+    run = run_scan(tmp_path, repos, monkeypatch)
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    # Sin --limit se procesan todos (aunque queden ordenados alfabéticamente).
+    assert [r["name"] for r in data["repositories"]] == [
+        "alpha",
+        "beta",
+        "zeta",
+    ]
+    assert data["summary"]["repositories"] == 3
+    assert "Límite aplicado" not in run.result.output
+
+
+def test_scan_limit_with_empty_organization(tmp_path, monkeypatch):
+    run = run_scan(tmp_path, [], monkeypatch, extra_args=["--limit", "5"])
+
+    assert run.result.exit_code == 0
+    data = json.loads(run.out.read_text())
+    assert data["repositories"] == []
+    assert data["summary"]["repositories"] == 0
+    # No hay nada que recortar, así que no se anuncia el límite.
+    assert "Límite aplicado" not in run.result.output
+    run.clone.assert_not_called()
 
 
 @pytest.mark.parametrize(
