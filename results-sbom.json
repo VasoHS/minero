@@ -1,0 +1,620 @@
+{
+  "organization": "tensorflow",
+  "summary": {
+    "repositories": 23,
+    "analyzed": 0,
+    "failed": 0,
+    "unsupported": 0,
+    "findings": 0,
+    "sboms_generated": 23,
+    "sboms_failed": 0,
+    "components": 1614,
+    "vulns_scanned": 0,
+    "vulns_failed": 0,
+    "vulnerabilities": 0,
+    "vulns_critical": 0,
+    "vulns_high": 0,
+    "vulns_medium": 0,
+    "vulns_low": 0
+  },
+  "repositories": [
+    {
+      "name": "addons",
+      "full_name": "tensorflow/addons",
+      "url": "https://github.com/tensorflow/addons.git",
+      "commit": "d208d752e98c310280938efa939117bf635a60a8",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 20,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:28:55.795967+00:00",
+        "file": "sboms/addons.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "community",
+      "full_name": "tensorflow/community",
+      "url": "https://github.com/tensorflow/community.git",
+      "commit": "185530183d8f3734795beb520d02b8265c230a12",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "no_components",
+        "components": 0,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:28:57.054329+00:00",
+        "file": "sboms/community.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "docs",
+      "full_name": "tensorflow/docs",
+      "url": "https://github.com/tensorflow/docs.git",
+      "commit": "53f7db427b7766dfad0ef1fc1f46852dc7ab79af",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 7,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:28:58.187244+00:00",
+        "file": "sboms/docs.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "examples",
+      "full_name": "tensorflow/examples",
+      "url": "https://github.com/tensorflow/examples.git",
+      "commit": "bda6a8741864b7bc934345c47c25f8e17fd67bdc",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 159,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:28:59.123002+00:00",
+        "file": "sboms/examples.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "fairness-indicators",
+      "full_name": "tensorflow/fairness-indicators",
+      "url": "https://github.com/tensorflow/fairness-indicators.git",
+      "commit": "b747546137ccd3c26b29f25f280da45a13b644a6",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 19,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:00.419948+00:00",
+        "file": "sboms/fairness-indicators.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "gnn",
+      "full_name": "tensorflow/gnn",
+      "url": "https://github.com/tensorflow/gnn.git",
+      "commit": "7fd24610dd904d8041cbc1cfb14eab21b5757f08",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 5,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:01.361926+00:00",
+        "file": "sboms/gnn.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "java",
+      "full_name": "tensorflow/java",
+      "url": "https://github.com/tensorflow/java.git",
+      "commit": "58a19434ad41d6e62c944e2f7f2a974bf170bff4",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 33,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:02.303233+00:00",
+        "file": "sboms/java.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "mlir-hlo",
+      "full_name": "tensorflow/mlir-hlo",
+      "url": "https://github.com/tensorflow/mlir-hlo.git",
+      "commit": "74b9d25f5cb824269cabfd2d4640a050c3fe6728",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "no_components",
+        "components": 0,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:03.335464+00:00",
+        "file": "sboms/mlir-hlo.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "model-analysis",
+      "full_name": "tensorflow/model-analysis",
+      "url": "https://github.com/tensorflow/model-analysis.git",
+      "commit": "5df83b6cbb6712e6b48a41af2a72559745d7f6c9",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 17,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:04.310707+00:00",
+        "file": "sboms/model-analysis.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "models",
+      "full_name": "tensorflow/models",
+      "url": "https://github.com/tensorflow/models.git",
+      "commit": "930a6f98f7debcc32ca7afbca4a176dbf9211e03",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 42,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:05.460718+00:00",
+        "file": "sboms/models.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "neural-structured-learning",
+      "full_name": "tensorflow/neural-structured-learning",
+      "url": "https://github.com/tensorflow/neural-structured-learning.git",
+      "commit": "82eb5d4f16c138bc7eb04ea648997ebd97f0d2b4",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 4,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:06.486431+00:00",
+        "file": "sboms/neural-structured-learning.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "playground",
+      "full_name": "tensorflow/playground",
+      "url": "https://github.com/tensorflow/playground.git",
+      "commit": "02469bd3751764b20486015d4202b792af5362a6",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 5,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:07.436937+00:00",
+        "file": "sboms/playground.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "privacy",
+      "full_name": "tensorflow/privacy",
+      "url": "https://github.com/tensorflow/privacy.git",
+      "commit": "c5a3633e84f1a296c7e362e7c1926aead4063359",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 4,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:08.369521+00:00",
+        "file": "sboms/privacy.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "probability",
+      "full_name": "tensorflow/probability",
+      "url": "https://github.com/tensorflow/probability.git",
+      "commit": "d135a50f176224d654c62149be8cccc0886c0ed7",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 12,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:09.318484+00:00",
+        "file": "sboms/probability.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "recommenders",
+      "full_name": "tensorflow/recommenders",
+      "url": "https://github.com/tensorflow/recommenders.git",
+      "commit": "7f3e76f277494ae2dfe5d0c6f7a26aea35d6cfc1",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 9,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:10.300705+00:00",
+        "file": "sboms/recommenders.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "recommenders-addons",
+      "full_name": "tensorflow/recommenders-addons",
+      "url": "https://github.com/tensorflow/recommenders-addons.git",
+      "commit": "b3bc3d4691a9421dbe837ee9708c504217fdc8f9",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 18,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:11.239468+00:00",
+        "file": "sboms/recommenders-addons.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "rust",
+      "full_name": "tensorflow/rust",
+      "url": "https://github.com/tensorflow/rust.git",
+      "commit": "1ddf5a348037402f87d67c076bf3019857eae05f",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 7,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:12.192448+00:00",
+        "file": "sboms/rust.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "serving",
+      "full_name": "tensorflow/serving",
+      "url": "https://github.com/tensorflow/serving.git",
+      "commit": "40f3fb1b022fa54c4d0ae29544532af65cc392de",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 2,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:13.148175+00:00",
+        "file": "sboms/serving.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "tensor2tensor",
+      "full_name": "tensorflow/tensor2tensor",
+      "url": "https://github.com/tensorflow/tensor2tensor.git",
+      "commit": "bafdc1b67730430d38d6ab802cbd51f9d053ba2e",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 3,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:14.124285+00:00",
+        "file": "sboms/tensor2tensor.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "tensorflow",
+      "full_name": "tensorflow/tensorflow",
+      "url": "https://github.com/tensorflow/tensorflow.git",
+      "commit": "f27cff93ab3ed3d24e428050acd9b7d88f980fb7",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 803,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:15.073759+00:00",
+        "file": "sboms/tensorflow.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "tflite-micro",
+      "full_name": "tensorflow/tflite-micro",
+      "url": "https://github.com/tensorflow/tflite-micro.git",
+      "commit": "3f787dcff5c4693f3436a65aff1b268538a07bdb",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 148,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:16.848989+00:00",
+        "file": "sboms/tflite-micro.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "tfx",
+      "full_name": "tensorflow/tfx",
+      "url": "https://github.com/tensorflow/tfx.git",
+      "commit": "19225645c7907ef052ca8d5d893bba27fefe7a56",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 281,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:17.843099+00:00",
+        "file": "sboms/tfx.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    },
+    {
+      "name": "transform",
+      "full_name": "tensorflow/transform",
+      "url": "https://github.com/tensorflow/transform.git",
+      "commit": "deefef17a96947c9703ff82e3b58abc0052c61b3",
+      "status": "cloned",
+      "error": null,
+      "languages": [],
+      "findings": [],
+      "sbom": {
+        "status": "generated",
+        "components": 16,
+        "syft_version": "1.51.0",
+        "generated_at": "2026-10-05T22:29:18.897575+00:00",
+        "file": "sboms/transform.cdx.json"
+      },
+      "vulnerabilities": {
+        "status": "skipped",
+        "total": 0,
+        "by_severity": {},
+        "vulnerabilities": [],
+        "grype_version": null,
+        "generated_at": null,
+        "file": null
+      }
+    }
+  ]
+}
