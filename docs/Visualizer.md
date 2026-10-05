@@ -96,18 +96,22 @@ y el mensaje `No existe el documento de entrada: <ruta>`; si no es JSON válido,
 ### Notebook
 
 `notebooks/04_visualizer.ipynb` genera el tablero a partir del documento del
-Analyzer. Se ejecuta junto con el resto de notebooks:
+Analyzer. Se ejecuta con:
 
 ```bash
 source .venv/bin/activate
 pip install -e .[analyzer]     # nbformat, nbclient e ipykernel
-python notebooks/execute.py
+python notebooks/execute.py --notebook 04_visualizer
 ```
 
-`notebooks/execute.py` recorre `notebooks/*.ipynb` en orden alfabético y fija el
-directorio de trabajo en la raíz del repositorio; `04` se ejecuta después de
-`03_sintesis_visualizer.ipynb`, que escribe `analyzer_output.json`. La salida
-queda en `analysis/outputs/visualizer.html` (ignorado por git).
+`notebooks/execute.py` fija el directorio de trabajo en la raíz del repositorio;
+por defecto ejecuta solo el notebook maestro (`00_pipeline_completo.ipynb`), y con
+`--all` ejecuta `00`-`04` en orden. La salida de `04` queda en
+`analysis/outputs/visualizer.html` (ignorado por git).
+
+> **Nota.** El notebook maestro `notebooks/00_pipeline_completo.ipynb` genera el
+> tablero como último paso del flujo (Miner opcional → Analyzer → Visualizer) y lo
+> **muestra inline** en el propio notebook mediante un `IFrame`.
 
 ### Python
 

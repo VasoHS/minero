@@ -557,23 +557,70 @@ extra `[analyzer]`:
 pip install -e .[analyzer]
 ```
 
-Los notebooks del Analyzer se ejecutan en orden con:
+### Ejecución con un solo Jupyter
+
+El **notebook maestro** `notebooks/00_pipeline_completo.ipynb` es el punto de
+entrada recomendado: ejecuta el flujo completo **Miner (opcional) → Analyzer →
+Visualizer** y muestra el tablero inline en el propio notebook (mediante un
+`IFrame`), sin cambiar de herramienta. La orquestación vive en
+`analysis/orchestrator.py`.
 
 ```bash
 source .venv/bin/activate
-python notebooks/execute.py
+python notebooks/execute.py                                      # por defecto: solo el notebook maestro (00)
+python notebooks/execute.py --all                                # 00-04 en orden
+python notebooks/execute.py --notebook 02_analisis_vulnerabilidades
 ```
+
+`notebooks/execute.py` usa el kernel `python3`, fija el directorio de trabajo en
+la raíz del repositorio y devuelve un código de salida distinto de `0` si algún
+notebook falla:
+
+| Invocación | Qué ejecuta |
+| --- | --- |
+| `python notebooks/execute.py` | Solo `00_pipeline_completo.ipynb` (el maestro). Si no existiera, todos los `*.ipynb`. |
+| `python notebooks/execute.py --all` | `00`, `01`, `02`, `03` y `04` en orden alfabético. |
+| `python notebooks/execute.py --notebook <nombre>` | Un único notebook, por nombre o sin la extensión `.ipynb`. |
+
+El notebook maestro decide si ejecuta el Miner leyendo variables de entorno:
+
+| Variable | Por defecto | Descripción |
+| --- | --- | --- |
+| `MINER_MODE` | `auto` | `auto`: reutiliza los reportes existentes y **solo ejecuta el Miner si faltan**. `force`: ejecuta siempre el Miner. `off`: nunca ejecuta el Miner (exige reportes existentes). |
+| `MINER_ORGANIZATION` | — | Organización de GitHub. **Obligatoria solo si se ejecuta el Miner**. |
+| `MINER_LIMIT` | sin límite | Máximo de repositorios a analizar (`--limit` del Miner). Opcional. |
+| `GENERATED_AT` | hora real | Marca temporal ISO-8601 que fija `meta.generated_at` del Analyzer para reproducibilidad exacta. |
+| `GITHUB_TOKEN` | — | Token de GitHub. Se lee del entorno y **nunca se imprime**; el Miner lo usa al ejecutarse. |
+
+El Miner se invoca con `miner scan` a través de `subprocess` (`python -m
+miner.cli scan`), heredando el entorno para que `GITHUB_TOKEN` esté disponible
+sin exponerlo. Ejemplo forzando el Miner:
+
+```bash
+export $(grep GITHUB_TOKEN .env)
+MINER_MODE=force MINER_ORGANIZATION=nombre-organizacion MINER_LIMIT=5 \
+  python notebooks/execute.py
+```
+
+> El Miner **solo se ejecuta si faltan reportes** (modo `auto`) y el token
+> **nunca se imprime**: solo se comprueba su presencia en el entorno.
+
+Los notebooks `01`-`04` quedan como **exploración opcional** del pipeline (carga y
+calidad, análisis de vulnerabilidades, síntesis/exportación y Visualizer). No son
+necesarios para el flujo end-to-end del notebook maestro.
 
 Cada notebook resuelve su lista `INPUT_PATHS`: usa `results.json` (`scan`) si
 existe; en caso contrario, fusiona los que existan de `results-sbom.json` y
 `results-vuln.json`. Con `GENERATED_AT` se fija `meta.generated_at` para
 reproducibilidad exacta.
 
-| Notebook | Qué hace | Escribe en disco |
-| --- | --- | --- |
-| `01_carga_y_calidad.ipynb` | Carga los reportes, los fusiona, mide la cobertura y audita la calidad de los datos. | No |
-| `02_analisis_vulnerabilidades.ipynb` | Analiza severidad, CVE/GHSA, paquetes, concentración y relaciones. | No |
-| `03_sintesis_visualizer.ipynb` | Ejecuta el pipeline, valida el contrato y exporta las salidas. | Sí |
+| Notebook | Qué hace | Escribe en disco | ¿Opcional? |
+| --- | --- | --- | --- |
+| `00_pipeline_completo.ipynb` | Ejecuta Miner (opcional) → Analyzer → Visualizer y muestra el tablero inline. | Sí (documento del Analyzer y tablero HTML) | No (entry point) |
+| `01_carga_y_calidad.ipynb` | Carga los reportes, los fusiona, mide la cobertura y audita la calidad de los datos. | No | Sí |
+| `02_analisis_vulnerabilidades.ipynb` | Analiza severidad, CVE/GHSA, paquetes, concentración y relaciones. | No | Sí |
+| `03_sintesis_visualizer.ipynb` | Ejecuta el pipeline, valida el contrato y exporta las salidas. | Sí | Sí |
+| `04_visualizer.ipynb` | Genera el tablero HTML a partir del documento del Analyzer. | Sí | Sí |
 
 Las salidas quedan en `analysis/outputs/` (ignorado por git):
 
@@ -618,8 +665,8 @@ miner visualize --input analysis/outputs/analyzer_output.json \
   --output analysis/outputs/visualizer.html
 ```
 
-También puedes generarlo con el notebook `04_visualizer.ipynb` (se ejecuta con
-`python notebooks/execute.py`) o desde Python:
+También puedes generarlo con el notebook `04_visualizer.ipynb` (por ejemplo,
+`python notebooks/execute.py --notebook 04_visualizer`) o desde Python:
 
 ```python
 from miner.visualizer import build_visualizer

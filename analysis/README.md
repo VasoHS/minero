@@ -64,36 +64,53 @@ desde los notebooks, desde `pytest` o desde la CLI sin depender de Jupyter.
 | `analysis/metrics.py` | Métricas puras y deterministas: cobertura, severidad, topes, concentración, relaciones, observaciones y limitaciones. |
 | `analysis/contract.py` | Ensamblado (`build_document`), validación (`validate_document`) y escritura (`write_document`) del documento de salida. |
 | `analysis/pipeline.py` | Punto de entrada `run_analysis(input_paths, output_path)`; acepta una ruta o una lista y encadena todo el pipeline. |
+| `analysis/orchestrator.py` | Orquestación end-to-end **Miner → Analyzer → Visualizer** del notebook maestro: decide si ejecutar el Miner (`should_run_miner`, `existing_reports`), comprueba la presencia del token (`github_token_present`), construye `miner scan` (`build_miner_command`) y ejecuta comandos mostrando su salida (`run_command`). Solo librería estándar; nunca imprime el token. |
 | `analysis/contracts/` | JSON Schema (`analyzer_output.schema.json`), ejemplo válido y guía del contrato. |
 | `analysis/METRICAS.md` | Referencia detallada de cada métrica, su fórmula y su interpretación. |
 | `analysis/outputs/` | Salidas generadas (JSON, CSV y figuras); ignoradas por git. |
 
 ## Notebooks
 
-Los notebooks documentan y verifican el pipeline paso a paso. Se ejecutan en
-orden con:
+`notebooks/00_pipeline_completo.ipynb` es el **entry point** recomendado:
+orquesta el flujo completo **Miner (opcional) → Analyzer → Visualizer** y muestra
+el tablero inline (IFrame). La lógica de orquestación vive en
+[`orchestrator.py`](orchestrator.py); los notebooks `01`-`04` quedan como
+**exploración opcional** del pipeline.
+
+Se ejecutan con:
 
 ```bash
-python notebooks/execute.py
+python notebooks/execute.py                      # solo el notebook maestro (00)
+python notebooks/execute.py --all                # 00-04 en orden
+python notebooks/execute.py --notebook 03_sintesis_visualizer
 ```
 
-`notebooks/execute.py` recorre todos los `notebooks/*.ipynb` en orden
-alfabético, usa el kernel `python3`, fija el directorio de trabajo en la raíz del
-repositorio y devuelve un código de salida distinto de `0` si algún notebook
-falla. Ejecuta primero el entorno virtual (`source .venv/bin/activate`) para que
-el kernel use el intérprete correcto.
+`notebooks/execute.py` usa el kernel `python3`, fija el directorio de trabajo en
+la raíz del repositorio y devuelve un código de salida distinto de `0` si algún
+notebook falla. Por defecto ejecuta **solo** `00_pipeline_completo.ipynb`; con
+`--all` ejecuta `00`-`04` en orden alfabético y con `--notebook <nombre>` uno
+concreto (por nombre o sin `.ipynb`). Ejecuta primero el entorno virtual
+(`source .venv/bin/activate`) para que el kernel use el intérprete correcto.
 
-| Notebook | Qué hace | Escribe en disco |
-| --- | --- | --- |
-| `01_carga_y_calidad.ipynb` | Carga los reportes y los fusiona por repositorio, describe la organización y el origen, mide la cobertura y audita la calidad/coherencia de los datos. | No |
-| `02_analisis_vulnerabilidades.ipynb` | Analiza severidad, CVE/GHSA, paquetes, distribución por repositorio, concentración y relaciones; muestra figuras inline. | No |
-| `03_sintesis_visualizer.ipynb` | Ejecuta `run_analysis`, valida el contrato y exporta el documento, los CSV y las figuras. | Sí |
+| Notebook | Qué hace | Escribe en disco | ¿Opcional? |
+| --- | --- | --- | --- |
+| `00_pipeline_completo.ipynb` | Ejecuta Miner (opcional) → Analyzer → Visualizer y muestra el tablero inline. | Sí | No (entry point) |
+| `01_carga_y_calidad.ipynb` | Carga los reportes y los fusiona por repositorio, describe la organización y el origen, mide la cobertura y audita la calidad/coherencia de los datos. | No | Sí |
+| `02_analisis_vulnerabilidades.ipynb` | Analiza severidad, CVE/GHSA, paquetes, distribución por repositorio, concentración y relaciones; muestra figuras inline. | No | Sí |
+| `03_sintesis_visualizer.ipynb` | Ejecuta `run_analysis`, valida el contrato y exporta el documento, los CSV y las figuras. | Sí | Sí |
+| `04_visualizer.ipynb` | Genera el tablero HTML del Visualizer a partir del documento del Analyzer. | Sí | Sí |
+
+El notebook maestro decide si ejecuta el Miner con `MINER_MODE` (`auto` por
+defecto: reutiliza los reportes y solo ejecuta el Miner si faltan; `force`:
+siempre; `off`: nunca), `MINER_ORGANIZATION` (obligatoria solo si se ejecuta el
+Miner) y `MINER_LIMIT` (opcional). El token `GITHUB_TOKEN` se lee del entorno y
+**nunca se imprime**.
 
 Cada notebook resuelve su `INPUT_PATHS` (lista) con esta regla: si existe
 `results.json` (`scan`) usa solo ese; en caso contrario, fusiona los que existan
-de `[results-sbom.json, results-vuln.json]`, en ese orden. `03` permite fijar
-`meta.generated_at` con la variable de entorno `GENERATED_AT`; si no se define,
-usa la hora real de ejecución:
+de `[results-sbom.json, results-vuln.json]`, en ese orden. `00` y `03` permiten
+fijar `meta.generated_at` con la variable de entorno `GENERATED_AT`; si no se
+define, usa la hora real de ejecución:
 
 ```bash
 GENERATED_AT="2026-01-01T00:00:00+00:00" .venv/bin/python notebooks/execute.py
