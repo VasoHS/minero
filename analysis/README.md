@@ -33,6 +33,12 @@ miner vuln ─► results-vuln.json ┘   (fusión por repositorio)        │
   `metrics.py`). El contrato se detalla en
   [`contracts/README.md`](contracts/README.md).
 
+El Visualizer consume exclusivamente el documento del contrato: genera un tablero
+HTML autocontenido y offline sin recalcular métricas derivadas. Sus filtros solo
+restringen los repositorios de las vistas por repositorio; los indicadores y
+rankings globales se muestran precalculados. La guía del tablero está en
+[`../docs/Visualizer.md`](../docs/Visualizer.md).
+
 ## Instalación
 
 El núcleo del Analyzer (`loader`, `metrics`, `contract`, `pipeline`) solo usa la

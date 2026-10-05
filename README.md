@@ -251,7 +251,7 @@ GITHUB_TOKEN=ghp_tu_token_aqui
 
 ## Uso
 
-La CLI dispone de tres comandos: `miner scan` (CodeQL + SBOM + vulnerabilidades), `miner sbom` (solo SBOM, reutilizando repositorios ya clonados) y `miner vuln` (solo vulnerabilidades, reutilizando SBOM ya generados).
+La CLI dispone de cuatro comandos: `miner scan` (CodeQL + SBOM + vulnerabilidades), `miner sbom` (solo SBOM, reutilizando repositorios ya clonados), `miner vuln` (solo vulnerabilidades, reutilizando SBOM ya generados) y `miner visualize` (genera el tablero HTML a partir del documento del Analyzer).
 
 ### `miner scan`
 
@@ -600,6 +600,42 @@ Consulta [`analysis/README.md`](analysis/README.md) para la guía completa del
 Analyzer; el contrato de salida está en
 [`analysis/contracts/README.md`](analysis/contracts/README.md) y las métricas en
 [`analysis/METRICAS.md`](analysis/METRICAS.md).
+
+## Visualizer
+
+El **Visualizer** convierte el documento del Analyzer
+(`analysis/outputs/analyzer_output.json`, contrato `schema_version` `1.1`) en un
+**tablero HTML autocontenido y offline**: un único archivo `.html` con los datos,
+el CSS y el JavaScript embebidos, sin CDN ni peticiones de red. No recalcula
+métricas derivadas: muestra tal cual lo que produjo el Analyzer. Los filtros
+(repositorio, severidad, tipo y lenguaje) solo restringen los repositorios de las
+vistas por repositorio; los indicadores y rankings globales no cambian.
+
+Genera el tablero desde la CLI:
+
+```bash
+miner visualize --input analysis/outputs/analyzer_output.json \
+  --output analysis/outputs/visualizer.html
+```
+
+También puedes generarlo con el notebook `04_visualizer.ipynb` (se ejecuta con
+`python notebooks/execute.py`) o desde Python:
+
+```python
+from miner.visualizer import build_visualizer
+
+build_visualizer(
+    "analysis/outputs/analyzer_output.json",
+    "analysis/outputs/visualizer.html",
+)
+```
+
+El Visualizer vive dentro del paquete `miner` (`src/miner/visualizer/`) y se
+instala con `pip install -e .`; a diferencia del Analyzer, cuyo directorio
+top-level `analysis/` no forma parte del paquete instalado.
+
+Consulta [`docs/Visualizer.md`](docs/Visualizer.md) para la estructura de vistas,
+la personalización del título y la solución de problemas.
 
 ## Ejemplo de uso completo
 
