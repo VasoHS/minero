@@ -9,6 +9,9 @@ nada a mano en el anfitrión.
 > `docker-compose.yml` de runtime que viven en la raíz del repositorio; no los
 > modifica ni los sustituye.
 
+> Para la guía **centralizada** de todas las vías Docker (imagen de runtime y Dev
+> Container), consulta [`docs/Docker.md`](../docs/Docker.md).
+
 ## Qué incluye
 
 | Componente | Detalle |
