@@ -1,6 +1,6 @@
 # Reporte de seguridad
 
-_Generado: 2026-10-07T21:35:01+00:00_  
+_Generado: 2026-10-07T23:58:51+00:00_  
 _Hallazgos detectados: 11 (con modelo de lenguaje)_
 
 
@@ -8,22 +8,22 @@ _Hallazgos detectados: 11 (con modelo de lenguaje)_
 
 ## Severidad Media
 - **Hallazgos relacionados con scripts remotos ejecutados sin verificar integridad**:
-  - Se observó que se están ejecutando scripts remotos desde URLs sin verificar su integridad [WF-003], [WF-004]. Esto es importante porque ejecutar scripts de fuentes no verificadas puede introducir vulnerabilidades en el sistema, permitiendo la ejecución de código malicioso. 
+  - Se observó que se están ejecutando scripts remotos desde URLs sin verificar su integridad [WF-003], [WF-004]. Esto es importante porque ejecutar scripts de fuentes no verificadas puede introducir vulnerabilidades en el sistema, permitiendo la ejecución de código malicioso.
   - **Mitigación**: Se recomienda verificar la integridad de los scripts descargados utilizando hashes o firmas digitales antes de su ejecución.
 
 - **Hallazgo relacionado con dependencias no fijadas**:
-  - Se observó que no hay un lockfile ni requirements con versiones resueltas en el archivo `pyproject.toml` [DEP-001]. Esto es relevante porque las dependencias no fijadas pueden llevar a builds no reproducibles y a un escaneo limitado de CVEs, aumentando el riesgo de vulnerabilidades.
-  - **Mitigación**: Se debe crear un lockfile y especificar versiones de dependencias en el archivo de configuración para asegurar builds reproducibles y facilitar el escaneo de vulnerabilidades.
+  - Se observó que no hay un lockfile ni un archivo de requirements con versiones resueltas en `pyproject.toml` [DEP-001]. Esto es relevante porque las dependencias no fijadas pueden resultar en builds no reproducibles y un escaneo de CVEs limitado.
+  - **Mitigación**: Se sugiere crear un lockfile y especificar versiones de dependencias en el archivo de configuración para asegurar la reproducibilidad y facilitar el escaneo de vulnerabilidades.
 
 ## Severidad Baja
 - **Hallazgos relacionados con acciones no fijadas a un SHA de commit**:
-  - Se observó que varias acciones en el archivo `.github/workflows/security-report.yml` no están fijadas a un SHA de commit [WF-001], [WF-002], [WF-005]. Esto es importante porque usar versiones de acciones sin fijar puede resultar en cambios inesperados en el comportamiento de los workflows, lo que podría introducir vulnerabilidades.
-  - **Mitigación**: Se recomienda fijar todas las acciones a un SHA de commit específico para evitar cambios inesperados en el futuro.
+  - Se observó que varias acciones en el archivo `.github/workflows/security-report.yml` no están fijadas a un SHA de commit [WF-001], [WF-002], [WF-005]. Esto es importante porque usar versiones de acciones sin fijar puede llevar a la ejecución de código no intencionado si la acción se actualiza.
+  - **Mitigación**: Se recomienda fijar las acciones a un SHA de commit específico para evitar cambios inesperados en el comportamiento de las mismas.
 
 ## Informativa
 - **Hallazgos relacionados con artefactos generados versionados**:
   - Se observó que varios artefactos generados están versionados, incluyendo `results-sbom.json`, `results-vuln.json`, `resultsTensorFlow.json`, `resultsTensorFlow2.json` y `sboms1.zip` [TR-001], [TR-002], [TR-003], [TR-004], [TR-005]. Es importante revisar estos artefactos para asegurarse de que no contengan datos sensibles y determinar si deben estar en el repositorio.
-  - **Recomendación**: Se sugiere realizar una revisión de contenido de estos artefactos para asegurar que no contengan información sensible y evaluar su necesidad de estar en el repositorio.
+  - **Mitigación**: Se sugiere realizar una revisión de contenido de estos artefactos para asegurar que no contengan información sensible y evaluar su necesidad en el repositorio.
 
 ## Cobertura del análisis
 
