@@ -16,3 +16,5 @@ link
 
 # Configuración local de OpenCode (agentes)
 .opencode/
+
+reports/local-*

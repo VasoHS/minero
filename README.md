@@ -255,7 +255,7 @@ GITHUB_TOKEN=ghp_tu_token_aqui
 
 ## Uso
 
-La CLI dispone de cuatro comandos: `miner scan` (CodeQL + SBOM + vulnerabilidades), `miner sbom` (solo SBOM, reutilizando repositorios ya clonados), `miner vuln` (solo vulnerabilidades, reutilizando SBOM ya generados) y `miner visualize` (genera el tablero HTML a partir del documento del Analyzer).
+La CLI dispone de cinco comandos: `miner scan` (CodeQL + SBOM + vulnerabilidades), `miner sbom` (solo SBOM, reutilizando repositorios ya clonados), `miner vuln` (solo vulnerabilidades, reutilizando SBOM ya generados), `miner visualize` (genera el tablero HTML a partir del documento del Analyzer) y `miner report` (audita la seguridad de este repositorio).
 
 ### `miner scan`
 
@@ -688,6 +688,48 @@ top-level `analysis/` no forma parte del paquete instalado.
 Consulta [`docs/Visualizer.md`](docs/Visualizer.md) para la estructura de vistas,
 la personalización del título y la solución de problemas.
 
+## Reporter
+
+El **Reporter** audita la seguridad de **este repositorio** (código,
+dependencias, configuración y workflows) en lugar de los repositorios de una
+organización externa: no reutiliza los reportes del Miner ni del Analyzer.
+Un recolector determinista detecta hallazgos con evidencia (archivo, línea,
+fragmento) y un modelo de lenguaje, consultado a través de
+**[OpenRouter](https://openrouter.ai)**, los redacta y prioriza; un validador
+posterior comprueba que toda cita del modelo exista entre los hallazgos
+reales. El resultado es un reporte en Markdown con hallazgos, evidencia,
+cobertura del análisis y recomendaciones de mitigación.
+
+Configura la key antes de usarlo:
+
+```bash
+cp .env.example .env
+# Edita .env y define OPENROUTER_API_KEY=sk-or-tu-key-aqui
+export $(grep OPENROUTER_API_KEY .env)
+```
+
+Genera el reporte con la CLI:
+
+```bash
+miner report --output reports/security-report.md
+```
+
+Con `--no-llm` se genera solo con la evidencia recolectada, sin usar el
+modelo de lenguaje:
+
+```bash
+miner report --no-llm --output reports/security-report.md
+```
+
+Se ejecuta automáticamente mediante
+[`.github/workflows/security-report.yml`](.github/workflows/security-report.yml)
+(diario y manual desde la pestaña **Actions**), publicando el resultado en el
+resumen del job y como artefacto descargable.
+
+Consulta [`docs/Reporter.md`](docs/Reporter.md) para la arquitectura completa,
+las reglas implementadas y las garantías de trazabilidad frente a
+alucinaciones del modelo.
+
 ## Ejemplo de uso completo
 
 ```bash
@@ -822,5 +864,7 @@ pytest
 - **Sin vulnerabilidades (`no_vulnerabilities`):** no es un error; significa que Grype no encontró coincidencias. Puede deberse a que el SBOM no incluye versiones resueltas (por ejemplo, npm sin archivo de bloqueo) o a que la base de datos no conoce esos paquetes.
 - **Omitir el escaneo de vulnerabilidades (`--no-vuln`):** el objeto `vulnerabilities` queda en `skipped` y no afecta a ninguno de los contadores `vulns_*`.
 - **Errores o advertencias de Grype durante el escaneo:** las líneas que contienen `error`, `fatal`, `panic`, `warning`/`warn` o `failed` se muestran en rojo, se resumen al final del comando y se guardan en `vulns/errores.log` (o en la ruta indicada con `--error-log`). El log se trunca al empezar cada ejecución; con `--no-progress` no se imprime el avance, pero el log se sigue escribiendo.
+- **`OPENROUTER_API_KEY` ausente:** `miner report` termina con código `1` y el mensaje `Error: OPENROUTER_API_KEY no está configurada.`. Exporta la variable desde tu `.env` o usa `--no-llm` para generar el reporte solo con evidencia, sin consultar el modelo.
+- **El reporte advierte "IDs que no existen":** significa que el modelo citó un hallazgo inexistente en su respuesta. Revisa manualmente esa sección del reporte; el apéndice de evidencia es la fuente de verdad.
 
 Para más detalle sobre el SBOM, consulta [`docs/SBOM.md`](docs/SBOM.md); para el escaneo de vulnerabilidades, [`docs/Vulnerabilidades.md`](docs/Vulnerabilidades.md).
