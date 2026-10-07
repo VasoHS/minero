@@ -24,5 +24,7 @@ def ask(system: str, user: str) -> str:
             ],
         },
     )
-    r.raise_for_status()
+    if not r.ok:
+        # OpenRouter devuelve el motivo real en el cuerpo (p. ej. modelo inválido).
+        raise RuntimeError(f"OpenRouter respondió {r.status_code}: {r.text[:500]}")
     return r.json()["choices"][0]["message"]["content"]
