@@ -533,5 +533,38 @@ def visualize(input: Path = typer.Option(
         fg=typer.colors.GREEN
     )
 
+@app.command()
+def report(root: Path = typer.Option(
+               Path("."), "--root",
+               help="Raíz del repositorio a auditar (por defecto: el directorio actual)"),
+           output: Path = typer.Option(
+               Path("reports/security-report.md"), "--output",
+               help="Archivo Markdown de salida"),
+           llm: bool = typer.Option(
+               True, "--llm/--no-llm",
+               help="Usar el modelo de lenguaje (OpenRouter) para redactar el reporte")):
+    """Audita la seguridad del repositorio del proyecto y genera un reporte en Markdown."""
+    if not root.is_dir():
+        typer.secho(f"El directorio no existe: {root}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+
+    from .reporter.report import build_report
+
+    typer.echo(f"Auditando {root.resolve()}...")
+    try:
+        target = build_report(root, output, use_llm=llm)
+    except RuntimeError as e:
+        typer.secho(f"Error: {e}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+    except OSError as e:
+        typer.secho(f"Error al escribir el reporte: {e}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+    except Exception as e:
+        # Errores de red/API (requests). No se imprime la key en ningún caso.
+        typer.secho(f"Error al generar el reporte: {type(e).__name__}: {e}",
+                    fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+
+    typer.secho(f"\nReporte generado en {target}", fg=typer.colors.GREEN)
 if __name__ == "__main__":
     app()
