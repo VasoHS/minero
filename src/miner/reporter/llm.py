@@ -16,7 +16,7 @@ def ask(system: str, user: str) -> str:
             "Content-Type": "application/json",
         },
         json={
-            "model": os.environ.get("OPENROUTER_MODEL", "openai/gpt-4o-mini"),
+            "model": os.environ.get("OPENROUTER_MODEL") or "openai/gpt-4o-mini",
             "temperature": 0.2,
             "messages": [
                 {"role": "system", "content": system},
