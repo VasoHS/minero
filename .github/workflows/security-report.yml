@@ -5,24 +5,36 @@ on:
     - cron: "0 9 * * *"
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   report:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
 
-      # Usa las mismas versiones que fija tu Dockerfile
+      # Usa las mismas versiones que fija el Dockerfile (descarga de binarios
+      # fijados en lugar de ejecutar un script remoto).
       - name: Instalar Syft y Grype
         run: |
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sudo sh -s -- -b /usr/local/bin v1.51.0
-          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sudo sh -s -- -b /usr/local/bin v0.120.0
+          set -eux
+          arch="$(dpkg --print-architecture)"
+          case "${arch}" in
+            amd64) goarch="amd64" ;;
+            arm64) goarch="arm64" ;;
+            *) echo "Arquitectura no soportada: ${arch}" >&2; exit 1 ;;
+          esac
+          curl -fsSL -o /tmp/syft.tar.gz \
+            "https://github.com/anchore/syft/releases/download/v1.51.0/syft_1.51.0_linux_${goarch}.tar.gz"
+          sudo tar -xzf /tmp/syft.tar.gz -C /usr/local/bin syft
+          curl -fsSL -o /tmp/grype.tar.gz \
+            "https://github.com/anchore/grype/releases/download/v0.120.0/grype_0.120.0_linux_${goarch}.tar.gz"
+          sudo tar -xzf /tmp/grype.tar.gz -C /usr/local/bin grype
+          syft version
+          grype version
 
       - run: pip install -e .
 
@@ -35,7 +47,7 @@ jobs:
       - name: Publicar resumen
         run: cat reports/security-report.md >> "$GITHUB_STEP_SUMMARY"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: security-report
           path: reports/security-report.md

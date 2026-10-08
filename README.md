@@ -12,6 +12,13 @@ Para cada repositorio la herramienta:
 
 La generación del SBOM y el escaneo de vulnerabilidades son independientes del lenguaje y de CodeQL: se ejecutan aunque el repositorio no sea analizable.
 
+## Arquitectura
+
+La solución tiene cuatro componentes (Miner, Analyzer, Visualizer y Reporter) y
+dos flujos independientes: el análisis de repositorios externos
+(Miner → Analyzer → Visualizer) y la autoevaluación de este propio repositorio
+(Reporter). Consulta [`docs/Arquitectura.md`](docs/Arquitectura.md).
+
 ## Requisitos previos
 
 - Python 3.10 o superior.
@@ -626,7 +633,7 @@ reproducibilidad exacta.
 | `03_sintesis_visualizer.ipynb` | Ejecuta el pipeline, valida el contrato y exporta las salidas. | Sí | Sí |
 | `04_visualizer.ipynb` | Genera el tablero HTML a partir del documento del Analyzer. | Sí | Sí |
 
-Las salidas quedan en `analysis/outputs/` (ignorado por git):
+Las salidas quedan en `analysis/outputs/` (versionadas en el repositorio para la entrega):
 
 ```
 analysis/outputs/

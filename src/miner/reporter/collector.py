@@ -5,6 +5,8 @@ import tempfile
 import shutil
 from dataclasses import dataclass, asdict
 
+from ..timeouts import SUBPROCESS_TIMEOUT
+
 SKIP_DIRS = {".git", ".venv", "workdir", "node_modules", "reports", "__pycache__", "tests"}
 
 SECRET_PATTERNS = {
@@ -42,9 +44,10 @@ def _scan_targets(root):
         r = subprocess.run(
             ["git", "-c", "core.quotepath=off", "-C", str(root),
              "ls-files", "--cached", "--others", "--exclude-standard"],
-            capture_output=True, text=True, check=True)
+            capture_output=True, text=True, check=True,
+            timeout=SUBPROCESS_TIMEOUT)
         rels = [l for l in r.stdout.splitlines() if l]
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return list(_files(root))
     out = []
     for rel in rels:
@@ -118,37 +121,43 @@ def _tracked(root):
     """Archivos versionados por git (None si no es un repo git)."""
     try:
         r = subprocess.run(["git", "-C", str(root), "ls-files"],
-                           capture_output=True, text=True, check=True)
+                           capture_output=True, text=True, check=True,
+                           timeout=SUBPROCESS_TIMEOUT)
         return [l for l in r.stdout.splitlines() if l]
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return None
+
+
+# Dockerfiles que el Reporter inspecciona (runtime y Dev Container).
+DOCKERFILES = ("Dockerfile", ".devcontainer/Dockerfile")
 
 
 def scan_docker(root):
     out = []
-    p = pathlib.Path(root, "Dockerfile")
-    if not p.exists():
-        return out
-    lines = p.read_text(errors="ignore").splitlines()
+    for rel in DOCKERFILES:
+        p = pathlib.Path(root, rel)
+        if not p.exists():
+            continue
+        lines = p.read_text(errors="ignore").splitlines()
 
-    def add(sev, line, ev, rule):
-        out.append(Finding(f"DK-{len(out) + 1:03}", "docker", sev,
-                           "Dockerfile", line, ev, rule))
+        def add(sev, line, ev, rule, rel=rel):
+            out.append(Finding(f"DK-{len(out) + 1:03}", "docker", sev,
+                               rel, line, ev, rule))
 
-    if not any(l.strip().upper().startswith("USER ") for l in lines):
-        add("medium", None, "no hay instrucción USER",
-            "el contenedor se ejecuta como root")
-    for i, l in enumerate(lines, 1):
-        s = l.strip()
-        m = re.match(r"FROM\s+(\S+)", s, re.I)
-        if m:
-            image = m.group(1)
-            last = image.split("/")[-1]
-            if (image.lower() != "scratch" and "@sha256:" not in image
-                    and (":" not in last or image.endswith(":latest"))):
-                add("low", i, s, "imagen base sin versión fija (tag ausente o latest)")
-        if re.search(r"\b(curl|wget)\b.*\|\s*(sudo\s+)?(ba)?sh\b", s):
-            add("medium", i, s, "script remoto ejecutado sin verificar integridad")
+        if not any(l.strip().upper().startswith("USER ") for l in lines):
+            add("medium", None, "no hay instrucción USER",
+                "el contenedor se ejecuta como root")
+        for i, l in enumerate(lines, 1):
+            s = l.strip()
+            m = re.match(r"FROM\s+(\S+)", s, re.I)
+            if m:
+                image = m.group(1)
+                last = image.split("/")[-1]
+                if (image.lower() != "scratch" and "@sha256:" not in image
+                        and (":" not in last or image.endswith(":latest"))):
+                    add("low", i, s, "imagen base sin versión fija (tag ausente o latest)")
+            if re.search(r"\b(curl|wget)\b.*\|\s*(sudo\s+)?(ba)?sh\b", s):
+                add("medium", i, s, "script remoto ejecutado sin verificar integridad")
     return out
 
 
@@ -238,7 +247,7 @@ def collect_with_coverage(root="."):
     findings, coverage = [], {}
     for name, fn in [("secretos (archivos no ignorados por git)", scan_secrets),
                      ("workflows", scan_workflows),
-                     ("docker (solo Dockerfile de la raíz)", scan_docker),
+                     ("docker (Dockerfile y .devcontainer/Dockerfile)", scan_docker),
                      ("higiene (.gitignore)", scan_hygiene),
                      ("archivos versionados", scan_tracked_artifacts),
                      ("lockfile", scan_lockfile)]:

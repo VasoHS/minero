@@ -1,1 +1,12 @@
 language,rule_id,count
+java,java/comparison-with-wider-type,122
+java,java/implicit-cast-in-compound-assignment,1
+java,java/local-temp-file-or-directory-information-disclosure,1
+java,java/toctou-race-condition,1
+python,py/tarslip,32
+python,py/jinja2/autoescape-false,4
+python,py/incomplete-url-substring-sanitization,1
+python,py/overly-large-range,1
+python,py/overly-permissive-file,1
+python,py/request-without-cert-validation,1
+python,py/shell-command-constructed-from-input,1

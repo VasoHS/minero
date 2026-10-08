@@ -1,10 +1,12 @@
 import json
 import subprocess
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional, Protocol
 
 from .models import VulnResult, Vulnerability
+from .timeouts import SUBPROCESS_TIMEOUT
 
 
 class ProgressLike(Protocol):
@@ -29,9 +31,11 @@ def get_grype_version() -> Optional[str]:
     try:
         result = subprocess.run(
             ["grype", "version", "-o", "json"],
-            check=True, capture_output=True, text=True
+            check=True, capture_output=True, text=True,
+            timeout=SUBPROCESS_TIMEOUT
         )
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+            FileNotFoundError, OSError):
         return None
 
     try:
@@ -131,7 +135,8 @@ def _run_grype(cmd: List[str], progress: Optional[ProgressLike]) -> None:
     stderr (Grype escribe el JSON en ``--file`` y el progreso en stderr).
     """
     if progress is None:
-        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        subprocess.run(cmd, check=True, capture_output=True, text=True,
+                       timeout=SUBPROCESS_TIMEOUT)
         return
 
     process = subprocess.Popen(
@@ -143,9 +148,12 @@ def _run_grype(cmd: List[str], progress: Optional[ProgressLike]) -> None:
         errors="replace",
         bufsize=1,
     )
+    deadline = time.monotonic() + SUBPROCESS_TIMEOUT
     try:
         if process.stdout is not None:
             for raw_line in process.stdout:
+                if time.monotonic() > deadline:
+                    raise subprocess.TimeoutExpired(cmd, SUBPROCESS_TIMEOUT)
                 line = raw_line.rstrip("\r\n")
                 if not line:
                     continue
@@ -155,14 +163,19 @@ def _run_grype(cmd: List[str], progress: Optional[ProgressLike]) -> None:
                     # Un fallo al mostrar el progreso no debe abortar el escaneo.
                     pass
     except BaseException:
-        # Ante una interrupción, no dejar el proceso hijo huérfano.
+        # Ante una interrupción o un timeout, no dejar el proceso hijo huérfano.
         process.kill()
         process.wait()
         raise
     finally:
         if process.stdout is not None:
             process.stdout.close()
-    returncode = process.wait()
+    try:
+        returncode = process.wait(timeout=max(0.0, deadline - time.monotonic()))
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait()
+        raise
     if returncode != 0:
         raise subprocess.CalledProcessError(returncode, cmd)
 
@@ -195,7 +208,8 @@ def scan_vulnerabilities(source: str, output_file: Path,
             ["grype", str(source), "-o", "json", "--file", str(output_file)],
             progress,
         )
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError) as exc:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+            FileNotFoundError, OSError) as exc:
         _report_error(progress, f"Grype falló al escanear {source}: {exc}")
         _discard(output_file)
         return VulnResult(status="failed", grype_version=grype_version,

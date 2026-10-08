@@ -1,1 +1,12 @@
 rule_id,count,repos_affected
+java/comparison-with-wider-type,122,1
+py/tarslip,32,4
+py/jinja2/autoescape-false,4,2
+java/implicit-cast-in-compound-assignment,1,1
+java/local-temp-file-or-directory-information-disclosure,1,1
+java/toctou-race-condition,1,1
+py/incomplete-url-substring-sanitization,1,1
+py/overly-large-range,1,1
+py/overly-permissive-file,1,1
+py/request-without-cert-validation,1,1
+py/shell-command-constructed-from-input,1,1

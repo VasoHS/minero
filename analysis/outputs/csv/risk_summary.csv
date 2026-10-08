@@ -1,2 +1,2 @@
 score,severity_weighted_average,severity_median,total_vulnerabilities,repositories_scored,repositories_with_critical,repositories_with_high_or_critical,mean_repository_score,max_repository_score,worst_severity,critical_hotspots
-6.0,5.5107,7.0,280,13,3,7,4.5,7.3,Critical,"[""examples"", ""tensor2tensor"", ""tfx""]"
+6.0,5.5335,7.0,313,13,3,7,4.6,7.3,Critical,"[""examples"", ""tensor2tensor"", ""tfx""]"

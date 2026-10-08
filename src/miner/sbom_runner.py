@@ -5,15 +5,18 @@ from pathlib import Path
 from typing import Optional
 
 from .models import SbomResult
+from .timeouts import SUBPROCESS_TIMEOUT
 
 def get_syft_version() -> Optional[str]:
     """Obtiene la versión de Syft instalada, o None si no está disponible."""
     try:
         result = subprocess.run(
             ["syft", "version", "-o", "json"],
-            check=True, capture_output=True, text=True
+            check=True, capture_output=True, text=True,
+            timeout=SUBPROCESS_TIMEOUT
         )
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+            FileNotFoundError, OSError):
         return None
 
     try:
@@ -67,9 +70,11 @@ def generate_sbom(source_dir: Path, output_file: Path,
     try:
         subprocess.run(
             ["syft", f"dir:{source_dir}", "-o", f"cyclonedx-json={output_file}"],
-            check=True, capture_output=True, text=True
+            check=True, capture_output=True, text=True,
+            timeout=SUBPROCESS_TIMEOUT
         )
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+            FileNotFoundError, OSError):
         _discard(output_file)
         return SbomResult(status="failed", syft_version=syft_version,
                           generated_at=generated_at)

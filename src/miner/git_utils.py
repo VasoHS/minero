@@ -2,16 +2,20 @@ import subprocess
 from pathlib import Path
 from typing import Optional
 
+from .timeouts import SUBPROCESS_TIMEOUT
+
 def clone_repository(repo_url: str, dest_dir: Path) -> bool:
     try:
         subprocess.run(
             ["git", "clone", "--depth", "1", repo_url, str(dest_dir)],
             check=True,
+            timeout=SUBPROCESS_TIMEOUT,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
         return True
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+            FileNotFoundError, OSError):
         return False
 
 def get_head_commit(repo_dir: Path) -> Optional[str]:
@@ -19,9 +23,11 @@ def get_head_commit(repo_dir: Path) -> Optional[str]:
     try:
         result = subprocess.run(
             ["git", "-C", str(repo_dir), "rev-parse", "HEAD"],
-            check=True, capture_output=True, text=True
+            check=True, capture_output=True, text=True,
+            timeout=SUBPROCESS_TIMEOUT
         )
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+            FileNotFoundError, OSError):
         return None
     commit = result.stdout.strip()
     return commit or None
@@ -31,9 +37,11 @@ def get_remote_url(repo_dir: Path) -> Optional[str]:
     try:
         result = subprocess.run(
             ["git", "-C", str(repo_dir), "remote", "get-url", "origin"],
-            check=True, capture_output=True, text=True
+            check=True, capture_output=True, text=True,
+            timeout=SUBPROCESS_TIMEOUT
         )
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+            FileNotFoundError, OSError):
         return None
     remote = result.stdout.strip()
     return remote or None

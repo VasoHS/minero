@@ -33,6 +33,30 @@ def test_get_github_token_present(monkeypatch):
     assert get_github_token() == "test-token"
 
 
+def test_get_organization_repos_retries_on_rate_limit(monkeypatch):
+    """Ante un 403/429 reintenta (respetando Retry-After) y devuelve el resultado."""
+    monkeypatch.setenv("GITHUB_TOKEN", "test-token")
+    monkeypatch.setattr("miner.github_api.time.sleep", lambda *_: None)
+
+    rate_limited = FakeResponse([], headers={"Retry-After": "0"})
+    rate_limited.status_code = 403
+
+    def raise_403():
+        raise requests.HTTPError(response=rate_limited)
+
+    rate_limited.raise_for_status = raise_403
+
+    ok = FakeResponse([{"name": "repo-a"}])
+    ok.status_code = 200
+
+    responses = iter([rate_limited, ok])
+    monkeypatch.setattr(
+        "miner.github_api.requests.get", lambda *a, **k: next(responses)
+    )
+
+    assert get_organization_repos("test-org") == [{"name": "repo-a"}]
+
+
 def test_get_organization_repos_headers_and_timeout(monkeypatch):
     monkeypatch.setenv("GITHUB_TOKEN", "test-token")
     response = FakeResponse([{"name": "repo-a"}])
