@@ -104,7 +104,7 @@ syft version
 Puedes instalar Grype por cualquiera de estas vías (de la más recomendada según tu sistema a las alternativas genéricas):
 
 **Arch / CachyOS (paquete oficial):**
-
+ 
 ```bash
 sudo pacman -S grype
 # o, con un ayudante de AUR:
