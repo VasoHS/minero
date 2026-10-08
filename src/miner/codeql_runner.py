@@ -13,6 +13,8 @@ import subprocess
 from pathlib import Path
 from typing import List, Optional
 
+from .timeouts import CODEQL_TIMEOUT, SUBPROCESS_TIMEOUT
+
 # Paquete estándar de consultas de GitHub por lenguaje de CodeQL.
 QUERY_PACKS = {
     "python": "codeql/python-queries",
@@ -49,12 +51,14 @@ def get_codeql_version() -> Optional[str]:
             ["codeql", "version", "--format=json"],
             check=True, capture_output=True, text=True,
             encoding="utf-8", errors="replace",
+            timeout=SUBPROCESS_TIMEOUT,
         )
         data = json.loads(result.stdout)
         version = data.get("version") if isinstance(data, dict) else None
         if isinstance(version, str) and version:
             return version
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError,
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+            FileNotFoundError, OSError,
             json.JSONDecodeError, TypeError, ValueError):
         pass
 
@@ -64,8 +68,10 @@ def get_codeql_version() -> Optional[str]:
             ["codeql", "version"],
             check=True, capture_output=True, text=True,
             encoding="utf-8", errors="replace",
+            timeout=SUBPROCESS_TIMEOUT,
         )
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+            FileNotFoundError, OSError):
         return None
     match = re.search(r"release\s+([0-9]+(?:\.[0-9]+)+)", result.stdout)
     return match.group(1) if match else None
@@ -96,6 +102,7 @@ def _run_codeql(cmd: List[str]) -> None:
     subprocess.run(
         cmd, check=True, capture_output=True, text=True,
         encoding="utf-8", errors="replace",
+        timeout=CODEQL_TIMEOUT,
     )
 
 
@@ -144,7 +151,8 @@ def create_database(source_dir: Path, db_dir: Path, language: str,
         try:
             _run_codeql(cmd)
             return True
-        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as exc:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+                FileNotFoundError, OSError) as exc:
             _record(errors,
                     f"creación de base (intento {attempt}): {_describe_error(exc)}")
 
@@ -182,7 +190,8 @@ def analyze_database(db_dir: Path, output_sarif: Path, language: str,
         try:
             _run_codeql(cmd)
             return True
-        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as exc:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+                FileNotFoundError, OSError) as exc:
             _record(errors,
                     f"análisis (intento {attempt}): {_describe_error(exc)}")
     return False

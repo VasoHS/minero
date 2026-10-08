@@ -4,6 +4,6 @@ java-archive,High,1
 java-archive,Low,1
 pod,Critical,1
 python,Critical,13
-python,High,130
-python,Medium,108
+python,High,149
+python,Medium,122
 python,Low,20

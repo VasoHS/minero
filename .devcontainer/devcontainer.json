@@ -6,7 +6,8 @@
     "args": {
       "CODEQL_VERSION": "2.27.1",
       "SYFT_VERSION": "1.51.0",
-      "GRYPE_VERSION": "0.120.0"
+      "GRYPE_VERSION": "0.120.0",
+      "NODE_VERSION": "22.11.0"
     }
   },
   "remoteUser": "vscode",

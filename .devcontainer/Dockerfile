@@ -20,6 +20,7 @@ FROM python:3.12-slim-bookworm
 ARG CODEQL_VERSION=2.27.1
 ARG SYFT_VERSION=1.51.0
 ARG GRYPE_VERSION=0.120.0
+ARG NODE_VERSION=22.11.0
 
 LABEL org.opencontainers.image.title="GitHub CodeQL Miner (Dev Container)" \
       org.opencontainers.image.description="Entorno de desarrollo reproducible: Python 3.12, Node.js, CodeQL, Syft y Grype"
@@ -31,20 +32,37 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PATH="/opt/codeql:${PATH}"
 
 # Dependencias del sistema: git (clonado), curl y unzip (descarga de las
-# herramientas), ca-certificates (HTTPS), Node.js/npm (análisis CodeQL de
-# JavaScript/TypeScript) y utilidades básicas de desarrollo.
+# herramientas), ca-certificates (HTTPS), xz-utils (descompresión de Node.js)
+# y utilidades básicas de desarrollo.
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
       ca-certificates \
       curl \
       git \
       unzip \
+      xz-utils \
       sudo \
       procps \
       less \
-      nodejs \
-      npm \
  && rm -rf /var/lib/apt/lists/*
+
+# Node.js fijado por versión (necesario para el análisis CodeQL de
+# JavaScript/TypeScript). Se descarga el binario oficial en lugar de usar el
+# paquete de Debian, cuya versión depende del snapshot del repositorio.
+RUN set -eux; \
+    arch="$(dpkg --print-architecture)"; \
+    case "${arch}" in \
+      amd64) node_arch="x64" ;; \
+      arm64) node_arch="arm64" ;; \
+      *) echo "Arquitectura no soportada para Node.js: ${arch}" >&2; exit 1 ;; \
+    esac; \
+    curl -fsSL -o /tmp/node.tar.xz \
+      "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${node_arch}.tar.xz"; \
+    tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1 \
+      --exclude=CHANGELOG.md --exclude=LICENSE --exclude=README.md; \
+    rm /tmp/node.tar.xz; \
+    node --version; \
+    npm --version
 
 # CodeQL CLI: bundle oficial que incluye la CLI y los query packs estándar.
 RUN set -eux; \

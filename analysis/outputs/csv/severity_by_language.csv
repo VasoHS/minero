@@ -1,1 +1,9 @@
 language,severity,count
+cpp,High,21
+cpp,Medium,17
+java,High,1
+java,Low,1
+python,Critical,14
+python,High,128
+python,Medium,105
+python,Low,26
