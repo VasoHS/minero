@@ -1,22 +1,28 @@
 # Reporte de seguridad
 
-_Generado: 2026-10-08T16:02:50+00:00_  
+_Generado: 2026-10-09T00:19:03+00:00_  
 _Hallazgos detectados: 3 (con modelo de lenguaje)_
 
 
-# Hallazgos de Seguridad
+## Crítica/alta
 
-## Baja/Informativa
+No se reportan hallazgos de severidad crítica o alta en la evidencia proporcionada. [TR-001] [TR-002] [TR-003]
 
-### Artefactos Generados Versionados
-Se han identificado varios artefactos generados que están versionados en el repositorio. Estos son:
-- [TR-001]: `results-sbom.json`
-- [TR-002]: `results-vuln.json`
-- [TR-003]: `results.json`
+## Media
 
-**Observación:** Estos archivos son artefactos generados y podrían contener datos sensibles.  
-**Importancia:** Es crucial revisar estos archivos para asegurarse de que no contengan información sensible que no deba estar expuesta en el repositorio.  
-**Mitigación:** Realizar una revisión de contenido de estos archivos y, si es necesario, considerar su eliminación del repositorio o su exclusión mediante `.gitignore` si no deben ser versionados.
+No se reportan hallazgos de severidad media en la evidencia proporcionada. [TR-001] [TR-002] [TR-003]
+
+## Baja/informativa
+
+### Artefactos generados versionados
+
+Los archivos `results-sbom.json`, `results-vuln.json` y `results.json` están versionados pese a ser artefactos generados. [TR-001] [TR-002] [TR-003]
+
+Esto puede introducir ruido en el repositorio y conservar resultados generados que quizá deban producirse durante el proceso de CI/CD; además, la evidencia disponible no permite determinar si contienen datos sensibles. [TR-001] [TR-002] [TR-003]
+
+Como mitigación, revisa el contenido de los tres archivos y confirma si deben formar parte del repositorio; si no son necesarios, elimínalos del control de versiones y añade sus rutas al `.gitignore`. [TR-001] [TR-002] [TR-003]
+
+No hay evidencia suficiente en estos hallazgos para recomendar la revocación de credenciales. [TR-001] [TR-002] [TR-003]
 
 ## Cobertura del análisis
 
