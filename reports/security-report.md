@@ -1,18 +1,16 @@
 # Reporte de seguridad
 
-_Generado: 2026-10-12T18:29:21+00:00_  
+_Generado: 2026-10-13T16:41:40+00:00_  
 _Hallazgos detectados: 3 (con modelo de lenguaje)_
 
 
-# Hallazgos de seguridad
-
 ## Crítica/alta
 
-No se reportan hallazgos de severidad crítica o alta en la evidencia proporcionada [TR-001][TR-002][TR-003].
+No se reportan hallazgos de severidad crítica o alta en la evidencia proporcionada.
 
 ## Media
 
-No se reportan hallazgos de severidad media en la evidencia proporcionada [TR-001][TR-002][TR-003].
+No se reportan hallazgos de severidad media en la evidencia proporcionada.
 
 ## Baja/informativa
 
@@ -20,15 +18,11 @@ No se reportan hallazgos de severidad media en la evidencia proporcionada [TR-00
 
 Se detectaron tres artefactos generados que están versionados en el repositorio: `results-sbom.json`, `results-vuln.json` y `results.json` [TR-001][TR-002][TR-003].
 
-Esto importa porque esos archivos podrían contener datos sensibles o resultados que no deberían mantenerse en el repositorio, aunque la evidencia disponible no confirma que contengan información sensible [TR-001][TR-002][TR-003].
+Esto importa porque dichos archivos podrían contener datos sensibles o resultados de análisis que no deberían formar parte del repositorio; sin embargo, la evidencia disponible no confirma que contengan información sensible [TR-001][TR-002][TR-003].
 
-**Mitigación concreta:**
+**Mitigación concreta:** revisar el contenido de los tres archivos y determinar si deben permanecer versionados. Si no son necesarios, eliminarlos del repositorio, añadir sus rutas al `.gitignore` y evitar que se vuelvan a generar dentro del árbol versionado [TR-001][TR-002][TR-003].
 
-- Revisar el contenido de los tres archivos para determinar si contienen datos sensibles o información operativa innecesaria [TR-001][TR-002][TR-003].
-- Si no deben versionarse, eliminarlos del repositorio y añadir sus rutas a `.gitignore` [TR-001][TR-002][TR-003].
-- Si deben conservarse, documentar su propósito y validar que su contenido sea apropiado para almacenamiento en el repositorio [TR-001][TR-002][TR-003].
-
-No hay evidencia suficiente en estos hallazgos para recomendar la revocación de credenciales, ya que no se identificó un posible secreto [TR-001][TR-002][TR-003].
+La cobertura reporta que la verificación de secretos en archivos no ignorados por Git no encontró hallazgos; por tanto, no hay base en este análisis para recomendar la revocación de credenciales [TR-001][TR-002][TR-003].
 
 ## Cobertura del análisis
 
