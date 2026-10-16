@@ -1,32 +1,34 @@
 # Reporte de seguridad
 
-_Generado: 2026-10-15T13:52:29+00:00_  
+_Generado: 2026-10-16T13:42:40+00:00_  
 _Hallazgos detectados: 3 (con modelo de lenguaje)_
 
 
-## Crítica/alta
+## Crítica / alta
 
-No se reportan hallazgos de severidad crítica o alta en la evidencia proporcionada. [TR-001][TR-002][TR-003]
+No se reportan hallazgos de severidad crítica o alta en la evidencia recibida. [TR-001] [TR-002] [TR-003]
 
 ## Media
 
-No se reportan hallazgos de severidad media en la evidencia proporcionada. [TR-001][TR-002][TR-003]
+No se reportan hallazgos de severidad media. [TR-001] [TR-002] [TR-003]
 
-## Baja/informativa
+## Baja / informativa
 
 ### Artefactos generados versionados
 
-Se observaron tres artefactos generados que están versionados en el repositorio: `results-sbom.json`, `results-vuln.json` y `results.json`. [TR-001][TR-002][TR-003]
+Se observaron tres artefactos generados dentro del repositorio:
 
-Esto importa porque la evidencia disponible no permite determinar si esos archivos contienen datos sensibles ni si deben formar parte del repositorio. [TR-001][TR-002][TR-003]
+- `results-sbom.json` [TR-001]
+- `results-vuln.json` [TR-002]
+- `results.json` [TR-003]
 
-Mitigación concreta:
+Estos archivos están versionados y deben revisarse para determinar si contienen datos sensibles o si realmente deben formar parte del repositorio. [TR-001] [TR-002] [TR-003]
 
-- Revisar el contenido de los tres archivos para confirmar que no incluyan datos sensibles o información innecesaria. [TR-001][TR-002][TR-003]
-- Si son resultados temporales o generados durante CI, eliminarlos del repositorio y añadirlos al `.gitignore`, generándolos bajo demanda. [TR-001][TR-002][TR-003]
-- Si deben permanecer versionados, documentar su necesidad y validar que su contenido sea apropiado para el repositorio. [TR-001][TR-002][TR-003]
+Esto importa porque los resultados generados pueden introducir información innecesaria o potencialmente sensible en el historial del repositorio; sin embargo, la evidencia disponible no confirma que estos archivos contengan datos sensibles ni que deban eliminarse. [TR-001] [TR-002] [TR-003]
 
-No hay evidencia suficiente para recomendar la revocación de credenciales, ya que estos hallazgos no identifican posibles secretos. [TR-001][TR-002][TR-003]
+**Mitigación concreta:** inspeccionar el contenido de los tres archivos, confirmar si son necesarios para el proyecto y, si no lo son, eliminarlos del control de versiones y añadir sus rutas a `.gitignore`. Si contienen información sensible, debe evaluarse su exposición y aplicar el procedimiento correspondiente de saneamiento. [TR-001] [TR-002] [TR-003]
+
+La verificación de secretos en archivos no ignorados por Git se ejecutó sin hallazgos, por lo que no hay base en este análisis para recomendar la revocación de credenciales. [TR-001] [TR-002] [TR-003]
 
 ## Cobertura del análisis
 
