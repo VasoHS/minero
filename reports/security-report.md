@@ -1,30 +1,32 @@
 # Reporte de seguridad
 
-_Generado: 2026-10-19T16:06:28+00:00_  
+_Generado: 2026-10-20T14:03:00+00:00_  
 _Hallazgos detectados: 3 (con modelo de lenguaje)_
 
 
-# Crítica/alta
+## Crítica/alta
 
-No se reportan hallazgos de severidad crítica o alta en el JSON recibido. [TR-001] [TR-002] [TR-003]
+No se reportaron hallazgos de severidad crítica o alta.
 
-# Media
+## Media
 
-No se reportan hallazgos de severidad media en el JSON recibido. [TR-001] [TR-002] [TR-003]
+No se reportaron hallazgos de severidad media.
 
-# Baja/informativa
+## Baja/informativa
 
-## Artefactos generados versionados
+### Artefactos generados versionados
 
-Se observaron tres artefactos generados versionados: `results-sbom.json` [TR-001], `results-vuln.json` [TR-002] y `results.json` [TR-003].
+Se observaron tres artefactos generados versionados: `results-sbom.json`, `results-vuln.json` y `results.json` [TR-001] [TR-002] [TR-003].
 
-Esto importa porque podrían contener datos sensibles o resultados internos, aunque la evidencia disponible no confirma que los contengan. [TR-001] [TR-002] [TR-003]
+Esto importa porque esos archivos podrían contener datos sensibles o resultados que no deberían formar parte del repositorio; el JSON no aporta evidencia suficiente para confirmar que contengan información sensible [TR-001] [TR-002] [TR-003].
 
-**Mitigación concreta:** revisar el contenido de los tres archivos y decidir explícitamente si deben permanecer en el repositorio; si no son necesarios, eliminarlos del control de versiones y añadirlos a `.gitignore`. [TR-001] [TR-002] [TR-003]
+Mitigación concreta:
 
-No hay evidencia suficiente para recomendar la revocación de credenciales: los hallazgos solo indican que son artefactos generados versionados y no posibles secretos confirmados o detectados. [TR-001] [TR-002] [TR-003]
+- Revisar el contenido de los tres archivos y confirmar si deben permanecer en el repositorio [TR-001] [TR-002] [TR-003].
+- Si no son necesarios, eliminarlos del control de versiones y añadir sus patrones al `.gitignore` [TR-001] [TR-002] [TR-003].
+- Si deben mantenerse, documentar su propósito y verificar que no incluyan datos sensibles [TR-001] [TR-002] [TR-003].
 
-La cobertura indica que la verificación de secretos en archivos no ignorados por Git se ejecutó sin hallazgos, pero la revisión del contenido y necesidad de conservar estos artefactos sigue siendo aplicable. [TR-001] [TR-002] [TR-003]
+La revisión de secretos en archivos no ignorados por Git no reportó hallazgos, por lo que no hay base para recomendar la revocación de credenciales a partir de estos hallazgos [TR-001] [TR-002] [TR-003].
 
 ## Cobertura del análisis
 
