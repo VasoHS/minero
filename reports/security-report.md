@@ -1,44 +1,38 @@
 # Reporte de seguridad
 
-_Generado: 2026-10-21T14:19:12+00:00_  
-_Hallazgos detectados: 11 (con modelo de lenguaje)_
+_Generado: 2026-10-22T14:18:17+00:00_  
+_Hallazgos detectados: 23 (con modelo de lenguaje)_
 
 
-## Crítica
+> **Nota:** el modelo no comentó estos hallazgos (ver apéndice): ['VUL-020'].
 
-### Dependencia `certifi`
+# Informe de hallazgos
 
-- **Qué se observó:** El SBOM reporta la vulnerabilidad **GHSA-6q48-6c7w-9gw2** en `certifi` **2026.7.22`; la corrección indicada es `2026.10.19` [VUL-001].
-- **Por qué importa:** Se trata de una vulnerabilidad conocida con severidad crítica en una dependencia incluida en el repositorio [VUL-001].
-- **Mitigación:** Actualizar `certifi` al menos a `2026.10.19`, regenerar el SBOM y repetir el análisis de dependencias para confirmar la corrección [VUL-001].
+## Crítica / alta
 
-### Dependencia `pillow`
+### Vulnerabilidades críticas en dependencias
 
-- **Qué se observó:** El SBOM reporta **GHSA-8g5g-8vmr-9782** en `pillow` **12.3.0`; la corrección indicada es `13.0.0` [VUL-002].
-- **Por qué importa:** La dependencia contiene una vulnerabilidad conocida con severidad crítica [VUL-002].
-- **Mitigación:** Actualizar `pillow` al menos a `13.0.0`, validar la compatibilidad de la aplicación y repetir el análisis de dependencias [VUL-002].
+- Se identificó una vulnerabilidad crítica **GHSA-6q48-6c7w-9gw2** en `certifi` versión `2026.7.22`; la corrección indicada está disponible en `2026.10.19` [VUL-001]. Esto puede exponer al repositorio o a sus consumidores a riesgos asociados con una dependencia vulnerable. **Mitigación:** actualizar `certifi` al menos a `2026.10.19` y regenerar el SBOM para verificar el resultado [VUL-001].
+- Se identificaron tres vulnerabilidades críticas en `pillow` versión `12.3.0`: **GHSA-332p-7hrc-92wf**, **GHSA-8g5g-8vmr-9782** y **GHSA-w889-685w-c8fh**; la corrección indicada es `13.0.0` [VUL-002] [VUL-003] [VUL-004]. La permanencia de esa versión mantiene expuesta la dependencia a vulnerabilidades conocidas. **Mitigación:** actualizar `pillow` al menos a `13.0.0`, revisar compatibilidad de la aplicación y regenerar el SBOM [VUL-002] [VUL-003] [VUL-004].
 
-## Alta
+### Vulnerabilidades altas en `pillow`
 
-### Vulnerabilidades adicionales en `pillow`
-
-- **Qué se observó:** El SBOM reporta las vulnerabilidades **GHSA-58r4-6rv3-gfh8**, **GHSA-65qm-jvmh-6pqg**, **GHSA-c6hw-5grf-ff96**, **GHSA-p4wg-p73j-c528**, **GHSA-pchr-8j38-3x4p** y **GHSA-q45j-58j2-45rg** en `pillow` **12.3.0`; para todas se indica como versión corregida `13.0.0` [VUL-003] [VUL-004] [VUL-005] [VUL-006] [VUL-007] [VUL-008].
-- **Por qué importa:** Estas vulnerabilidades conocidas tienen severidad alta y afectan a la misma versión de `pillow` [VUL-003] [VUL-004] [VUL-005] [VUL-006] [VUL-007] [VUL-008].
-- **Mitigación:** Actualizar `pillow` a `13.0.0` o posterior, realizar pruebas funcionales y repetir el escaneo para verificar que no permanezcan estos identificadores [VUL-003] [VUL-004] [VUL-005] [VUL-006] [VUL-007] [VUL-008].
+- Se identificaron vulnerabilidades altas en `pillow` versión `12.3.0`, correspondientes a **GHSA-22hg-r758-rrw9**, **GHSA-27h8-gf7j-v5hc**, **GHSA-58r4-6rv3-gfh8**, **GHSA-5xm2-6676-qcp9**, **GHSA-65qm-jvmh-6pqg**, **GHSA-7mwm-ghpf-9vrm**, **GHSA-c6hw-5grf-ff96**, **GHSA-cp9v-662q-vvx9**, **GHSA-f2g6-542v-9j58**, **GHSA-gg2r-wvfm-q9rx**, **GHSA-j4m9-6w36-pw47**, **GHSA-jg86-v3jv-hrpm**, **GHSA-p4wg-p73j-c528**, **GHSA-pchr-8j38-3x4p**, **GHSA-q45j-58j2-45rg** y **GHSA-xvh5-g6gv-559v** [VUL-005] [VUL-006] [VUL-007] [VUL-008] [VUL-009] [VUL-010] [VUL-011] [VUL-012] [VUL-013] [VUL-014] [VUL-015] [VUL-016] [VUL-017] [VUL-018] [VUL-019].
+- La versión corregida indicada para todos esos avisos es `pillow 13.0.0`; mantener `12.3.0` conserva múltiples vulnerabilidades conocidas en la misma dependencia [VUL-005] [VUL-006] [VUL-007] [VUL-008] [VUL-009] [VUL-010] [VUL-011] [VUL-012] [VUL-013] [VUL-014] [VUL-015] [VUL-016] [VUL-017] [VUL-018] [VUL-019].
+- **Mitigación:** actualizar `pillow` a `13.0.0` o posterior, ejecutar las pruebas de compatibilidad y volver a generar el análisis de dependencias [VUL-005] [VUL-006] [VUL-007] [VUL-008] [VUL-009] [VUL-010] [VUL-011] [VUL-012] [VUL-013] [VUL-014] [VUL-015] [VUL-016] [VUL-017] [VUL-018] [VUL-019].
 
 ## Media
 
-No se registran hallazgos de severidad media en la evidencia proporcionada [VUL-001] [VUL-002] [VUL-003] [VUL-004] [VUL-005] [VUL-006] [VUL-007] [VUL-008].
+No se reportan hallazgos de severidad media en la evidencia recibida [VUL-001] [VUL-005].
 
-## Baja / Informativa
+## Baja / informativa
 
 ### Artefactos generados versionados
 
-- **Qué se observó:** `results-sbom.json`, `results-vuln.json` y `results.json` aparecen como artefactos generados versionados [TR-001] [TR-002] [TR-003].
-- **Por qué importa:** El hallazgo requiere revisar si esos artefactos deben permanecer en el repositorio y si contienen datos sensibles; el JSON no aporta evidencia suficiente para confirmar que contengan información sensible [TR-001] [TR-002] [TR-003].
-- **Mitigación:** Inspeccionar el contenido de los tres archivos, confirmar si su versionado es necesario y, si no lo es, eliminarlos del repositorio y añadirlos a `.gitignore`; si deben conservarse, limitar su contenido a información no sensible [TR-001] [TR-002] [TR-003].
-
-No se recomienda revocar credenciales, porque estos hallazgos no identifican un posible secreto en un archivo no ignorado por Git [TR-001] [TR-002] [TR-003].
+- `results-sbom.json`, `results-vuln.json` y `results.json` aparecen como artefactos generados versionados [TR-001] [TR-002] [TR-003].
+- Esto importa porque el JSON únicamente demuestra que están versionados y no permite determinar si contienen datos sensibles ni si deben permanecer en el repositorio; por tanto, no hay evidencia suficiente para confirmar exposición de información sensible [TR-001] [TR-002] [TR-003].
+- **Mitigación:** revisar el contenido de los tres archivos y decidir explícitamente si deben versionarse; si no son necesarios, eliminarlos del repositorio y añadirlos a `.gitignore` o al mecanismo equivalente de exclusión [TR-001] [TR-002] [TR-003].
+- No se recomienda revocar credenciales basándose en estos hallazgos, porque no se identificó un posible secreto; la evidencia solo indica que son artefactos generados versionados [TR-001] [TR-002] [TR-003].
 
 ## Cobertura del análisis
 
@@ -50,7 +44,7 @@ No se recomienda revocar credenciales, porque estos hallazgos no identifican un 
 | higiene (.gitignore) | ejecutado (0 hallazgos) |
 | archivos versionados | ejecutado (3 hallazgos) |
 | lockfile | ejecutado (0 hallazgos) |
-| dependencias (Syft+Grype) | ejecutado (69 componentes, 10 vulnerabilidades en total) |
+| dependencias (Syft+Grype) | ejecutado (69 componentes, 29 vulnerabilidades en total) |
 
 ## Apéndice: evidencia
 
@@ -60,10 +54,22 @@ No se recomienda revocar credenciales, porque estos hallazgos no identifican un 
 | TR-002 | info | `results-vuln.json` | - | revisar que no contenga datos sensibles y si debe estar en el repo | artefacto generado versionado |
 | TR-003 | info | `results.json` | - | revisar que no contenga datos sensibles y si debe estar en el repo | artefacto generado versionado |
 | VUL-001 | critical | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-6q48-6c7w-9gw2 en certifi 2026.7.22; corregido en 2026.10.19 |
-| VUL-002 | critical | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-8g5g-8vmr-9782 en pillow 12.3.0; corregido en 13.0.0 |
-| VUL-003 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-58r4-6rv3-gfh8 en pillow 12.3.0; corregido en 13.0.0 |
-| VUL-004 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-65qm-jvmh-6pqg en pillow 12.3.0; corregido en 13.0.0 |
-| VUL-005 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-c6hw-5grf-ff96 en pillow 12.3.0; corregido en 13.0.0 |
-| VUL-006 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-p4wg-p73j-c528 en pillow 12.3.0; corregido en 13.0.0 |
-| VUL-007 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-pchr-8j38-3x4p en pillow 12.3.0; corregido en 13.0.0 |
-| VUL-008 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-q45j-58j2-45rg en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-002 | critical | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-332p-7hrc-92wf en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-003 | critical | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-8g5g-8vmr-9782 en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-004 | critical | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-w889-685w-c8fh en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-005 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-22hg-r758-rrw9 en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-006 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-27h8-gf7j-v5hc en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-007 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-58r4-6rv3-gfh8 en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-008 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-5xm2-6676-qcp9 en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-009 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-65qm-jvmh-6pqg en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-010 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-7mwm-ghpf-9vrm en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-011 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-c6hw-5grf-ff96 en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-012 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-cp9v-662q-vvx9 en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-013 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-f2g6-542v-9j58 en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-014 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-gg2r-wvfm-q9rx en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-015 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-j4m9-6w36-pw47 en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-016 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-jg86-v3jv-hrpm en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-017 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-p4wg-p73j-c528 en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-018 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-pchr-8j38-3x4p en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-019 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-q45j-58j2-45rg en pillow 12.3.0; corregido en 13.0.0 |
+| VUL-020 | high | `(SBOM del repositorio)` | - | vulnerabilidad conocida en dependencia (Grype) | GHSA-xvh5-g6gv-559v en pillow 12.3.0; corregido en 13.0.0 |
