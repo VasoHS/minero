@@ -1,46 +1,34 @@
 # Reporte de seguridad
 
-_Generado: 2026-10-31T14:57:55+00:00_  
+_Generado: 2026-11-01T15:41:56+00:00_  
 _Hallazgos detectados: 23 (con modelo de lenguaje)_
 
 
-# Crítica
+# Hallazgos
 
-## Dependencia `certifi`
+## Crítica/alta
 
-- **Observado:** El SBOM reporta la vulnerabilidad **GHSA-6q48-6c7w-9gw2** en `certifi` **2026.7.22`, corregida en `2026.10.18` [VUL-001].
-- **Por qué importa:** La dependencia contiene una vulnerabilidad conocida de severidad crítica, por lo que el software puede quedar expuesto a un problema de seguridad asociado a esa versión [VUL-001].
-- **Mitigación:** Actualizar `certifi` a `2026.10.18` o posterior, regenerar el lockfile/SBOM y volver a ejecutar el análisis de dependencias [VUL-001].
+### Vulnerabilidades conocidas en dependencias
 
-## Dependencia `pillow`
+- **Certifi 2026.7.22:** se identificó la vulnerabilidad **GHSA-6q48-6c7w-9gw2**, cuya corrección está indicada en la versión **2026.10.18** [VUL-001]. Esto importa porque la dependencia actualmente identificada está afectada por una vulnerabilidad conocida. **Mitigación:** actualizar `certifi` al menos a `2026.10.18` y volver a ejecutar el análisis de dependencias [VUL-001].
 
-- **Observado:** El SBOM reporta cinco vulnerabilidades críticas en `pillow` `12.3.0`: **GHSA-332p-7hrc-92wf**, **GHSA-5x8w-8jj5-q52h**, **GHSA-8g5g-8vmr-9782**, **GHSA-v9pv-5gc8-w2m6** y **GHSA-w889-685w-c8fh** [VUL-002][VUL-003][VUL-004][VUL-005][VUL-006].
-- **Por qué importa:** Se está utilizando una versión afectada por varias vulnerabilidades conocidas de severidad crítica [VUL-002][VUL-003][VUL-004][VUL-005][VUL-006].
-- **Mitigación:** Actualizar `pillow` a `13.0.0` o posterior, validar compatibilidad de la aplicación, regenerar el lockfile/SBOM y repetir el análisis [VUL-002][VUL-003][VUL-004][VUL-005][VUL-006].
+- **Pillow 12.3.0:** se identificaron cinco vulnerabilidades críticas —**GHSA-332p-7hrc-92wf**, **GHSA-5x8w-8jj5-q52h**, **GHSA-8g5g-8vmr-9782**, **GHSA-v9pv-5gc8-w2m6** y **GHSA-w889-685w-c8fh**—, todas con corrección indicada en **Pillow 13.0.0** [VUL-002] [VUL-003] [VUL-004] [VUL-005] [VUL-006]. Esto importa porque una misma versión de la dependencia está asociada a múltiples vulnerabilidades críticas. **Mitigación:** actualizar `Pillow` a la versión **13.0.0** o posterior compatible y volver a ejecutar el análisis [VUL-002] [VUL-003] [VUL-004] [VUL-005] [VUL-006].
 
-# Alta
+- **Pillow 12.3.0:** se identificaron las vulnerabilidades de severidad alta **GHSA-22hg-r758-rrw9**, **GHSA-27h8-gf7j-v5hc**, **GHSA-3j72-p6qg-6xp7**, **GHSA-58r4-6rv3-gfh8**, **GHSA-5xm2-6676-qcp9**, **GHSA-65qm-jvmh-6pqg**, **GHSA-78g4-xqwv-q3g8**, **GHSA-7mwm-ghpf-9vrm**, **GHSA-9v9v-9qvf-h2hj**, **GHSA-c6hw-5grf-ff96**, **GHSA-cp9v-662q-vvx9**, **GHSA-f2g6-542v-9j58**, **GHSA-g4qv-2jxx-769h** y **GHSA-g7cr-3p24-7wf7**, todas con corrección indicada en **Pillow 13.0.0** [VUL-007] [VUL-008] [VUL-009] [VUL-010] [VUL-011] [VUL-012] [VUL-013] [VUL-014] [VUL-015] [VUL-016] [VUL-017] [VUL-018] [VUL-019] [VUL-020]. Esto importa porque la versión identificada concentra múltiples vulnerabilidades de severidad alta además de las críticas anteriores. **Mitigación:** actualizar `Pillow` a **13.0.0** o posterior, validar compatibilidad de la aplicación y repetir el análisis [VUL-007] [VUL-008] [VUL-009] [VUL-010] [VUL-011] [VUL-012] [VUL-013] [VUL-014] [VUL-015] [VUL-016] [VUL-017] [VUL-018] [VUL-019] [VUL-020].
 
-## Vulnerabilidades adicionales en `pillow`
+La cobertura de dependencias indica que se detectaron **45 vulnerabilidades en total** y que se listan **20 de 29 vulnerabilidades críticas/altas**; por tanto, las evidencias mostradas no permiten evaluar individualmente las nueve restantes [VUL-001] [VUL-020].
 
-- **Observado:** El SBOM reporta las vulnerabilidades de severidad alta **GHSA-22hg-r758-rrw9**, **GHSA-27h8-gf7j-v5hc**, **GHSA-3j72-p6qg-6xp7**, **GHSA-58r4-6rv3-gfh8**, **GHSA-5xm2-6676-qcp9**, **GHSA-65qm-jvmh-6pqg**, **GHSA-78g4-xqwv-q3g8**, **GHSA-7mwm-ghpf-9vrm**, **GHSA-9v9v-9qvf-h2hj**, **GHSA-c6hw-5grf-ff96**, **GHSA-cp9v-662q-vvx9**, **GHSA-f2g6-542v-9j58**, **GHSA-g4qv-2jxx-769h** y **GHSA-g7cr-3p24-7wf7** en `pillow` `12.3.0` [VUL-007][VUL-008][VUL-009][VUL-010][VUL-011][VUL-012][VUL-013][VUL-014][VUL-015][VUL-016][VUL-017][VUL-018][VUL-019][VUL-020].
-- **Por qué importa:** La versión instalada está afectada por múltiples vulnerabilidades conocidas de severidad alta [VUL-007][VUL-008][VUL-009][VUL-010][VUL-011][VUL-012][VUL-013][VUL-014][VUL-015][VUL-016][VUL-017][VUL-018][VUL-019][VUL-020].
-- **Mitigación:** Actualizar `pillow` a `13.0.0` o posterior, realizar pruebas de regresión y confirmar mediante un nuevo escaneo que las vulnerabilidades fueron resueltas [VUL-007][VUL-008][VUL-009][VUL-010][VUL-011][VUL-012][VUL-013][VUL-014][VUL-015][VUL-016][VUL-017][VUL-018][VUL-019][VUL-020].
+## Media
 
-La cobertura de dependencias indica que se detectaron 45 vulnerabilidades en total y que solo se detallan 20 de las 29 clasificadas como críticas o altas; por tanto, las vulnerabilidades no listadas individualmente no pudieron evaluarse con el detalle disponible [VUL-001][VUL-002][VUL-003][VUL-004][VUL-005][VUL-006][VUL-007][VUL-008][VUL-009][VUL-010][VUL-011][VUL-012][VUL-013][VUL-014][VUL-015][VUL-016][VUL-017][VUL-018][VUL-019][VUL-020].
+No se registraron hallazgos de severidad media en la evidencia proporcionada.
 
-# Media
+## Baja/informativa
 
-No se registran hallazgos de severidad media en los datos proporcionados [VUL-001][TR-001].
+### Artefactos generados versionados
 
-# Baja / informativa
+- Se observaron como versionados los artefactos generados `results-sbom.json`, `results-vuln.json` y `results.json` [TR-001] [TR-002] [TR-003]. Esto importa porque el contenido de estos archivos podría incluir datos sensibles o resultados que no deberían formar parte del repositorio; la evidencia disponible solo confirma que están versionados y **no confirma** que contengan datos sensibles [TR-001] [TR-002] [TR-003]. **Mitigación:** revisar su contenido y determinar si deben permanecer en el repositorio; si no son necesarios, eliminarlos del control de versiones y añadirlos a la exclusión correspondiente [TR-001] [TR-002] [TR-003].
 
-## Artefactos generados versionados
-
-- **Observado:** Los archivos `results-sbom.json`, `results-vuln.json` y `results.json` aparecen como artefactos generados y versionados [TR-001][TR-002][TR-003].
-- **Por qué importa:** El JSON no confirma que contengan datos sensibles, pero deben revisarse para determinar si su contenido debe permanecer en el repositorio [TR-001][TR-002][TR-003].
-- **Mitigación:** Inspeccionar los tres archivos para descartar datos sensibles y confirmar su necesidad en el repositorio; si no deben versionarse, eliminarlos del control de versiones y añadirlos a `.gitignore` [TR-001][TR-002][TR-003].
-
-La verificación de secretos en archivos no ignorados por Git se ejecutó y no reportó hallazgos; por ello, no hay base en este análisis para recomendar la revocación de credenciales [TR-001][TR-002][TR-003].
+No se recomienda revocar credenciales, ya que no se reportó ningún posible secreto en un archivo no ignorado por Git.
 
 ## Cobertura del análisis
 
